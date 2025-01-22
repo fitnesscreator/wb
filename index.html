@@ -865,15 +865,19 @@ function buildModal(){
   m+="<div class='quantity-options'><label>Quantity:</label><div class='qty-controls'><button class='qty-btn qty-minus'>-</button><span id='qtyValue' class='qty-display'>1</span><button class='qty-btn qty-plus'>+</button></div></div>";
   m+="<div class='order-details-panel'><h3>Order Details</h3><div class='order-item'><label>Price x Quantity:</label><span class='value' id='itemTotal'>--</span></div><div class='order-item'><label>Selection:</label><span class='value' id='selectedCombos'>(Color, Size)</span></div><div class='order-item'><label>Shipping:</label><span class='value' id='shippingCost'>$0.00</span></div><div class='order-item'><label>Returns:</label><span class='value' id='returnPolicy'></span></div><div class='shipping-info' id='shippingInfo'><strong>Shipping Information:</strong> If your PayPal shipping address or contact details have changed, please update them at checkout so we send your goodies to the right place!</div><div class='subtotal'>Total: <span id='subtotalValue'>$0.00</span></div></div>";
   m+="<div class='modal-actions'><button class='buy-now-btn'>Buy Now</button></div>";
-  // Static PayPal form inserted after modal actions
+  
+  // Static hidden PayPal form
   m+="<form id='paypalForm' action='https://www.paypal.com/cgi-bin/webscr' method='post' style='display:none;'>";
   m+="<input type='hidden' name='cmd' value='_xclick' />";
   m+="<input type='hidden' name='business' value='' />";
   m+="<input type='hidden' name='item_name' value='' />";
+  m+="<input type='hidden' name='item_number' value='' />";
   m+="<input type='hidden' name='amount' value='' />";
+  m+="<input type='hidden' name='shipping' value='' />";
   m+="<input type='hidden' name='currency_code' value='USD' />";
   m+="<input type='hidden' name='quantity' value='1' />";
   m+="</form>";
+  
   m+="</div></div></div>";
 
   m+="<script>(function(){";
@@ -903,9 +907,12 @@ function buildModal(){
   m+="  if (!currentProduct) return;";
   m+="  if (paymentMethod === 'paypalEmail') {";
   m+="    var paypalForm = document.getElementById('paypalForm');";
+  m+="    paypalForm.target = '_blank';";
   m+="    paypalForm.elements['business'].value = paypalEmail;";
   m+="    paypalForm.elements['item_name'].value = currentProduct.title + ' - Color: ' + selectedColor + ', Size: ' + selectedSize + ', Qty: ' + currentQty;";
+  m+="    paypalForm.elements['item_number'].value = currentProduct.item_number || '';";
   m+="    paypalForm.elements['amount'].value = (basePrice * currentQty).toFixed(2);";
+  m+="    paypalForm.elements['shipping'].value = shippingFee.toFixed(2);";
   m+="    paypalForm.elements['currency_code'].value = paypalCurrency;";
   m+="    paypalForm.submit();";
   m+="  } else if (paymentMethod === 'paypalLink' && currentProduct.paypalLink) {";
@@ -935,6 +942,8 @@ function escapeHTML(str){
     }
   });
 }
+
+
 
 </script>
 </body>
