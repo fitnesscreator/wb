@@ -183,7 +183,7 @@
         <h2>Payment Integration</h2>
         <form>
           <label>Your Paypal currency</label>
-          <input id="paypalCurrency" type="text" placeholder="e.g. $" required>
+          <input id="paypalCurrency" type="text" placeholder="e.g. USD" required>
 
           <label>Select Payment Method</label>
           <select id="paymentMethod" required>
@@ -353,7 +353,8 @@ window.onload=function(){
     var method = this.value;
     paymentIntegration.method = method;
     document.getElementById('paypalEmailField').style.display = method==='paypalEmail'?'block':'none';
-    updateAddProductFormFields();
+    document.getElementById('productEmbedField').style.display = method==='paypalEmbed'?'block':'none';
+    document.getElementById('productLinkField').style.display = method==='paypalLink'?'block':'none';
     updatePreview();
   };
   document.getElementById('paypalEmail').oninput = updatePreview;
@@ -773,16 +774,18 @@ function buildProductsSection(){
     var mainImg=(p.images.length>0)?escapeHTML(p.images[0]):"";
     html+="<div class='product-item'"+
       " data-title='"+escapeHTML(p.title||"")+"'"+
-      " data-img1='"+(p.images[0]||"")+"'"+
-      " data-img2='"+(p.images[1]||"")+"'"+
-      " data-img3='"+(p.images[2]||"")+"'"+
-      " data-sold='"+(p.sold||"")+"'"+
+      " data-img1='"+escapeHTML(p.images[0]||"")+"'"+
+      " data-img2='"+escapeHTML(p.images[1]||"")+"'"+
+      " data-img3='"+escapeHTML(p.images[2]||"")+"'"+
+      " data-sold='"+escapeHTML(p.sold||"")+"'"+
       " data-price='"+escapeHTML(p.price||"0")+"'"+
       " data-coloroptions='"+escapeHTML(p.coloroptions||"")+"'"+
       " data-sizeoptions='"+escapeHTML(p.sizeoptions||"")+"'"+
       " data-description='"+escapeHTML(p.description||"")+"'"+
       " data-shipping='"+escapeHTML(p.shipping||"FREE")+"'"+
       " data-returns='"+escapeHTML(p.returns||"Accepted")+"'"+
+      " data-paypalembed='"+escapeHTML(p.paypalEmbed||"")+"'"+
+      " data-paypallink='"+escapeHTML(p.paypalLink||"")+"'"+
       ">";
     html+="<div class='product-img' style=\"background-image:url('"+mainImg+"');\"></div>";
     html+="<div class='product-content'>";
@@ -814,8 +817,8 @@ function buildReviewsSection(){
 function buildAboutSection(){
   if(!aboutData.title && !aboutData.paragraph && !aboutData.image)return "";
   var a="<section class='about-section' id='about'><div class='about-left'>";
-  a+="<h2>"+escapeHTML(aboutData.title)||"Who We Are"+"</h2>";
-  a+="<p>"+escapeHTML(aboutData.paragraph)||"We are a small business, etc."+"</p>";
+  a+="<h2>"+escapeHTML(aboutData.title || "Who We Are")+"</h2>";
+  a+="<p>"+escapeHTML(aboutData.paragraph || "We are a small business, etc.")+"</p>";
   a+="</div><div class='about-right'>";
   if(aboutData.image){
     a+="<img src='"+escapeHTML(aboutData.image)+"' alt='About Image'>";
@@ -871,27 +874,49 @@ function buildModal(){
   m+="var paypalCurrency = '"+escapeHTML(paymentIntegration.currency || "USD")+"';";
   m+="var currentProduct = null;";
   m+="var modal=document.getElementById('productModal'); var modalClose=document.querySelector('.modal-close'); var modalTitle=document.getElementById('modalTitle'); var modalPrice=document.getElementById('modalPrice'); var modalSold=document.getElementById('modalSold'); var modalDescription=document.getElementById('modalDescription'); var modalMainImg=document.getElementById('modalMainImg'); var modalThumb1=document.getElementById('modalThumb1'); var modalThumb2=document.getElementById('modalThumb2'); var modalThumb3=document.getElementById('modalThumb3'); var arrowLeft=document.getElementById('arrowLeft'); var arrowRight=document.getElementById('arrowRight'); var colorPH=document.getElementById('colorPlaceholders'); var sizePH=document.getElementById('sizePlaceholders'); var qtyValue=document.getElementById('qtyValue'); var itemTotal=document.getElementById('itemTotal'); var shippingCost=document.getElementById('shippingCost'); var returnPolicy=document.getElementById('returnPolicy'); var subtotalValue=document.getElementById('subtotalValue'); var selectedCombos=document.getElementById('selectedCombos'); var currentQty=1, basePrice=0, shippingFee=0, returnsText='Accepted'; var allImages=[], currentImgIndex=0; var selectedColor='', selectedSize='';";
+  
+  // Open modal with product data
   m+="function openModal(p){ currentProduct = p; modalTitle.textContent=p.title||''; modalPrice.textContent=fixedCurrencySymbol+(p.price||'0'); if(p.sold){modalSold.textContent=p.sold+' Sold';}else{modalSold.textContent='';} modalDescription.textContent=p.description||''; basePrice=parseFloat(p.price)||0; if(p.shipping==='FREE'){ shippingFee=0;} else{ shippingFee=parseFloat(p.shipping)||0;} returnsText=p.returns||'Accepted'; currentQty=1; qtyValue.textContent=currentQty;";
   m+="allImages=[]; if(p.img1)allImages.push(p.img1); if(p.img2)allImages.push(p.img2); if(p.img3)allImages.push(p.img3); currentImgIndex=0; if(allImages.length>0)modalMainImg.src=allImages[0]; else modalMainImg.src='https://via.placeholder.com/400?text=No+Image'; modalThumb1.src=allImages[0]||'https://via.placeholder.com/400?text=No+Image1'; modalThumb2.src=allImages[1]||'https://via.placeholder.com/400?text=No+Image2'; modalThumb3.src=allImages[2]||'https://via.placeholder.com/400?text=No+Image3'; resetThumbs(); if(allImages[0]) modalThumb1.classList.add('selected'); selectedColor=''; selectedSize=''; colorPH.innerHTML=''; sizePH.innerHTML=''; if(p.coloroptions){ var carr=p.coloroptions.split(','); for(var i=0;i<carr.length;i++){ var c=carr[i].trim(); if(!c)continue; var sp=document.createElement('span'); sp.innerText=c; sp.onclick=function(col,elm){return function(){ pickColor(col,elm);};}(c,sp); if(i===0){ sp.classList.add('selected'); selectedColor=c;} colorPH.appendChild(sp);}} if(p.sizeoptions){ var sarr=p.sizeoptions.split(','); for(var j=0;j<sarr.length;j++){ var sizeX=sarr[j].trim(); if(!sizeX)continue; var ssp=document.createElement('span'); ssp.innerText=sizeX; ssp.onclick=function(sz,elm){return function(){ pickSize(sz,elm);};}(sizeX,ssp); if(j===0){ ssp.classList.add('selected'); selectedSize=sizeX;} sizePH.appendChild(ssp);}} updateOrderDetails(); modal.style.display='flex';}";
+  
+  // Pick color
   m+="function pickColor(c,span){ Array.from(colorPH.children).forEach(function(ch){ch.classList.remove('selected');}); span.classList.add('selected'); selectedColor=c; updateOrderDetails();}";
+  
+  // Pick size
   m+="function pickSize(c,span){ Array.from(sizePH.children).forEach(function(ch){ch.classList.remove('selected');}); span.classList.add('selected'); selectedSize=c; updateOrderDetails();}";
+  
+  // Reset thumbnail selections
   m+="function resetThumbs(){ modalThumb1.classList.remove('selected'); modalThumb2.classList.remove('selected'); modalThumb3.classList.remove('selected');}";
+  
+  // Navigate images
   m+="arrowLeft.onclick=function(){ if(allImages.length<2)return; currentImgIndex=(currentImgIndex-1+allImages.length)%allImages.length; setMain();}; arrowRight.onclick=function(){ if(allImages.length<2)return; currentImgIndex=(currentImgIndex+1)%allImages.length; setMain();};";
   m+="function setMain(){ modalMainImg.src=allImages[currentImgIndex]; resetThumbs(); if(currentImgIndex===0)modalThumb1.classList.add('selected'); if(currentImgIndex===1)modalThumb2.classList.add('selected'); if(currentImgIndex===2)modalThumb3.classList.add('selected');}";
+  
+  // Thumbnail click
   m+="modalThumb1.onclick=function(){ if(!allImages[0])return; currentImgIndex=0; setMain();}; modalThumb2.onclick=function(){ if(!allImages[1])return; currentImgIndex=1; setMain();}; modalThumb3.onclick=function(){ if(!allImages[2])return; currentImgIndex=2; setMain();};";
+  
+  // Quantity controls
   m+="document.querySelector('.qty-minus').onclick=function(){ if(currentQty>1){ currentQty--; qtyValue.textContent=currentQty; updateOrderDetails();}};";
   m+="document.querySelector('.qty-plus').onclick=function(){ currentQty++; qtyValue.textContent=currentQty; updateOrderDetails();};";
+  
+  // Update order details
   m+="function updateOrderDetails(){ var total=basePrice*currentQty; itemTotal.textContent=fixedCurrencySymbol+basePrice.toFixed(2)+' x '+currentQty+' = '+fixedCurrencySymbol+(total.toFixed(2)); if(shippingFee===0){ shippingCost.textContent='FREE'; } else{ shippingCost.textContent=fixedCurrencySymbol+shippingFee.toFixed(2);} returnPolicy.textContent=returnsText; var grand=total+shippingFee; subtotalValue.textContent=fixedCurrencySymbol+grand.toFixed(2); selectedCombos.textContent='('+selectedColor+', '+selectedSize+')';}";
-  m+="modalClose.onclick=function(){ modal.style.display='none';}; window.onclick=function(e){ if(e.target===modal){ modal.style.display='none';}};";
-  m+="document.querySelectorAll('.product-item').forEach(function(it){ var pd={}; pd.title=it.getAttribute('data-title')||''; pd.sold=it.getAttribute('data-sold')||''; pd.price=it.getAttribute('data-price')||'0'; pd.description=it.getAttribute('data-description')||''; pd.img1=it.getAttribute('data-img1')||''; pd.img2=it.getAttribute('data-img2')||''; pd.img3=it.getAttribute('data-img3')||''; pd.coloroptions=it.getAttribute('data-coloroptions')||''; pd.sizeoptions=it.getAttribute('data-sizeoptions')||''; pd.shipping=it.getAttribute('data-shipping')||'FREE'; pd.returns=it.getAttribute('data-returns')||'Accepted'; it.addEventListener('click',function(){ openModal(pd);}); var buy=it.querySelector('.buy-now'); if(buy){ buy.addEventListener('click',function(ev){ ev.stopPropagation(); ev.preventDefault(); openModal(pd);});}});";
+  
+  // Close modal
+  m+="modalClose.onclick=function(){ modal.style.display='none'; currentProduct = null; }; window.onclick=function(e){ if(e.target===modal){ modal.style.display='none'; currentProduct = null;}};";
+  
+  // Open modal when product is clicked
+  m+="document.querySelectorAll('.product-item').forEach(function(it){ var pd={}; pd.title=it.getAttribute('data-title')||''; pd.sold=it.getAttribute('data-sold')||''; pd.price=it.getAttribute('data-price')||'0'; pd.description=it.getAttribute('data-description')||''; pd.img1=it.getAttribute('data-img1')||''; pd.img2=it.getAttribute('data-img2')||''; pd.img3=it.getAttribute('data-img3')||''; pd.coloroptions=it.getAttribute('data-coloroptions')||''; pd.sizeoptions=it.getAttribute('data-sizeoptions')||''; pd.shipping=it.getAttribute('data-shipping')||'FREE'; pd.returns=it.getAttribute('data-returns')||'Accepted'; pd.paypalEmbed=it.getAttribute('data-paypalembed')||''; pd.paypalLink=it.getAttribute('data-paypallink')||''; it.addEventListener('click',function(){ openModal(pd);}); var buy=it.querySelector('.buy-now'); if(buy){ buy.addEventListener('click',function(ev){ ev.stopPropagation(); ev.preventDefault(); openModal(pd);});}});";
+  
+  // Handle Buy Now in Modal
   m+="document.querySelector('.buy-now-btn').onclick = function(){";
   m+="  if (!currentProduct) return;";
   m+="  if (paymentMethod === 'paypalEmail') {";
   m+="    var url = \"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick\"";
-  m+=",+ \"&business=\" + encodeURIComponent(paypalEmail)";
-  m+=",+ \"&item_name=\" + encodeURIComponent(currentProduct.title)";
-  m+=",+ \"&amount=\" + encodeURIComponent(currentProduct.price)";
-  m+=",+ \"&currency_code=\" + encodeURIComponent(paypalCurrency);";
+  m+="    + \"&business=\" + encodeURIComponent(paypalEmail)";
+  m+="    + \"&item_name=\" + encodeURIComponent(currentProduct.title)";
+  m+="    + \"&amount=\" + encodeURIComponent(currentProduct.price)";
+  m+="    + \"&currency_code=\" + encodeURIComponent(paypalCurrency);";
   m+="    window.open(url, '_blank');";
   m+="  } else if (paymentMethod === 'paypalLink' && currentProduct.paypalLink) {";
   m+="    window.open(currentProduct.paypalLink, '_blank');";
@@ -902,6 +927,7 @@ function buildModal(){
   m+="    alert(\"Payment integration not configured.\");";
   m+="  }";
   m+="};";
+  
   m+="})();<\/script>";
   return m;
 }
