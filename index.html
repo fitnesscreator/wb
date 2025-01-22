@@ -382,7 +382,7 @@ function updateAddProductFormFields() {
 function addProduct(){
   var title        = document.getElementById('productTitle').value.trim();
   var img1         = document.getElementById('image1').value.trim();
-  var img2         = document.getElementById('image2').value.trim();
+  var img2         =document.getElementById('image2').value.trim();
   var img3         = document.getElementById('image3').value.trim();
   var sold         = document.getElementById('sold').value.trim();
   var price        = document.getElementById('price').value.trim();
@@ -678,7 +678,7 @@ function buildGlobalCSS(){
   s+=".contact-links img:hover{transform:scale(1.1)}";
   s+=".contact-email{margin-top:30px}";
   s+=".contact-email span{display:block;font-size:1rem;margin-bottom:10px;color:#333}";
-  s+=".email-btn{display:inline-block;padding:12px 25px;background:#2196f3;color:#fff;font-weight:bold;border-radius:5px;text-transform:uppercase;letter-spacing:1px;box-shadow:0 2px 6px rgba(0,0,0,0.1);transition:background 0.3s}";
+  s+=".email-btn{display:inline-block;padding:12px 25px;background:#2196f3;color:#fff;font-weight:bold;border-radius:5px;text-transform:uppercase;letter-spacing:1px;box-shadow:0 2px 6px rgba(0,0,0,0.1)}";
   s+=".email-btn:hover{background:#1976d2}";
 
   /* modal */
@@ -864,7 +864,16 @@ function buildModal(){
   m+="<div id='modalDescription' class='modal-description'></div><div class='color-options'><label>Color:</label><span id='colorPlaceholders'></span></div><div class='size-options'><label>Size:</label><span id='sizePlaceholders'></span></div>";
   m+="<div class='quantity-options'><label>Quantity:</label><div class='qty-controls'><button class='qty-btn qty-minus'>-</button><span id='qtyValue' class='qty-display'>1</span><button class='qty-btn qty-plus'>+</button></div></div>";
   m+="<div class='order-details-panel'><h3>Order Details</h3><div class='order-item'><label>Price x Quantity:</label><span class='value' id='itemTotal'>--</span></div><div class='order-item'><label>Selection:</label><span class='value' id='selectedCombos'>(Color, Size)</span></div><div class='order-item'><label>Shipping:</label><span class='value' id='shippingCost'>$0.00</span></div><div class='order-item'><label>Returns:</label><span class='value' id='returnPolicy'></span></div><div class='shipping-info' id='shippingInfo'><strong>Shipping Information:</strong> If your PayPal shipping address or contact details have changed, please update them at checkout so we send your goodies to the right place!</div><div class='subtotal'>Total: <span id='subtotalValue'>$0.00</span></div></div>";
-  m+="<div class='modal-actions'><button class='buy-now-btn'>Buy Now</button></div></div>";
+  m+="<div class='modal-actions'><button class='buy-now-btn'>Buy Now</button></div>";
+  // Static PayPal form inserted after modal actions
+  m+="<form id='paypalForm' action='https://www.paypal.com/cgi-bin/webscr' method='post' style='display:none;'>";
+  m+="<input type='hidden' name='cmd' value='_xclick' />";
+  m+="<input type='hidden' name='business' value='' />";
+  m+="<input type='hidden' name='item_name' value='' />";
+  m+="<input type='hidden' name='amount' value='' />";
+  m+="<input type='hidden' name='currency_code' value='USD' />";
+  m+="<input type='hidden' name='quantity' value='1' />";
+  m+="</form>";
   m+="</div></div></div>";
 
   m+="<script>(function(){";
@@ -874,60 +883,41 @@ function buildModal(){
   m+="var paypalCurrency = '"+escapeHTML(paymentIntegration.currency || "USD")+"';";
   m+="var currentProduct = null;";
   m+="var modal=document.getElementById('productModal'); var modalClose=document.querySelector('.modal-close'); var modalTitle=document.getElementById('modalTitle'); var modalPrice=document.getElementById('modalPrice'); var modalSold=document.getElementById('modalSold'); var modalDescription=document.getElementById('modalDescription'); var modalMainImg=document.getElementById('modalMainImg'); var modalThumb1=document.getElementById('modalThumb1'); var modalThumb2=document.getElementById('modalThumb2'); var modalThumb3=document.getElementById('modalThumb3'); var arrowLeft=document.getElementById('arrowLeft'); var arrowRight=document.getElementById('arrowRight'); var colorPH=document.getElementById('colorPlaceholders'); var sizePH=document.getElementById('sizePlaceholders'); var qtyValue=document.getElementById('qtyValue'); var itemTotal=document.getElementById('itemTotal'); var shippingCost=document.getElementById('shippingCost'); var returnPolicy=document.getElementById('returnPolicy'); var subtotalValue=document.getElementById('subtotalValue'); var selectedCombos=document.getElementById('selectedCombos'); var currentQty=1, basePrice=0, shippingFee=0, returnsText='Accepted'; var allImages=[], currentImgIndex=0; var selectedColor='', selectedSize='';";
-  
-  // Open modal with product data
+
   m+="function openModal(p){ currentProduct = p; modalTitle.textContent=p.title||''; modalPrice.textContent=fixedCurrencySymbol+(p.price||'0'); if(p.sold){modalSold.textContent=p.sold+' Sold';}else{modalSold.textContent='';} modalDescription.textContent=p.description||''; basePrice=parseFloat(p.price)||0; if(p.shipping==='FREE'){ shippingFee=0;} else{ shippingFee=parseFloat(p.shipping)||0;} returnsText=p.returns||'Accepted'; currentQty=1; qtyValue.textContent=currentQty;";
   m+="allImages=[]; if(p.img1)allImages.push(p.img1); if(p.img2)allImages.push(p.img2); if(p.img3)allImages.push(p.img3); currentImgIndex=0; if(allImages.length>0)modalMainImg.src=allImages[0]; else modalMainImg.src='https://via.placeholder.com/400?text=No+Image'; modalThumb1.src=allImages[0]||'https://via.placeholder.com/400?text=No+Image1'; modalThumb2.src=allImages[1]||'https://via.placeholder.com/400?text=No+Image2'; modalThumb3.src=allImages[2]||'https://via.placeholder.com/400?text=No+Image3'; resetThumbs(); if(allImages[0]) modalThumb1.classList.add('selected'); selectedColor=''; selectedSize=''; colorPH.innerHTML=''; sizePH.innerHTML=''; if(p.coloroptions){ var carr=p.coloroptions.split(','); for(var i=0;i<carr.length;i++){ var c=carr[i].trim(); if(!c)continue; var sp=document.createElement('span'); sp.innerText=c; sp.onclick=function(col,elm){return function(){ pickColor(col,elm);};}(c,sp); if(i===0){ sp.classList.add('selected'); selectedColor=c;} colorPH.appendChild(sp);}} if(p.sizeoptions){ var sarr=p.sizeoptions.split(','); for(var j=0;j<sarr.length;j++){ var sizeX=sarr[j].trim(); if(!sizeX)continue; var ssp=document.createElement('span'); ssp.innerText=sizeX; ssp.onclick=function(sz,elm){return function(){ pickSize(sz,elm);};}(sizeX,ssp); if(j===0){ ssp.classList.add('selected'); selectedSize=sizeX;} sizePH.appendChild(ssp);}} updateOrderDetails(); modal.style.display='flex';}";
-  
-  // Pick color
+
   m+="function pickColor(c,span){ Array.from(colorPH.children).forEach(function(ch){ch.classList.remove('selected');}); span.classList.add('selected'); selectedColor=c; updateOrderDetails();}";
-  
-  // Pick size
   m+="function pickSize(c,span){ Array.from(sizePH.children).forEach(function(ch){ch.classList.remove('selected');}); span.classList.add('selected'); selectedSize=c; updateOrderDetails();}";
-  
-  // Reset thumbnail selections
   m+="function resetThumbs(){ modalThumb1.classList.remove('selected'); modalThumb2.classList.remove('selected'); modalThumb3.classList.remove('selected');}";
-  
-  // Navigate images
   m+="arrowLeft.onclick=function(){ if(allImages.length<2)return; currentImgIndex=(currentImgIndex-1+allImages.length)%allImages.length; setMain();}; arrowRight.onclick=function(){ if(allImages.length<2)return; currentImgIndex=(currentImgIndex+1)%allImages.length; setMain();};";
   m+="function setMain(){ modalMainImg.src=allImages[currentImgIndex]; resetThumbs(); if(currentImgIndex===0)modalThumb1.classList.add('selected'); if(currentImgIndex===1)modalThumb2.classList.add('selected'); if(currentImgIndex===2)modalThumb3.classList.add('selected');}";
-  
-  // Thumbnail click
   m+="modalThumb1.onclick=function(){ if(!allImages[0])return; currentImgIndex=0; setMain();}; modalThumb2.onclick=function(){ if(!allImages[1])return; currentImgIndex=1; setMain();}; modalThumb3.onclick=function(){ if(!allImages[2])return; currentImgIndex=2; setMain();};";
-  
-  // Quantity controls
   m+="document.querySelector('.qty-minus').onclick=function(){ if(currentQty>1){ currentQty--; qtyValue.textContent=currentQty; updateOrderDetails();}};";
   m+="document.querySelector('.qty-plus').onclick=function(){ currentQty++; qtyValue.textContent=currentQty; updateOrderDetails();};";
-  
-  // Update order details
   m+="function updateOrderDetails(){ var total=basePrice*currentQty; itemTotal.textContent=fixedCurrencySymbol+basePrice.toFixed(2)+' x '+currentQty+' = '+fixedCurrencySymbol+(total.toFixed(2)); if(shippingFee===0){ shippingCost.textContent='FREE'; } else{ shippingCost.textContent=fixedCurrencySymbol+shippingFee.toFixed(2);} returnPolicy.textContent=returnsText; var grand=total+shippingFee; subtotalValue.textContent=fixedCurrencySymbol+grand.toFixed(2); selectedCombos.textContent='('+selectedColor+', '+selectedSize+')';}";
-  
-  // Close modal
   m+="modalClose.onclick=function(){ modal.style.display='none'; currentProduct = null; }; window.onclick=function(e){ if(e.target===modal){ modal.style.display='none'; currentProduct = null;}};";
-  
-  // Open modal when product is clicked
   m+="document.querySelectorAll('.product-item').forEach(function(it){ var pd={}; pd.title=it.getAttribute('data-title')||''; pd.sold=it.getAttribute('data-sold')||''; pd.price=it.getAttribute('data-price')||'0'; pd.description=it.getAttribute('data-description')||''; pd.img1=it.getAttribute('data-img1')||''; pd.img2=it.getAttribute('data-img2')||''; pd.img3=it.getAttribute('data-img3')||''; pd.coloroptions=it.getAttribute('data-coloroptions')||''; pd.sizeoptions=it.getAttribute('data-sizeoptions')||''; pd.shipping=it.getAttribute('data-shipping')||'FREE'; pd.returns=it.getAttribute('data-returns')||'Accepted'; pd.paypalEmbed=it.getAttribute('data-paypalembed')||''; pd.paypalLink=it.getAttribute('data-paypallink')||''; it.addEventListener('click',function(){ openModal(pd);}); var buy=it.querySelector('.buy-now'); if(buy){ buy.addEventListener('click',function(ev){ ev.stopPropagation(); ev.preventDefault(); openModal(pd);});}});";
-  
-  // Handle Buy Now in Modal
+
   m+="document.querySelector('.buy-now-btn').onclick = function(){";
   m+="  if (!currentProduct) return;";
   m+="  if (paymentMethod === 'paypalEmail') {";
-  m+="    var url = \"https://www.paypal.com/cgi-bin/webscr?cmd=_xclick\"";
-  m+="    + \"&business=\" + encodeURIComponent(paypalEmail)";
-  m+="    + \"&item_name=\" + encodeURIComponent(currentProduct.title)";
-  m+="    + \"&amount=\" + encodeURIComponent(currentProduct.price)";
-  m+="    + \"&currency_code=\" + encodeURIComponent(paypalCurrency);";
-  m+="    window.open(url, '_blank');";
+  m+="    var paypalForm = document.getElementById('paypalForm');";
+  m+="    paypalForm.elements['business'].value = paypalEmail;";
+  m+="    paypalForm.elements['item_name'].value = currentProduct.title + ' - Color: ' + selectedColor + ', Size: ' + selectedSize + ', Qty: ' + currentQty;";
+  m+="    paypalForm.elements['amount'].value = (basePrice * currentQty).toFixed(2);";
+  m+="    paypalForm.elements['currency_code'].value = paypalCurrency;";
+  m+="    paypalForm.submit();";
   m+="  } else if (paymentMethod === 'paypalLink' && currentProduct.paypalLink) {";
   m+="    window.open(currentProduct.paypalLink, '_blank');";
   m+="  } else if (paymentMethod === 'paypalEmbed' && currentProduct.paypalEmbed) {";
-  m+="    var newWin = window.open(\"\", \"_blank\");";
+  m+="    var newWin = window.open('', '_blank');";
   m+="    newWin.document.write(currentProduct.paypalEmbed);";
   m+="  } else {";
-  m+="    alert(\"Payment integration not configured.\");";
+  m+="    alert('Payment integration not configured.');";
   m+="  }";
   m+="};";
-  
+
   m+="})();<\/script>";
   return m;
 }
@@ -945,6 +935,7 @@ function escapeHTML(str){
     }
   });
 }
+
 </script>
 </body>
 </html>
