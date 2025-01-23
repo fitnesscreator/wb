@@ -179,25 +179,7 @@
         </form>
       </div>
 
-      <div class="section-card">
-        <h2>Payment Integration</h2>
-        <form>
-          <label>Your Paypal currency</label>
-          <input id="paypalCurrency" type="text" placeholder="e.g. USD" required>
-
-          <label>Select Payment Method</label>
-          <select id="paymentMethod" required>
-            <option value="paypalEmail">Paypal Email</option>
-            <option value="paypalEmbed">Paypal Button Embed Code</option>
-            <option value="paypalLink">Paypal Button Link</option>
-          </select>
-
-          <div id="paypalEmailField">
-            <label>Paypal Email</label>
-            <input id="paypalEmail" type="email" placeholder="Email..." required>
-          </div>
-        </form>
-      </div>
+      <!-- Payment Integration section removed -->
 
       <div class="section-card">
         <h2>Add Products</h2>
@@ -213,6 +195,9 @@
 
           <label>3rd Image URL (optional)</label>
           <input id="image3" type="text" placeholder="https://example.com/product3.jpg">
+
+          <label>Currency</label>
+          <input id="productCurrency" type="text" placeholder="e.g. USD" required>
 
           <label>Number Sold</label>
           <input id="sold" type="text" placeholder="e.g. 500 (blank or 0 to hide)" required>
@@ -238,14 +223,20 @@
           <label>Description</label>
           <textarea id="description" rows="3" placeholder="Describe the product here" required></textarea>
 
+          <label>Select PayPal Payment Method</label>
+          <select id="productPaymentMethod" required>
+            <option value="paypalEmbed">PayPal Button Embed Code</option>
+            <option value="paypalLink">PayPal Button Link</option>
+          </select>
+
           <div id="productEmbedField" style="display:none;">
-            <label>Paypal Button Embed Code (for this product)</label>
-            <textarea id="productEmbed" rows="2" placeholder="Embed code..." required></textarea>
+            <label>PayPal Button Embed Code (for this product)</label>
+            <textarea id="productEmbed" rows="2" placeholder="Embed code..."></textarea>
           </div>
 
           <div id="productLinkField" style="display:none;">
-            <label>Paypal Button Link (for this product)</label>
-            <textarea id="productLink" rows="2" placeholder="Button link..." required></textarea>
+            <label>PayPal Button Link (for this product)</label>
+            <textarea id="productLink" rows="2" placeholder="Button link..."></textarea>
           </div>
 
           <button type="button" onclick="addProduct()">Add Product</button>
@@ -327,45 +318,43 @@ var products    = [];
 var reviews     = [];
 var aboutData   = { title:'', paragraph:'', image:'' };
 var contactData = { instagram:'', tiktok:'', facebook:'', email:'' };
-var paymentIntegration = { method:'paypalEmail', paypalEmail:'', paypalEmbed:'', paypalLink:'', currency:'' };
 var finalHTML   = '';
 
 window.onload=function(){
+  // Hero Section inputs
   document.getElementById('logo').oninput     = updatePreview;
   document.getElementById('banner').oninput   = updatePreview;
   document.getElementById('heroText').oninput = updatePreview;
   document.getElementById('ctaText').oninput  = updatePreview;
 
-  // About
+  // About Section inputs
   document.getElementById('aboutTitle').oninput     = updatePreview;
   document.getElementById('aboutParagraph').oninput = updatePreview;
   document.getElementById('aboutImage').oninput     = updatePreview;
 
-  // Contact
+  // Contact Section inputs
   document.getElementById('contactInstagram').oninput = updatePreview;
   document.getElementById('contactTiktok').oninput    = updatePreview;
   document.getElementById('contactFacebook').oninput  = updatePreview;
   document.getElementById('contactEmail').oninput     = updatePreview;
 
-  // Payment Integration events
-  document.getElementById('paypalCurrency').oninput = updatePreview;
-  document.getElementById('paymentMethod').onchange = function(){
+  // Add Products section events
+  document.getElementById('productPaymentMethod').onchange = function(){
     var method = this.value;
-    paymentIntegration.method = method;
-    document.getElementById('paypalEmailField').style.display = method==='paypalEmail'?'block':'none';
-    document.getElementById('productEmbedField').style.display = method==='paypalEmbed'?'block':'none';
-    document.getElementById('productLinkField').style.display = method==='paypalLink'?'block':'none';
+    document.getElementById('productEmbedField').style.display = method === 'paypalEmbed' ? 'block' : 'none';
+    document.getElementById('productLinkField').style.display = method === 'paypalLink' ? 'block' : 'none';
     updatePreview();
   };
-  document.getElementById('paypalEmail').oninput = updatePreview;
-  updateAddProductFormFields();
-
   document.getElementById('productEmbed').oninput = updatePreview;
   document.getElementById('productLink').oninput = updatePreview;
+
+  // Initialize Add Products payment method fields
+  updateAddProductFormFields();
 };
 
+/* Function to handle showing/hiding PayPal fields in Add Products */
 function updateAddProductFormFields() {
-  var method = document.getElementById('paymentMethod').value;
+  var method = document.getElementById('productPaymentMethod').value;
   if(method === 'paypalEmbed') {
      document.getElementById('productEmbedField').style.display='block';
      document.getElementById('productLinkField').style.display='none';
@@ -384,26 +373,27 @@ function addProduct(){
   var img1         = document.getElementById('image1').value.trim();
   var img2         =document.getElementById('image2').value.trim();
   var img3         = document.getElementById('image3').value.trim();
+  var currency     = document.getElementById('productCurrency').value.trim();
   var sold         = document.getElementById('sold').value.trim();
   var price        = document.getElementById('price').value.trim();
-  var curr         = paymentIntegration.currency || document.getElementById('paypalCurrency').value.trim();
   var shipping     = document.getElementById('shipping').value.trim();
   var returns      = document.getElementById('returns').value;
   var coloroptions = document.getElementById('colorOptions').value.trim();
   var sizeoptions  = document.getElementById('sizeOptions').value.trim();
   var desc         = document.getElementById('description').value.trim();
-
+  var paymentMethod = document.getElementById('productPaymentMethod').value;
   var productEmbed = "";
   var productLink = "";
-  if(paymentIntegration.method === 'paypalEmbed') {
+
+  if(paymentMethod === 'paypalEmbed') {
     productEmbed = document.getElementById('productEmbed').value.trim();
   }
-  if(paymentIntegration.method === 'paypalLink') {
+  if(paymentMethod === 'paypalLink') {
     productLink = document.getElementById('productLink').value.trim();
   }
 
-  if(!img1 || !price || !desc){
-    alert("Please fill out at least: 1st Image, Price, and Description.");
+  if(!img1 || !price || !desc || !currency){
+    alert("Please fill out at least: Currency, 1st Image, Price, and Description.");
     return;
   }
   var imgs=[img1];
@@ -423,42 +413,45 @@ function addProduct(){
     images:imgs,
     sold:soldVal,
     price:price,
-    currency:curr,
+    currency:currency,
     shipping:shippingVal,
     returns:returns,
     coloroptions:coloroptions,
     sizeoptions:sizeoptions,
     description:desc
   };
-  if(paymentIntegration.method === 'paypalEmbed') {
+  if(paymentMethod === 'paypalEmbed') {
     product.paypalEmbed = productEmbed;
   }
-  if(paymentIntegration.method === 'paypalLink') {
+  if(paymentMethod === 'paypalLink') {
     product.paypalLink = productLink;
   }
 
   products.push(product);
 
+  // Clear the form fields
   document.getElementById('productTitle').value='';
   document.getElementById('image1').value='';
   document.getElementById('image2').value='';
   document.getElementById('image3').value='';
+  document.getElementById('productCurrency').value='';
   document.getElementById('sold').value='';
   document.getElementById('price').value='';
   document.getElementById('shipping').value='';
   document.getElementById('description').value='';
   document.getElementById('colorOptions').value='';
   document.getElementById('sizeOptions').value='';
-  if(paymentIntegration.method === 'paypalEmbed') {
+  if(paymentMethod === 'paypalEmbed') {
     document.getElementById('productEmbed').value='';
   }
-  if(paymentIntegration.method === 'paypalLink') {
+  if(paymentMethod === 'paypalLink') {
     document.getElementById('productLink').value='';
   }
 
   updatePreview();
   showProductList();
 }
+
 function showProductList(){
   var listing=document.getElementById('productListing');
   listing.innerHTML='<h3 style="margin-top:20px;">Products in Builder</h3>';
@@ -504,6 +497,7 @@ function addReview(){
   updatePreview();
   showReviewList();
 }
+
 function showReviewList(){
   var rlist=document.getElementById('reviewListing');
   rlist.innerHTML='<h3 style="margin-top:20px;">Reviews in Builder</h3>';
@@ -545,11 +539,6 @@ function updatePreview(){
   contactData.tiktok   =document.getElementById('contactTiktok').value.trim();
   contactData.facebook =document.getElementById('contactFacebook').value.trim();
   contactData.email    =document.getElementById('contactEmail').value.trim();
-
-  // payment integration
-  paymentIntegration.currency = document.getElementById('paypalCurrency').value.trim();
-  paymentIntegration.method = document.getElementById('paymentMethod').value;
-  paymentIntegration.paypalEmail = document.getElementById('paypalEmail').value.trim();
 
   finalHTML=buildFinalHTML();
   var iframe=document.getElementById('previewFrame');
@@ -768,10 +757,10 @@ function buildHero(){
 function buildProductsSection(){
   if(products.length===0)return "<section id='products'><div class='products-grid'></div></section>";
   var html="";
-  var currencySymbol = escapeHTML(paymentIntegration.currency || "$");
   for(var i=0;i<products.length;i++){
     var p=products[i];
     var mainImg=(p.images.length>0)?escapeHTML(p.images[0]):"";
+    var currencySymbol = getCurrencySymbol(p.currency);
     html+="<div class='product-item'"+
       " data-title='"+escapeHTML(p.title||"")+"'"+
       " data-img1='"+escapeHTML(p.images[0]||"")+"'"+
@@ -779,6 +768,7 @@ function buildProductsSection(){
       " data-img3='"+escapeHTML(p.images[2]||"")+"'"+
       " data-sold='"+escapeHTML(p.sold||"")+"'"+
       " data-price='"+escapeHTML(p.price||"0")+"'"+
+      " data-currency='"+escapeHTML(p.currency||"$")+"'"+
       " data-coloroptions='"+escapeHTML(p.coloroptions||"")+"'"+
       " data-sizeoptions='"+escapeHTML(p.sizeoptions||"")+"'"+
       " data-description='"+escapeHTML(p.description||"")+"'"+
@@ -795,6 +785,18 @@ function buildProductsSection(){
     html+="</div></div>";
   }
   return "<section id='products'><div class='products-grid'>"+html+"</div></section>";
+}
+
+/* Function to get currency symbol from currency code */
+function getCurrencySymbol(currencyCode){
+  const symbols = {
+    USD: "$",
+    EUR: "€",
+    GBP: "£",
+    JPY: "¥",
+    // add more as needed
+  };
+  return symbols[currencyCode.toUpperCase()] || currencyCode + " ";
 }
 
 /* Build reviews from reviews[] */
@@ -866,30 +868,15 @@ function buildModal(){
   m+="<div class='order-details-panel'><h3>Order Details</h3><div class='order-item'><label>Price x Quantity:</label><span class='value' id='itemTotal'>--</span></div><div class='order-item'><label>Selection:</label><span class='value' id='selectedCombos'>(Color, Size)</span></div><div class='order-item'><label>Shipping:</label><span class='value' id='shippingCost'>$0.00</span></div><div class='order-item'><label>Returns:</label><span class='value' id='returnPolicy'></span></div><div class='shipping-info' id='shippingInfo'><strong>Shipping Information:</strong> If your PayPal shipping address or contact details have changed, please update them at checkout so we send your goodies to the right place!</div><div class='subtotal'>Total: <span id='subtotalValue'>$0.00</span></div></div>";
   m+="<div class='modal-actions'><button class='buy-now-btn'>Buy Now</button></div>";
   
-  // Static hidden PayPal form
-  m+="<form id='paypalForm' action='https://www.paypal.com/cgi-bin/webscr' method='post' style='display:none;'>";
-  m+="<input type='hidden' name='cmd' value='_xclick' />";
-  m+="<input type='hidden' name='business' value='' />";
-  m+="<input type='hidden' name='item_name' value='' />";
-  m+="<input type='hidden' name='item_number' value='' />";
-  m+="<input type='hidden' name='amount' value='' />";
-  m+="<input type='hidden' name='shipping' value='' />";
-  m+="<input type='hidden' name='currency_code' value='USD' />";
-  m+="<input type='hidden' name='quantity' value='1' />";
-  m+="</form>";
-  
-  m+="</div></div></div>";
+  // Remove PayPal form as email integration is removed
 
   m+="<script>(function(){";
-  m+="var fixedCurrencySymbol = '"+escapeHTML(paymentIntegration.currency || "$")+"';";
-  m+="var paymentMethod = '"+escapeHTML(paymentIntegration.method)+"';";
-  m+="var paypalEmail = '"+escapeHTML(paymentIntegration.paypalEmail)+"';";
-  m+="var paypalCurrency = '"+escapeHTML(paymentIntegration.currency || "USD")+"';";
+  m+="var getCurrencySymbol = function(currencyCode){ const symbols = { USD: '$', EUR: '€', GBP: '£', JPY: '¥' }; return symbols[currencyCode.toUpperCase()] || currencyCode + ' '; };";
   m+="var currentProduct = null;";
   m+="var modal=document.getElementById('productModal'); var modalClose=document.querySelector('.modal-close'); var modalTitle=document.getElementById('modalTitle'); var modalPrice=document.getElementById('modalPrice'); var modalSold=document.getElementById('modalSold'); var modalDescription=document.getElementById('modalDescription'); var modalMainImg=document.getElementById('modalMainImg'); var modalThumb1=document.getElementById('modalThumb1'); var modalThumb2=document.getElementById('modalThumb2'); var modalThumb3=document.getElementById('modalThumb3'); var arrowLeft=document.getElementById('arrowLeft'); var arrowRight=document.getElementById('arrowRight'); var colorPH=document.getElementById('colorPlaceholders'); var sizePH=document.getElementById('sizePlaceholders'); var qtyValue=document.getElementById('qtyValue'); var itemTotal=document.getElementById('itemTotal'); var shippingCost=document.getElementById('shippingCost'); var returnPolicy=document.getElementById('returnPolicy'); var subtotalValue=document.getElementById('subtotalValue'); var selectedCombos=document.getElementById('selectedCombos'); var currentQty=1, basePrice=0, shippingFee=0, returnsText='Accepted'; var allImages=[], currentImgIndex=0; var selectedColor='', selectedSize='';";
 
-  m+="function openModal(p){ currentProduct = p; modalTitle.textContent=p.title||''; modalPrice.textContent=fixedCurrencySymbol+(p.price||'0'); if(p.sold){modalSold.textContent=p.sold+' Sold';}else{modalSold.textContent='';} modalDescription.textContent=p.description||''; basePrice=parseFloat(p.price)||0; if(p.shipping==='FREE'){ shippingFee=0;} else{ shippingFee=parseFloat(p.shipping)||0;} returnsText=p.returns||'Accepted'; currentQty=1; qtyValue.textContent=currentQty;";
-  m+="allImages=[]; if(p.img1)allImages.push(p.img1); if(p.img2)allImages.push(p.img2); if(p.img3)allImages.push(p.img3); currentImgIndex=0; if(allImages.length>0)modalMainImg.src=allImages[0]; else modalMainImg.src='https://via.placeholder.com/400?text=No+Image'; modalThumb1.src=allImages[0]||'https://via.placeholder.com/400?text=No+Image1'; modalThumb2.src=allImages[1]||'https://via.placeholder.com/400?text=No+Image2'; modalThumb3.src=allImages[2]||'https://via.placeholder.com/400?text=No+Image3'; resetThumbs(); if(allImages[0]) modalThumb1.classList.add('selected'); selectedColor=''; selectedSize=''; colorPH.innerHTML=''; sizePH.innerHTML=''; if(p.coloroptions){ var carr=p.coloroptions.split(','); for(var i=0;i<carr.length;i++){ var c=carr[i].trim(); if(!c)continue; var sp=document.createElement('span'); sp.innerText=c; sp.onclick=function(col,elm){return function(){ pickColor(col,elm);};}(c,sp); if(i===0){ sp.classList.add('selected'); selectedColor=c;} colorPH.appendChild(sp);}} if(p.sizeoptions){ var sarr=p.sizeoptions.split(','); for(var j=0;j<sarr.length;j++){ var sizeX=sarr[j].trim(); if(!sizeX)continue; var ssp=document.createElement('span'); ssp.innerText=sizeX; ssp.onclick=function(sz,elm){return function(){ pickSize(sz,elm);};}(sizeX,ssp); if(j===0){ ssp.classList.add('selected'); selectedSize=sizeX;} sizePH.appendChild(ssp);}} updateOrderDetails(); modal.style.display='flex';}";
+  m+="function openModal(p){ currentProduct = p; modalTitle.textContent=p.title||''; modalPrice.textContent=getCurrencySymbol(p.currency || '$')+(p.price||'0'); if(p.sold){modalSold.textContent=p.sold+' Sold';}else{modalSold.textContent='';} modalDescription.textContent=p.description||''; basePrice=parseFloat(p.price)||0; if(p.shipping==='FREE'){ shippingFee=0;} else{ shippingFee=parseFloat(p.shipping)||0;} returnsText=p.returns||'Accepted'; currentQty=1; qtyValue.textContent=currentQty;";
+  m+="allImages=[]; if(p.images[0])allImages.push(p.images[0]); if(p.images[1])allImages.push(p.images[1]); if(p.images[2])allImages.push(p.images[2]); currentImgIndex=0; if(allImages.length>0)modalMainImg.src=allImages[0]; else modalMainImg.src='https://via.placeholder.com/400?text=No+Image'; modalThumb1.src=allImages[0]||'https://via.placeholder.com/400?text=No+Image1'; modalThumb2.src=allImages[1]||'https://via.placeholder.com/400?text=No+Image2'; modalThumb3.src=allImages[2]||'https://via.placeholder.com/400?text=No+Image3'; resetThumbs(); if(allImages[0]) modalThumb1.classList.add('selected'); selectedColor=''; selectedSize=''; colorPH.innerHTML=''; sizePH.innerHTML=''; if(p.coloroptions){ var carr=p.coloroptions.split(','); for(var i=0;i<carr.length;i++){ var c=carr[i].trim(); if(!c)continue; var sp=document.createElement('span'); sp.innerText=c; sp.onclick=function(col,elm){return function(){ pickColor(col,elm);};}(c,sp); if(i===0){ sp.classList.add('selected'); selectedColor=c;} colorPH.appendChild(sp);}} if(p.sizeoptions){ var sarr=p.sizeoptions.split(','); for(var j=0;j<sarr.length;j++){ var sizeX=sarr[j].trim(); if(!sizeX)continue; var ssp=document.createElement('span'); ssp.innerText=sizeX; ssp.onclick=function(sz,elm){return function(){ pickSize(sz,elm);};}(sizeX,ssp); if(j===0){ ssp.classList.add('selected'); selectedSize=sizeX;} sizePH.appendChild(ssp);}} updateOrderDetails(); modal.style.display='flex';}";
 
   m+="function pickColor(c,span){ Array.from(colorPH.children).forEach(function(ch){ch.classList.remove('selected');}); span.classList.add('selected'); selectedColor=c; updateOrderDetails();}";
   m+="function pickSize(c,span){ Array.from(sizePH.children).forEach(function(ch){ch.classList.remove('selected');}); span.classList.add('selected'); selectedSize=c; updateOrderDetails();}";
@@ -899,29 +886,24 @@ function buildModal(){
   m+="modalThumb1.onclick=function(){ if(!allImages[0])return; currentImgIndex=0; setMain();}; modalThumb2.onclick=function(){ if(!allImages[1])return; currentImgIndex=1; setMain();}; modalThumb3.onclick=function(){ if(!allImages[2])return; currentImgIndex=2; setMain();};";
   m+="document.querySelector('.qty-minus').onclick=function(){ if(currentQty>1){ currentQty--; qtyValue.textContent=currentQty; updateOrderDetails();}};";
   m+="document.querySelector('.qty-plus').onclick=function(){ currentQty++; qtyValue.textContent=currentQty; updateOrderDetails();};";
-  m+="function updateOrderDetails(){ var total=basePrice*currentQty; itemTotal.textContent=fixedCurrencySymbol+basePrice.toFixed(2)+' x '+currentQty+' = '+fixedCurrencySymbol+(total.toFixed(2)); if(shippingFee===0){ shippingCost.textContent='FREE'; } else{ shippingCost.textContent=fixedCurrencySymbol+shippingFee.toFixed(2);} returnPolicy.textContent=returnsText; var grand=total+shippingFee; subtotalValue.textContent=fixedCurrencySymbol+grand.toFixed(2); selectedCombos.textContent='('+selectedColor+', '+selectedSize+')';}";
-  m+="modalClose.onclick=function(){ modal.style.display='none'; currentProduct = null; }; window.onclick=function(e){ if(e.target===modal){ modal.style.display='none'; currentProduct = null;}};";
-  m+="document.querySelectorAll('.product-item').forEach(function(it){ var pd={}; pd.title=it.getAttribute('data-title')||''; pd.sold=it.getAttribute('data-sold')||''; pd.price=it.getAttribute('data-price')||'0'; pd.description=it.getAttribute('data-description')||''; pd.img1=it.getAttribute('data-img1')||''; pd.img2=it.getAttribute('data-img2')||''; pd.img3=it.getAttribute('data-img3')||''; pd.coloroptions=it.getAttribute('data-coloroptions')||''; pd.sizeoptions=it.getAttribute('data-sizeoptions')||''; pd.shipping=it.getAttribute('data-shipping')||'FREE'; pd.returns=it.getAttribute('data-returns')||'Accepted'; pd.paypalEmbed=it.getAttribute('data-paypalembed')||''; pd.paypalLink=it.getAttribute('data-paypallink')||''; it.addEventListener('click',function(){ openModal(pd);}); var buy=it.querySelector('.buy-now'); if(buy){ buy.addEventListener('click',function(ev){ ev.stopPropagation(); ev.preventDefault(); openModal(pd);});}});";
+  m+="function updateOrderDetails(){ var total=basePrice*currentQty; itemTotal.textContent=getCurrencySymbol(currentProduct.currency || '$')+basePrice.toFixed(2)+' x '+currentQty+' = '+getCurrencySymbol(currentProduct.currency || '$')+(total.toFixed(2)); if(shippingFee===0){ shippingCost.textContent='FREE'; } else{ shippingCost.textContent=getCurrencySymbol(currentProduct.currency || '$')+shippingFee.toFixed(2); } returnPolicy.textContent=returnsText; var grand=total+shippingFee; subtotalValue.textContent=getCurrencySymbol(currentProduct.currency || '$')+grand.toFixed(2); selectedCombos.textContent='('+selectedColor+', '+selectedSize+')';}";
 
+  m+="modalClose.onclick=function(){ modal.style.display='none'; currentProduct = null; }; window.onclick=function(e){ if(e.target===modal){ modal.style.display='none'; currentProduct = null;}};";
+
+  // Add event listeners to product items
+  m+="document.querySelectorAll('.product-item').forEach(function(it){ var pd={}; pd.title=it.getAttribute('data-title')||''; pd.sold=it.getAttribute('data-sold')||''; pd.price=it.getAttribute('data-price')||'0'; pd.currency=it.getAttribute('data-currency')||'$'; pd.description=it.getAttribute('data-description')||''; pd.images=[]; pd.images.push(it.getAttribute('data-img1')||''); pd.images.push(it.getAttribute('data-img2')||''); pd.images.push(it.getAttribute('data-img3')||''); pd.coloroptions=it.getAttribute('data-coloroptions')||''; pd.sizeoptions=it.getAttribute('data-sizeoptions')||''; pd.shipping=it.getAttribute('data-shipping')||'FREE'; pd.returns=it.getAttribute('data-returns')||'Accepted'; pd.paypalEmbed=it.getAttribute('data-paypalembed')||''; pd.paypalLink=it.getAttribute('data-paypallink')||''; it.addEventListener('click',function(){ openModal(pd);}); var buy=it.querySelector('.buy-now'); if(buy){ buy.addEventListener('click',function(ev){ ev.stopPropagation(); ev.preventDefault(); openModal(pd);});}});";
+
+  // Handle Buy Now button in modal
   m+="document.querySelector('.buy-now-btn').onclick = function(){";
   m+="  if (!currentProduct) return;";
-  m+="  if (paymentMethod === 'paypalEmail') {";
-  m+="    var paypalForm = document.getElementById('paypalForm');";
-  m+="    paypalForm.target = '_blank';";
-  m+="    paypalForm.elements['business'].value = paypalEmail;";
-  m+="    paypalForm.elements['item_name'].value = currentProduct.title + ' - Color: ' + selectedColor + ', Size: ' + selectedSize + ', Qty: ' + currentQty;";
-  m+="    paypalForm.elements['item_number'].value = currentProduct.item_number || '';";
-  m+="    paypalForm.elements['amount'].value = (basePrice * currentQty).toFixed(2);";
-  m+="    paypalForm.elements['shipping'].value = shippingFee.toFixed(2);";
-  m+="    paypalForm.elements['currency_code'].value = paypalCurrency;";
-  m+="    paypalForm.submit();";
-  m+="  } else if (paymentMethod === 'paypalLink' && currentProduct.paypalLink) {";
-  m+="    window.open(currentProduct.paypalLink, '_blank');";
-  m+="  } else if (paymentMethod === 'paypalEmbed' && currentProduct.paypalEmbed) {";
+  m+="  var currencySymbol = getCurrencySymbol(currentProduct.currency || '$');";
+  m+="  if (currentProduct.paypalEmbed) {";
   m+="    var newWin = window.open('', '_blank');";
   m+="    newWin.document.write(currentProduct.paypalEmbed);";
+  m+="  } else if (currentProduct.paypalLink) {";
+  m+="    window.open(currentProduct.paypalLink, '_blank');";
   m+="  } else {";
-  m+="    alert('Payment integration not configured.');";
+  m+="    alert('PayPal payment method not configured for this product.');";
   m+="  }";
   m+="};";
 
@@ -942,8 +924,6 @@ function escapeHTML(str){
     }
   });
 }
-
-
 
 </script>
 </body>
