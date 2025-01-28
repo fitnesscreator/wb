@@ -2,147 +2,273 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Responsive Builder (About & Contact Included)</title>
+  <title>Create Website</title>
   <style>
-    /* Basic builder layout */
+        /* Basic builder layout */
     body {
       margin: 0;
       padding: 0;
-      font-family: sans-serif;
-      background: #f4f4f4;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: #faf9ff;
+      color: #333;
       text-align: center;
+      line-height: 1.6;
     }
-    h1 {
-      margin-top: 20px;
-    }
-    .container {
-      max-width: 1200px;
-      margin: 20px auto;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+
+    /* Main container with Flexbox */
+    .main-container {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      max-width: 1400px;
+      margin: 0 auto 40px auto;
       padding: 20px;
+      gap: 20px;
     }
-    .forms-section {
-      width: 100%;
-      max-width: 500px;
-      margin-right: 20px;
-    }
+    /* Forms section */
+    /* Make the left forms scrollable */
+.forms-section {
+  flex: 1;
+  max-width: 500px;
+  padding: 20px;
+
+  /* ADD THESE LINES */
+  height: calc(100vh - 80px); /* or whatever height you like */
+  overflow-y: auto;           /* let it scroll independently */
+}
+
+/* Increase space between forms from 30px to 40px (for example) */
+form {
+  margin-bottom: 60px; /* was 30px before */
+}
+
+
     .forms-section h2 {
-      text-align: center;
-      margin-top: 0;
+      text-align: left;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+      color: #555;
+      position: relative; 
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .forms-section h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(to bottom, #5e91ff, #9462ee);
+      margin-right: 10px;
+    }
+    /* Form styling */
+    form {
+      margin-bottom: 30px;
+      background: transparent;
     }
     label {
       display: block;
-      margin-top: 10px;
-      font-weight: bold;
+      margin-top: 15px;
+      font-weight: 500;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    label img {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+      vertical-align: middle;
     }
     input, textarea, select {
       width: 100%;
-      max-width: 450px;
+      padding: 10px;
       margin-top: 5px;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
       box-sizing: border-box;
       font-size: 14px;
+      transition: border-color 0.2s;
+      background: #fff;
+      color: #333;
+      spellcheck: false; 
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #2196f3;
+      outline: none;
     }
     button {
-      background: #2196f3;
       color: #fff;
       border: none;
-      border-radius: 5px;
-      padding: 10px 20px;
-      margin-top: 15px;
-      margin-right: 10px;
+      border-radius: 4px;
+      padding: 12px 20px;
+      margin-top: 20px;
       font-size: 14px;
       cursor: pointer;
-      transition: background-color 0.3s;
+      transition: background 0.3s;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-    button:hover {
-      background: #0b7dda;
+    button[onclick="addProduct()"],
+    button[onclick="addReview()"] {
+      background: linear-gradient(to right, #6561e0, #61a3ff);
     }
-    hr {
-      margin: 20px 0;
-      border: none;
-      border-top: 1px solid #ccc;
+    button[onclick="addProduct()"]:hover,
+    button[onclick="addReview()"]:hover {
+      background: linear-gradient(to right, #5450c0, #5090d0);
+    }
+    button:hover:not([onclick="addProduct()"]):not([onclick="addReview()"]) {
+      background: #1976d2;
     }
 
-    /* New card styling for sections */
-    .section-card {
-      border: 1px solid blue;
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 20px;
-    }
-
-    /* Buttons */
+    /* Buttons for Generate & Download and Show Generated Code */
     #downloadBtn {
-      background: #4caf50;
-      font-weight: bold;
+      background: linear-gradient(to right, #6561e0, #61a3ff);
     }
     #downloadBtn:hover {
-      background: #45a049;
+      background: linear-gradient(to right, #5450c0, #5090d0);
     }
     #showCodeBtn {
-      background: #ff9800;
+      background: #17a2b8;
+      margin-top: 10px;
     }
     #showCodeBtn:hover {
-      background: #e68a00;
+      background: #138496;
     }
 
-    /* Right side: live preview in an iframe */
+    /* Stylized Add Image Button */
+    #addImagesBtn {
+      background: transparent;
+      border: 1px solid #6561e0;
+      color: #6561e0;
+      border-radius: 4px;
+      padding: 12px 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    #addImagesBtn .arrow {
+      display: inline-block;
+      margin-left: 8px;
+      transform: rotate(-45deg);
+      transition: transform 0.2s;
+    }
+    #addImagesBtn:hover {
+      background: linear-gradient(to right, #6561e0, #61a3ff);
+      color: #fff;
+      border: none;
+    }
+    #addImagesBtn:hover .arrow {
+      transform: rotate(-45deg) translateX(5px);
+    }
+
+    #uploadBtn {
+      background: linear-gradient(to right, #fa8b5c, #f6d365);
+      border: none;
+      color: #fff;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #uploadBtn:hover {
+      background: linear-gradient(to right, #f67a45, #f5c64d);
+    }
+    
+    /* Rotate the Upload Button Arrow */
+#uploadBtn .arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  transform: rotate(-45deg); /* Rotates the arrow upwards and to the right */
+}
+
+#uploadBtn:hover .arrow {
+  transform: rotate(135deg); /* Example rotation on hover for interactivity */
+}
+
+
+    hr {
+      margin: 30px 0;
+      border: none;
+      border-top: 1px solid #eee;
+    }
+
+    /* Preview section */
     .preview-section {
-      flex: 1;
-      min-width: 320px;
-      padding: 10px;
+      flex: 1.2; 
+      max-width: 900px; 
+      background: #fff;
+      border: 1px solid #eee; 
+      border-radius: 8px; 
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
       align-items: center;
     }
     .preview-section h2 {
-      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 1.5rem;
+      color: #555;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+    }
+    .preview-section h2::before {
+      content: '';
+      display: inline-block;
+      width: 4px;
+      height: 24px;
+      background: linear-gradient(to bottom, #5e91ff, #9462ee);
+      margin-right: 10px;
     }
     #previewFrame {
       width: 100%;
       min-height: 600px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       background: #fff;
     }
 
-    /* Product & Reviews listing beneath the preview */
-    #productListing, #reviewListing {
-      margin-top: 20px;
-      text-align: left;
-      width: 100%;
-      max-width: 600px;
-    }
-    .product-list-item, .review-list-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #f9f9f9;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      padding: 5px 10px;
-      margin: 5px 0;
-    }
-    .delete-btn {
-      background: #f44336;
-      border: none;
-      color: #fff;
-      border-radius: 4px;
-      padding: 5px 10px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .delete-btn:hover {
-      background: #d32f2f;
-    }
+    /* Container for management lists inside the preview section */
+    /* Enhanced Management Items */
+#managementContainer div {
+  margin-bottom: 20px;
+}
+
+#managementContainer h3 {
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+  color: #555;
+}
+
+/* Smaller Delete Buttons */
+#managementContainer button {
+  padding: 5px 10px;
+  background-color: #ff4d4d;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+#managementContainer button:hover {
+  background-color: #e60000;
+}
+
 
     /* Show/hide code output */
     #output {
@@ -150,106 +276,620 @@
       width: 80%;
       height: 200px;
       margin: 20px auto;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 12px;
+      background: #f9f9f9;
+      overflow: auto;
+      text-align: left;
     }
+
+    /* Responsive adjustments */
+    @media (max-width: 1400px) {
+      .preview-section {
+        flex: 1;
+        max-width: 700px;
+      }
+    }
+    @media (max-width: 992px) {
+      .main-container {
+        flex-direction: column;
+      }
+      .forms-section, .preview-section {
+        max-width: 100%;
+      }
+    }
+
+    /* Custom Currency Dropdown Styles */
+    .currency-dropdown {
+      position: relative;
+      width: 100%;
+    }
+    .currency-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+      spellcheck: false;
+    }
+    .currency-list {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-top: none;
+      background: #fff;
+      z-index: 1000;
+      display: none;
+    }
+    .currency-list.visible {
+      display: block;
+    }
+    .currency-item {
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .currency-item:hover {
+      background: #f0f0f0;
+    }
+    .currency-flag {
+      margin-right: 10px;
+      font-size: 1.2rem;
+    }
+    .currency-code {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+    .currency-name {
+      color: #555;
+    }
+    .currency-search {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+    .currency-search input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    /* Stylized Add Product Form */
+    #addProductForm {
+      border: 1px solid #5e91ff; 
+      border-radius: 8px; 
+      padding: 20px;
+      margin-top: 15px;
+    }
+   
+
+    /* Stylized Upload Photos Form */
+    #uploadPhotosForm {
+      border: 1px solid #5e91ff; 
+      border-radius: 8px; 
+      padding: 20px;
+      margin-top: 15px;
+      background: transparent;
+    }
+    #uploadPhotosForm h2::before {
+      background: #5e91ff; 
+    }
+    #uploadPhotosForm p {
+      text-align: left;
+      margin-bottom: 20px;
+      color: #555;
+      font-size: 0.9rem;
+    }
+
+    /* Payment Method Label Enhancements */
+    .payment-method-label {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      margin-top: 15px;
+    }
+    .payment-method-row {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .payment-method-row img {
+      width: 24px;
+      height: 24px;
+    }
+    .payment-method-row span {
+      font-weight: 500;
+      margin-left: 4px;
+    }
+    .payment-method-select {
+      width: 100%;
+    }
+    .payment-method-select select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #fff;
+      color: #333;
+      cursor: pointer;
+    }
+
+    /* Add Contact Form row */
+    .add-contact-form-row {
+      margin-top: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .add-contact-form-row img {
+      width: 40px;
+      height: 40px;
+    }
+    .add-contact-form-row span {
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    #addContactFormButton {
+      background: linear-gradient(to right, #ff6c6c, #ffc371);
+      color: #fff !important;
+      font-weight: 600;
+    }
+    #addContactFormButton:hover {
+      background: linear-gradient(to right, #ff4c4c, #ffb347);
+    }
+    #addContactFormButton.success {
+      background: green !important;
+      cursor: default;
+    }
+
+    /* The contact form modal */
+    .modal {
+      display: none; 
+      position: fixed; 
+      z-index: 9999; 
+      left: 0; 
+      top: 0; 
+      width: 100%; 
+      height: 100%; 
+      overflow: auto; 
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-content {
+      background: #fff;
+      margin: auto;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 6px;
+      position: relative;
+      padding: 20px;
+    }
+    .modal-close-contact {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .modal-content h2 {
+      margin-top: 0;
+    }
+    .modal-content textarea {
+      margin-top: 15px;
+    }
+    #confirmAddContactFormButton {
+      background: linear-gradient(to right, #ff6c6c, #ffc371);
+      color: #fff;
+      font-weight: 600;
+      margin-top: 20px;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #confirmAddContactFormButton:hover {
+      background: linear-gradient(to right, #ff4c4c, #ffb347);
+    }
+
+    /* Contact Us form in the builder: thin border & same style */
+    #contactUsForm {
+      border: 1px solid #5e91ff; 
+      border-radius: 8px; 
+      padding: 20px;
+      margin-top: 15px;
+      background: transparent;
+    }
+   
+    
+    /* Gradient Line for Section Titles */
+.section-title {
+  position: relative;
+  display: inline-block;
+  padding-left: 25px; /* Increased padding for better spacing */
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.section-title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px; /* Increased width for better visibility */
+  height: 35px; /* Increased height for a more prominent line */
+  background: linear-gradient(to bottom, #6561e0, #a862ea);
+  border-radius: 3px;
+}
+
+/* Track Your Customers Section */
+.track-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.track-icons img {
+  width: 20px;
+  height: 20px;
+}
+
+.track-icons span {
+  font-size: 1rem;
+  color: #555;
+  text-align: left;
+}
+
+/* Add Feature Button */
+#addFeatureBtn {
+  padding: 10px 20px;
+  background: linear-gradient(to right, #6561e0, #a862ea);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+#addFeatureBtn:hover {
+  background: linear-gradient(to right, #5450c0, #a862ea);
+}
+
+/* Track Customers Modal */
+#trackModal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 10000; /* Ensure it appears above other elements */
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.5);
+  justify-content: center;
+  align-items: center;
+}
+
+#trackModal .modal-content {
+  background-color: #fff;
+  margin: auto;
+  padding: 20px;
+  border-radius: 6px;
+  width: 90%;
+  max-width: 600px;
+  position: relative;
+}
+
+.modal-close-track {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#trackModal textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+#confirmAddFeatureBtn {
+  padding: 10px 20px;
+  background: linear-gradient(to right, #6561e0, #a862ea);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+#confirmAddFeatureBtn:hover {
+  background: linear-gradient(to right, #5450c0, #a862ea);
+}
+    
+    /* Give all builder forms a consistent thin border & style */
+#addReviewForm,
+#aboutForm,
+#trackCustomersForm {
+  border: 1px solid #5e91ff; 
+  border-radius: 8px; 
+  padding: 20px;
+  margin-top: 15px;
+  background: transparent;
+}
+    
+
+/* Each row item inside those lists */
+.builder-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  border: 1px solid #ddd;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+/* The text on the left side of the row */
+.builder-item-row span {
+  flex: 1;
+  text-align: left;
+}
+
+/* The small delete button on the right */
+.builder-item-row button {
+  background: red;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+.builder-item-row button:hover {
+  background: #cc0000; /* Slightly darker red on hover */
+}
+
+/* Give Hero & Logo Form a thin border & style */
+#heroLogoForm {
+  border: 1px solid #5e91ff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-top: 15px;
+  background: transparent;
+}
+    
+    /* Each row container */
+/* Row styling */
+.builder-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* text on left, button on right */
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  margin-bottom: 8px;
+}
+
+/* Row text: smallish font */
+.builder-item-row span {
+  font-size: 0.9rem;
+}
+
+/* Minimal “×” button */
+.delete-btn {
+  display: inline-flex;          /* let it shrink to content */
+  align-items: center;
+  justify-content: center;
+  background: none;              /* no background by default */
+  color: #888;                   /* subtle text color */
+  border: none;                  /* remove default button borders */
+  cursor: pointer;
+  font-size: 1rem;               /* “×” size */
+  width: 24px;                   /* small circular area */
+  height: 24px;
+  text-align: center;
+  border-radius: 50%;            /* circular shape */
+  margin-left: auto;             /* push it all the way right */
+  transition: background 0.2s, color 0.2s; /* smooth hover transition */
+}
+
+/* On hover: light gray circle behind “×” */
+.delete-btn:hover {
+  background: #eee;
+  color: #555;
+}
+
+
   </style>
 </head>
+
 <body>
 
-  <h1>Responsive Builder (About & Contact Included)</h1>
-  <p>Fill out all sections. The preview updates live. Hide “X Sold” if zero, shipping “FREE” if 0, etc. We have About Us + Contact. Enjoy!</p>
-
-  <div class="container">
-    <!-- Left side forms -->
+  <!-- Main container: forms on the left, preview on the right -->
+  <div class="main-container">
+    <!-- Forms section on the left -->
     <div class="forms-section">
       
-      <div class="section-card">
+      <!-- Upload Photos Section -->
+      <form id="uploadPhotosForm">
+        <h2>Upload Photos</h2>
+        <p>Upload your Logo, Products Photos... to get their links</p>
+        <button type="button" id="uploadBtn" onclick="redirectToUpload()">Upload <span class="arrow">&#10148;</span></button>
+      </form>
+      
+      <!-- Hero & Logo Section -->
+      <form id="heroLogoForm">
         <h2>Hero & Logo Section</h2>
-        <form>
-          <label>Logo Image URL</label>
-          <input id="logo" type="text" placeholder="https://example.com/logo.png" required>
+        <label>Logo Image URL
+          <input id="logo" type="text" placeholder="https://example.com/logo.png" required spellcheck="false" maxlength="300">
+        </label>
 
-          <label>Hero Banner Image URL</label>
-          <input id="banner" type="text" placeholder="https://example.com/hero.jpg" required>
+        <label>Hero Banner Image URL
+          <input id="banner" type="text" placeholder="https://example.com/hero.jpg" required spellcheck="false" maxlength="300">
+        </label>
 
-          <label>Hero Title</label>
-          <textarea id="heroText" rows="2" placeholder="Your amazing headline" required></textarea>
+        <label>Hero Title
+          <textarea id="heroText" rows="2" placeholder="Your amazing headline" required spellcheck="false" maxlength="70"></textarea>
+        </label>
 
-          <label>CTA Button Text</label>
-          <input id="ctaText" type="text" placeholder="Shop Now!" required>
-        </form>
-      </div>
+        <label>CTA Button Text
+          <input id="ctaText" type="text" placeholder="Shop Now!" required spellcheck="false" maxlength="30">
+        </label>
+      </form>
 
-      <!-- Payment Integration section removed -->
+      <!-- Add Products -->
+      <form id="addProductForm">
+        <h2 class="section-title">Add Products</h2>
+        <label>Product Title
+          <input id="productTitle" type="text" placeholder="Awesome Gadget" required spellcheck="false" maxlength="60">
+        </label>
 
-      <div class="section-card">
-        <h2>Add Products</h2>
-        <form>
-          <label>Product Title</label>
-          <input id="productTitle" type="text" placeholder="Awesome Gadget" required>
+        <label>1st Image URL (required)
+          <input id="image1" type="text" placeholder="https://example.com/product1.jpg" required spellcheck="false" maxlength="300">
+        </label>
 
-          <label>1st Image URL (required)</label>
-          <input id="image1" type="text" placeholder="https://example.com/product1.jpg" required>
+        <!-- Second and Third Image Fields Initially Hidden -->
+        <div id="additionalImage2" style="display:none;">
+          <label>2nd Image URL (optional)
+            <input id="image2" type="text" placeholder="https://example.com/product2.jpg" spellcheck="false" maxlength="300">
+          </label>
+        </div>
 
-          <label>2nd Image URL (optional)</label>
-          <input id="image2" type="text" placeholder="https://example.com/product2.jpg">
+        <div id="additionalImage3" style="display:none;">
+          <label>3rd Image URL (optional)
+            <input id="image3" type="text" placeholder="https://example.com/product3.jpg" spellcheck="false" maxlength="300">
+          </label>
+        </div>
 
-          <label>3rd Image URL (optional)</label>
-          <input id="image3" type="text" placeholder="https://example.com/product3.jpg">
+        <!-- Add Images Button -->
+        <button type="button" id="addImagesBtn" onclick="addImageField()">Add Image +</button>
 
-          <label>Currency</label>
-          <input id="productCurrency" type="text" placeholder="e.g. USD" required>
+        <label>Currency
+          <div class="currency-dropdown">
+            <input type="text" id="productCurrency" class="currency-input" placeholder="Select Currency" readonly spellcheck="false">
+            <div class="currency-list" id="currencyList">
+              <div class="currency-search">
+                <input type="text" id="currencySearch" placeholder="Search Currency" spellcheck="false">
+              </div>
+              <!-- Currency items populated dynamically -->
+            </div>
+          </div>
+        </label>
 
-          <label>Number Sold</label>
-          <input id="sold" type="text" placeholder="e.g. 500 (blank or 0 to hide)" required>
+        <label>Number Sold
+          <input id="sold" type="text" placeholder="e.g. 500 (blank or 0 to hide)" spellcheck="false" maxlength="8">
+        </label>
 
-          <label>Price</label>
-          <input id="price" type="text" placeholder="12.99" required>
+        <label>Price
+          <input id="price" type="text" placeholder="12.99" required spellcheck="false" maxlength="15">
+        </label>
 
-          <label>Shipping Cost (set 0 for FREE)</label>
-          <input id="shipping" type="text" placeholder="e.g. 3.99 or 0" required>
+        <label>Shipping Cost (set 0 for FREE)
+          <input id="shipping" type="text" placeholder="e.g. 3.99 or 0" required spellcheck="false" maxlength="15">
+        </label>
 
-          <label>Returns</label>
+        <label>Returns
           <select id="returns" required>
             <option value="Accepted">Accepted</option>
             <option value="Not Accepted">Not Accepted</option>
           </select>
+        </label>
 
-          <label>Color Options (comma-separated)</label>
-          <input id="colorOptions" type="text" placeholder="Black, Cream, Green..." required>
+        <label>Color Options (comma-separated)
+          <input id="colorOptions" type="text" placeholder="Black, Cream, Green..." required spellcheck="false" maxlength="100">
+        </label>
 
-          <label>Size Options (comma-separated)</label>
-          <input id="sizeOptions" type="text" placeholder="S, M, L, XL..." required>
+        <label>Size Options (comma-separated)
+          <input id="sizeOptions" type="text" placeholder="S, M, L, XL..." required spellcheck="false" maxlength="100">
+        </label>
 
-          <label>Description</label>
-          <textarea id="description" rows="3" placeholder="Describe the product here" required></textarea>
+        <label>Description
+          <textarea id="description" rows="3" placeholder="Describe the product here" required spellcheck="false" maxlength="300"></textarea>
+        </label>
 
-          <label>Select PayPal Payment Method</label>
-          <select id="productPaymentMethod" required>
-            <option value="paypalEmbed">PayPal Button Embed Code</option>
-            <option value="paypalLink">PayPal Button Link</option>
-          </select>
-
-          <div id="productEmbedField" style="display:none;">
-            <label>PayPal Button Embed Code (for this product)</label>
-            <textarea id="productEmbed" rows="2" placeholder="Embed code..."></textarea>
+        <!-- Payment Method -->
+        <label class="payment-method-label">
+          <div class="payment-method-row">
+            <img src="https://i.ibb.co/tC9LHLG/Bella-52.png" alt="PayPal" />
+            <img src="https://i.ibb.co/V3gG6tw/Bella-56.png" alt="Icon2" />
+            <img src="https://i.ibb.co/cCtHLKs/Bella-58.png" alt="Icon3" />
+            <img src="https://i.ibb.co/QJY6Cp7/Bella-57.png" alt="Icon4" />
+            <img src="https://i.ibb.co/m496tmj/Bella-53.png" alt="Icon5" />
+            <span>Select Payment Method</span>
           </div>
-
-          <div id="productLinkField" style="display:none;">
-            <label>PayPal Button Link (for this product)</label>
-            <textarea id="productLink" rows="2" placeholder="Button link..."></textarea>
+          <div class="payment-method-select">
+            <select id="productPaymentMethod" required>
+              <option value="paypalLink">PayPal Button Link</option>
+              <option value="paypalEmbed">PayPal Button Embed Code</option>
+              <option value="other">Other Payment Button or Checkout Page</option>
+            </select>
           </div>
+        </label>
 
-          <button type="button" onclick="addProduct()">Add Product</button>
-        </form>
-      </div>
+        <div id="productLinkField">
+          <label>PayPal Button Link (for this product)
+            <textarea id="productLink" rows="2" placeholder="https://www.paypal.com/checkoutnow?token=YOURTOKEN" spellcheck="false" maxlength="1000"></textarea>
+          </label>
+        </div>
 
-      <div class="section-card">
+        <div id="productEmbedField" style="display:none;">
+          <label>PayPal Button Embed Code (for this product)
+            <textarea id="productEmbed" rows="2" placeholder="Embed code..." spellcheck="false" maxlength="2000"></textarea>
+          </label>
+        </div>
+
+        <div id="otherPaymentField" style="display:none;">
+          <label>Other Payment Button or Checkout Page Link
+            <input id="otherPaymentLink" type="text" placeholder="https://example.com/checkout" spellcheck="false" maxlength="1000">
+          </label>
+        </div>
+
+        <button type="button" onclick="addProduct()">Add Product</button>
+        <div id="addedProductsList" 
+       style="margin-top: 20px; border-top: 1px solid #5e91ff; padding-top: 10px;">
+  </div>
+      </form>
+
+      <!-- Add Reviews -->
+      <form id="addReviewForm">
         <h2>Add Reviews (max 3)</h2>
-        <form>
-          <label>Reviewer Name</label>
-          <input id="reviewerName" type="text" placeholder="John Doe" required>
+        <label>Reviewer Name
+          <input id="reviewerName" type="text" placeholder="John Doe" required spellcheck="false" maxlength="60">
+        </label>
 
-          <label>Stars (1–5)</label>
+        <label>Stars (1–5)
           <select id="reviewStars" required>
             <option value="1">1 star</option>
             <option value="2">2 stars</option>
@@ -257,123 +897,456 @@
             <option value="4">4 stars</option>
             <option value="5">5 stars</option>
           </select>
+        </label>
 
-          <label>Review Text</label>
-          <textarea id="reviewText" rows="2" placeholder="What do you think?" required></textarea>
+        <label>Review Text
+          <textarea id="reviewText" rows="2" placeholder="What do you think?" required spellcheck="false" maxlength="300"></textarea>
+        </label>
 
-          <button type="button" onclick="addReview()">Add Review</button>
-        </form>
-      </div>
+        <button type="button" onclick="addReview()">Add Review</button>
+        <div id="addedReviewsList" 
+       style="margin-top: 20px; border: 1px solid #5e91ff; padding: 10px; border-radius: 8px;">
+  </div>
+      </form>
 
-      <div class="section-card">
+      <!-- About Us -->
+      <form id="aboutForm">
         <h2>About Us Section</h2>
-        <form>
-          <label>About Title</label>
-          <input id="aboutTitle" type="text" placeholder="Who We Are" required>
+        <label>About Title
+          <input id="aboutTitle" type="text" placeholder="Who We Are" required spellcheck="false" maxlength="60">
+        </label>
 
-          <label>About Paragraph</label>
-          <textarea id="aboutParagraph" rows="3" placeholder="Our story..." required></textarea>
+        <label>About Paragraph
+          <textarea id="aboutParagraph" rows="3" placeholder="Our story..." required spellcheck="false" maxlength="500"></textarea>
+        </label>
 
-          <label>About Image URL (right side)</label>
-          <input id="aboutImage" type="text" placeholder="https://example.com/about.jpg" required>
-        </form>
-      </div>
+        <label>About Image URL (right side)
+          <input id="aboutImage" type="text" placeholder="https://example.com/about.jpg" required spellcheck="false" maxlength="300">
+        </label>
+      </form>
 
-      <div class="section-card">
-        <h2>Contact Us Section</h2>
-        <form>
-          <label>Instagram Link</label>
-          <input id="contactInstagram" type="text" placeholder="https://instagram.com/..." required>
+      <!-- Contact Us (thin border) -->
+      <form id="contactUsForm">
+        <h2 class="section-title">Contact Us</h2>
 
-          <label>TikTok Link</label>
-          <input id="contactTiktok" type="text" placeholder="https://tiktok.com/@..." required>
+        <label>Custom Contact Intro
+          <textarea id="contactIntro" rows="3" placeholder="We’d love to hear from you! Reach out..." required spellcheck="false" maxlength="250"></textarea>
+        </label>
 
-          <label>Facebook Link</label>
-          <input id="contactFacebook" type="text" placeholder="https://facebook.com/..." required>
+        <!-- Social icons: Instagram, TikTok, Facebook, X, Youtube -->
+        <label><img src="https://i.ibb.co/L6zwnKk/Bella-50.png" alt="Instagram" />Instagram Link
+          <input id="contactInstagram" type="text" placeholder="https://instagram.com/..." required spellcheck="false" maxlength="300">
+        </label>
+        <label><img src="https://i.ibb.co/2vSmtt0/Bella-49.png" alt="TikTok" />TikTok Link
+          <input id="contactTiktok" type="text" placeholder="https://tiktok.com/@..." required spellcheck="false" maxlength="300">
+        </label>
+        <label><img src="https://i.ibb.co/gmDjkH3/Bella-48.png" alt="Facebook" />Facebook Link
+          <input id="contactFacebook" type="text" placeholder="https://facebook.com/..." required spellcheck="false" maxlength="300">
+        </label>
+        <label><img src="https://i.ibb.co/fqp0KrB/Bella-63.png" alt="X" />X Link
+          <input id="contactX" type="text" placeholder="https://x.com/username" required spellcheck="false" maxlength="300">
+        </label>
+        <label><img src="https://i.ibb.co/hC6CQzs/Bella-62.png" alt="Youtube" />Youtube Link
+          <input id="contactYoutube" type="text" placeholder="https://youtube.com/@channel" required spellcheck="false" maxlength="300">
+        </label>
 
-          <label>Email Address</label>
-          <input id="contactEmail" type="text" placeholder="info@example.com" required>
-        </form>
-      </div>
+        <label><img src="https://i.ibb.co/zP00K3P/Bella-51.png" alt="Email" />Email Address
+          <input id="contactEmail" type="text" placeholder="info@example.com" required spellcheck="false" maxlength="300">
+        </label>
+
+        <!-- Row with icons & title, plus Add Form button -->
+        <div class="add-contact-form-row">
+          <img src="https://i.ibb.co/jVBBPwZ/Bella-61.png" alt="Jotform" />
+          <img src="https://i.ibb.co/HNPsXkj/Bella-60.png" alt="Google Forms" />
+          <span>Add Contact Form</span>
+        </div>
+
+        <button type="button" id="addContactFormButton">Add Form</button>
+        <div id="contactFormStatus" style="margin-top: 10px;"></div>
+      </form>
+      
+      <!-- Track Your Customers Section (Builder Interface) -->
+<form id="trackCustomersForm">
+  <h2 class="section-title">Track Your Customers</h2>
+  
+  <div class="track-icons">
+    <img src="https://i.ibb.co/f1fGPt7/Bella-64.png" alt="Google Analytics" />
+    <img src="https://i.ibb.co/g4FMpx2/Bella-65.png" alt="Clarity" />
+    <span>( Optional ) Link Google Analytics and Clarity to see how many people visit your website, and even videos of what they do on your website.</span>
+  </div>
+  
+  <button type="button" id="addFeatureBtn">Add Feature</button>
+</form>
+
+<!-- Track Customers Modal -->
+<div id="trackModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close-track" id="closeTrackModal">&times;</span>
+    <h2>Link Tracking Features</h2>
+    
+    <label>Google Analytics Manual Code
+      <textarea id="googleAnalyticsCode" rows="4" placeholder="Paste your Google Analytics code here..." spellcheck="false" maxlength="2000"></textarea>
+    </label>
+    
+    <label>Clarity Manual Code
+      <textarea id="clarityCode" rows="4" placeholder="Paste your Clarity code here..." spellcheck="false" maxlength="2000"></textarea>
+    </label>
+    
+    <button type="button" id="confirmAddFeatureBtn">Add</button>
+  </div>
+</div>
 
       <button id="downloadBtn" onclick="downloadSite()">Generate & Download</button>
       <button id="showCodeBtn" onclick="toggleCode()">Show Generated Code</button>
     </div>
+    
 
-    <!-- Right side: live preview + product listing + review listing -->
+    <!-- Preview section on the right -->
     <div class="preview-section">
       <h2>Live Preview</h2>
       <iframe id="previewFrame"></iframe>
 
-      <div id="productListing"></div>
-      <div id="reviewListing"></div>
+      <!-- Items in Your Website, below the preview on the right side -->
+      <div id="managementContainer"></div>
     </div>
   </div>
 
   <textarea id="output" readonly></textarea>
 
+  <!-- Contact Form Modal -->
+  <div id="contactFormModal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close-contact" id="closeContactFormModal">&times;</span>
+      <h2>Create Your Contact Form</h2>
+      <p style="font-weight:bold">
+        Step 1: Create your contact form in one of these companies (Jotform, Google Forms...)
+      </p>
+      <p style="font-weight:bold">
+        Step 2: Paste the embed HTML code of your form here:
+      </p>
+      <textarea id="contactFormIframe" rows="5" placeholder="Paste your contact form iframe HTML code here..."></textarea>
+      <button type="button" id="confirmAddContactFormButton">Add</button>
+    </div>
+  </div>
+
+
 <script>
+// ============== CURRENCY DATA ==============
+const currencyData = [
+  { code: "AED", name: "United Arab Emirates Dirham", symbol: "د.إ", flag: "🇦🇪" },
+  { code: "AFN", name: "Afghan Afghani", symbol: "؋", flag: "🇦🇫" },
+  { code: "ALL", name: "Albanian Lek", symbol: "L", flag: "🇦🇱" },
+  { code: "AMD", name: "Armenian Dram", symbol: "֏", flag: "🇦🇲" },
+  { code: "ANG", name: "Netherlands Antillean Guilder", symbol: "ƒ", flag: "🇳🇱" },
+  { code: "AOA", name: "Angolan Kwanza", symbol: "Kz", flag: "🇦🇴" },
+  { code: "ARS", name: "Argentine Peso", symbol: "$", flag: "🇦🇷" },
+  { code: "AUD", name: "Australian Dollar", symbol: "A$", flag: "🇦🇺" },
+  { code: "AWG", name: "Aruban Florin", symbol: "ƒ", flag: "🇦🇼" },
+  { code: "AZN", name: "Azerbaijani Manat", symbol: "₼", flag: "🇦🇿" },
+  { code: "BAM", name: "Bosnia-Herzegovina Convertible Mark", symbol: "KM", flag: "🇧🇦" },
+  { code: "BBD", name: "Barbadian Dollar", symbol: "Bds$", flag: "🇧🇧" },
+  { code: "BDT", name: "Bangladeshi Taka", symbol: "৳", flag: "🇧🇩" },
+  { code: "BGN", name: "Bulgarian Lev", symbol: "лв", flag: "🇧🇬" },
+  { code: "BHD", name: "Bahraini Dinar", symbol: "د.ب", flag: "🇧🇭" },
+  { code: "BIF", name: "Burundian Franc", symbol: "FBu", flag: "🇧🇮" },
+  { code: "BMD", name: "Bermudan Dollar", symbol: "$", flag: "🇧🇲" },
+  { code: "BND", name: "Brunei Dollar", symbol: "B$", flag: "🇧🇳" },
+  { code: "BOB", name: "Bolivian Boliviano", symbol: "$b", flag: "🇧🇴" },
+  { code: "BRL", name: "Brazilian Real", symbol: "R$", flag: "🇧🇷" },
+  { code: "BSD", name: "Bahamian Dollar", symbol: "$", flag: "🇧🇸" },
+  { code: "BTN", name: "Bhutanese Ngultrum", symbol: "Nu.", flag: "🇧🇹" },
+  { code: "BWP", name: "Botswanan Pula", symbol: "P", flag: "🇧🇼" },
+  { code: "BYN", name: "Belarusian Ruble", symbol: "Br", flag: "🇧🇾" },
+  { code: "BZD", name: "Belize Dollar", symbol: "BZ$", flag: "🇧🇿" },
+  { code: "CAD", name: "Canadian Dollar", symbol: "C$", flag: "🇨🇦" },
+  { code: "CDF", name: "Congolese Franc", symbol: "FC", flag: "🇨🇩" },
+  { code: "CHF", name: "Swiss Franc", symbol: "CHF", flag: "🇨🇭" },
+  { code: "CLP", name: "Chilean Peso", symbol: "$", flag: "🇨🇱" },
+  { code: "CNY", name: "Chinese Yuan", symbol: "¥", flag: "🇨🇳" },
+  { code: "COP", name: "Colombian Peso", symbol: "$", flag: "🇨🇴" },
+  { code: "CRC", name: "Costa Rican Colón", symbol: "₡", flag: "🇨🇷" },
+  { code: "CUC", name: "Cuban Convertible Peso", symbol: "$", flag: "🇨🇺" },
+  { code: "CUP", name: "Cuban Peso", symbol: "$", flag: "🇨🇺" },
+  { code: "CVE", name: "Cape Verdean Escudo", symbol: "$", flag: "🇨🇻" },
+  { code: "CZK", name: "Czech Koruna", symbol: "Kč", flag: "🇨🇿" },
+  { code: "DJF", name: "Djiboutian Franc", symbol: "Fdj", flag: "🇩🇯" },
+  { code: "DKK", name: "Danish Krone", symbol: "kr", flag: "🇩🇰" },
+  { code: "DOP", name: "Dominican Peso", symbol: "RD$", flag: "🇩🇴" },
+  { code: "DZD", name: "Algerian Dinar", symbol: "د.ج", flag: "🇩🇿" },
+  { code: "EGP", name: "Egyptian Pound", symbol: "£", flag: "🇪🇬" },
+  { code: "ERN", name: "Eritrean Nakfa", symbol: "Nfk", flag: "🇪🇷" },
+  { code: "ETB", name: "Ethiopian Birr", symbol: "Br", flag: "🇪🇹" },
+  { code: "EUR", name: "Euro", symbol: "€", flag: "🇪🇺" },
+  { code: "FJD", name: "Fijian Dollar", symbol: "FJ$", flag: "🇫🇯" },
+  { code: "FKP", name: "Falkland Islands Pound", symbol: "£", flag: "🇫🇰" },
+  { code: "FOK", name: "Faroese Króna", symbol: "kr", flag: "🇫🇴" },
+  { code: "GBP", name: "British Pound Sterling", symbol: "£", flag: "🇬🇧" },
+  { code: "GEL", name: "Georgian Lari", symbol: "₾", flag: "🇬🇪" },
+  { code: "GGP", name: "Guernsey Pound", symbol: "£", flag: "🇬🇬" },
+  { code: "GHS", name: "Ghanaian Cedi", symbol: "₵", flag: "🇬🇭" },
+  { code: "GIP", name: "Gibraltar Pound", symbol: "£", flag: "🇬🇮" },
+  { code: "GMD", name: "Gambian Dalasi", symbol: "D", flag: "🇬🇲" },
+  { code: "GNF", name: "Guinean Franc", symbol: "FG", flag: "🇬🇳" },
+  { code: "GTQ", name: "Guatemalan Quetzal", symbol: "Q", flag: "🇬🇹" },
+  { code: "GYD", name: "Guyanese Dollar", symbol: "G$", flag: "🇬🇾" },
+  { code: "HKD", name: "Hong Kong Dollar", symbol: "HK$", flag: "🇭🇰" },
+  { code: "HNL", name: "Honduran Lempira", symbol: "L", flag: "🇭🇳" },
+  { code: "HRK", name: "Croatian Kuna", symbol: "kn", flag: "🇭🇷" },
+  { code: "HTG", name: "Haitian Gourde", symbol: "G", flag: "🇭🇹" },
+  { code: "HUF", name: "Hungarian Forint", symbol: "Ft", flag: "🇭🇺" },
+  { code: "IDR", name: "Indonesian Rupiah", symbol: "Rp", flag: "🇮🇩" },
+  { code: "ILS", name: "Israeli New Shekel", symbol: "₪", flag: "🇮🇱" },
+  { code: "IMP", name: "Isle of Man Pound", symbol: "£", flag: "🇮🇲" },
+  { code: "INR", name: "Indian Rupee", symbol: "₹", flag: "🇮🇳" },
+  { code: "IQD", name: "Iraqi Dinar", symbol: "ع.د", flag: "🇮🇶" },
+  { code: "IRR", name: "Iranian Rial", symbol: "﷼", flag: "🇮🇷" },
+  { code: "ISK", name: "Icelandic Króna", symbol: "kr", flag: "🇮🇸" },
+  { code: "JEP", name: "Jersey Pound", symbol: "£", flag: "🇯🇪" },
+  { code: "JMD", name: "Jamaican Dollar", symbol: "J$", flag: "🇯🇲" },
+  { code: "JOD", name: "Jordanian Dinar", symbol: "د.ا", flag: "🇯🇴" },
+  { code: "JPY", name: "Japanese Yen", symbol: "¥", flag: "🇯🇵" },
+  { code: "KES", name: "Kenyan Shilling", symbol: "KSh", flag: "🇰🇪" },
+  { code: "KGS", name: "Kyrgyzstani Som", symbol: "сом", flag: "🇰🇬" },
+  { code: "KHR", name: "Cambodian Riel", symbol: "៛", flag: "🇰🇭" },
+  { code: "KMF", name: "Comorian Franc", symbol: "CF", flag: "🇰🇲" },
+  { code: "KPW", name: "North Korean Won", symbol: "₩", flag: "🇰🇵" },
+  { code: "KRW", name: "South Korean Won", symbol: "₩", flag: "🇰🇷" },
+  { code: "KWD", name: "Kuwaiti Dinar", symbol: "د.ك", flag: "🇰🇼" },
+  { code: "KYD", name: "Cayman Islands Dollar", symbol: "KYD", flag: "🇰🇾" },
+  { code: "KZT", name: "Kazakhstani Tenge", symbol: "₸", flag: "🇰🇿" },
+  { code: "LAK", name: "Laotian Kip", symbol: "₭", flag: "🇱🇦" },
+  { code: "LBP", name: "Lebanese Pound", symbol: "£", flag: "🇱🇧" },
+  { code: "LKR", name: "Sri Lankan Rupee", symbol: "Rs", flag: "🇱🇰" },
+  { code: "LRD", name: "Liberian Dollar", symbol: "L$", flag: "🇱🇷" },
+  { code: "LSL", name: "Lesotho Loti", symbol: "L", flag: "🇱🇸" },
+  { code: "LYD", name: "Libyan Dinar", symbol: "ل.د", flag: "🇱🇾" },
+  { code: "MAD", name: "Moroccan Dirham", symbol: "د.م.", flag: "🇲🇦" },
+  { code: "MDL", name: "Moldovan Leu", symbol: "L", flag: "🇲🇩" },
+  { code: "MGA", name: "Malagasy Ariary", symbol: "Ar", flag: "🇲🇬" },
+  { code: "MKD", name: "Macedonian Denar", symbol: "ден", flag: "🇲🇰" },
+  { code: "MMK", name: "Myanmar Kyat", symbol: "K", flag: "🇲🇲" },
+  { code: "MNT", name: "Mongolian Tugrik", symbol: "₮", flag: "🇲🇳" },
+  { code: "MOP", name: "Macanese Pataca", symbol: "MOP$", flag: "🇲🇴" },
+  { code: "MRU", name: "Mauritanian Ouguiya", symbol: "UM", flag: "🇲🇷" },
+  { code: "MUR", name: "Mauritian Rupee", symbol: "₨", flag: "🇲🇺" },
+  { code: "MVR", name: "Maldivian Rufiyaa", symbol: "Rf", flag: "🇲🇻" },
+  { code: "MWK", name: "Malawian Kwacha", symbol: "MK", flag: "🇲🇼" },
+  { code: "MXN", name: "Mexican Peso", symbol: "$", flag: "🇲🇽" },
+  { code: "MYR", name: "Malaysian Ringgit", symbol: "RM", flag: "🇲🇾" },
+  { code: "MZN", name: "Mozambican Metical", symbol: "MT", flag: "🇲🇿" },
+  { code: "NAD", name: "Namibian Dollar", symbol: "N$", flag: "🇳🇦" },
+  { code: "NGN", name: "Nigerian Naira", symbol: "₦", flag: "🇳🇬" },
+  { code: "NIO", name: "Nicaraguan Córdoba", symbol: "C$", flag: "🇳🇮" },
+  { code: "NOK", name: "Norwegian Krone", symbol: "kr", flag: "🇳🇴" },
+  { code: "NPR", name: "Nepalese Rupee", symbol: "₨", flag: "🇳🇵" },
+  { code: "NZD", name: "New Zealand Dollar", symbol: "NZ$", flag: "🇳🇿" },
+  { code: "OMR", name: "Omani Rial", symbol: "ر.ع.", flag: "🇴🇲" },
+  { code: "PAB", name: "Panamanian Balboa", symbol: "B/.", flag: "🇵🇦" },
+  { code: "PEN", name: "Peruvian Nuevo Sol", symbol: "S/.", flag: "🇵🇪" },
+  { code: "PGK", name: "Papua New Guinean Kina", symbol: "K", flag: "🇵🇬" },
+  { code: "PHP", name: "Philippine Peso", symbol: "₱", flag: "🇵🇭" },
+  { code: "PKR", name: "Pakistani Rupee", symbol: "₨", flag: "🇵🇰" },
+  { code: "PLN", name: "Polish Złoty", symbol: "zł", flag: "🇵🇱" },
+  { code: "PYG", name: "Paraguayan Guaraní", symbol: "₲", flag: "🇵🇾" },
+  { code: "QAR", name: "Qatari Rial", symbol: "ر.ق", flag: "🇶🇦" },
+  { code: "RON", name: "Romanian Leu", symbol: "lei", flag: "🇷🇴" },
+  { code: "RSD", name: "Serbian Dinar", symbol: "din", flag: "🇷🇸" },
+  { code: "RUB", name: "Russian Ruble", symbol: "₽", flag: "🇷🇺" },
+  { code: "RWF", name: "Rwandan Franc", symbol: "FRw", flag: "🇷🇼" },
+  { code: "SAR", name: "Saudi Riyal", symbol: "ر.س", flag: "🇸🇦" },
+  { code: "SBD", name: "Solomon Islands Dollar", symbol: "SI$", flag: "🇸🇧" },
+  { code: "SCR", name: "Seychellois Rupee", symbol: "₨", flag: "🇸🇨" },
+  { code: "SDG", name: "Sudanese Pound", symbol: "£", flag: "🇸🇩" },
+  { code: "SEK", name: "Swedish Krona", symbol: "kr", flag: "🇸🇪" },
+  { code: "SGD", name: "Singapore Dollar", symbol: "S$", flag: "🇸🇬" },
+  { code: "SHP", name: "Saint Helena Pound", symbol: "£", flag: "🇸🇭" },
+  { code: "SLL", name: "Sierra Leonean Leone", symbol: "Le", flag: "🇸🇱" },
+  { code: "SOS", name: "Somali Shilling", symbol: "S", flag: "🇸🇴" },
+  { code: "SRD", name: "Surinamese Dollar", symbol: "$", flag: "🇸🇷" },
+  { code: "SSP", name: "South Sudanese Pound", symbol: "£", flag: "🇸🇸" },
+  { code: "STD", name: "São Tomé and Príncipe Dobra", symbol: "Db", flag: "🇸🇹" },
+  { code: "STN", name: "São Tomé and Príncipe Dobra", symbol: "Db", flag: "🇸🇹" },
+  { code: "SVC", name: "Salvadoran Colón", symbol: "$", flag: "🇸🇻" },
+  { code: "SYP", name: "Syrian Pound", symbol: "£", flag: "🇸🇾" },
+  { code: "SZL", name: "Swazi Lilangeni", symbol: "E", flag: "🇸🇿" },
+  { code: "THB", name: "Thai Baht", symbol: "฿", flag: "🇹🇭" },
+  { code: "TJS", name: "Tajikistani Somoni", symbol: "ЅМ", flag: "🇹🇯" },
+  { code: "TMT", name: "Turkmenistani Manat", symbol: "m", flag: "🇹🇲" },
+  { code: "TND", name: "Tunisian Dinar", symbol: "د.ت", flag: "🇹🇳" },
+  { code: "TOP", name: "Tongan Paʻanga", symbol: "T$", flag: "🇹🇴" },
+  { code: "TRY", name: "Turkish Lira", symbol: "₺", flag: "🇹🇷" },
+  { code: "TTD", name: "Trinidad and Tobago Dollar", symbol: "TT$", flag: "🇹🇹" },
+  { code: "TWD", name: "New Taiwan Dollar", symbol: "NT$", flag: "🇹🇼" },
+  { code: "TZS", name: "Tanzanian Shilling", symbol: "TSh", flag: "🇹🇿" },
+  { code: "UAH", name: "Ukrainian Hryvnia", symbol: "₴", flag: "🇺🇦" },
+  { code: "UGX", name: "Ugandan Shilling", symbol: "USh", flag: "🇺🇬" },
+  { code: "USD", name: "United States Dollar", symbol: "$", flag: "🇺🇸" },
+  { code: "UYU", name: "Uruguayan Peso", symbol: "$U", flag: "🇺🇾" },
+  { code: "UZS", name: "Uzbekistan Som", symbol: "UZS", flag: "🇺🇿" },
+  { code: "VES", name: "Venezuelan Bolívar Soberano", symbol: "Bs.S", flag: "🇻🇪" },
+  { code: "VND", name: "Vietnamese Dong", symbol: "₫", flag: "🇻🇳" },
+  { code: "VUV", name: "Vanuatu Vatu", symbol: "VT", flag: "🇻🇺" },
+  { code: "WST", name: "Samoan Tala", symbol: "WS$", flag: "🇼🇸" },
+  { code: "XAF", name: "CFA Franc BEAC", symbol: "FCFA", flag: "🇨🇫" },
+  { code: "XCD", name: "East Caribbean Dollar", symbol: "EC$", flag: "🇨🇩" },
+  { code: "XDR", name: "Special Drawing Rights", symbol: "XDR", flag: "🇺🇳" },
+  { code: "XOF", name: "CFA Franc BCEAO", symbol: "CFA", flag: "🇨🇮" },
+  { code: "XPF", name: "CFP Franc", symbol: "CFPF", flag: "🇵🇫" },
+  { code: "YER", name: "Yemeni Rial", symbol: "﷼", flag: "🇾🇪" },
+  { code: "ZAR", name: "South African Rand", symbol: "R", flag: "🇿🇦" },
+  { code: "ZMW", name: "Zambian Kwacha", symbol: "ZK", flag: "🇿🇲" },
+  { code: "ZWL", name: "Zimbabwean Dollar", symbol: "Z$", flag: "🇿🇼" }
+];
+
+// ============== DATA STRUCTURES ==============
 var heroData    = { logo:'', banner:'', heroText:'', ctaText:'' };
 var products    = [];
 var reviews     = [];
 var aboutData   = { title:'', paragraph:'', image:'' };
-var contactData = { instagram:'', tiktok:'', facebook:'', email:'' };
+var contactData = { 
+  intro:'', 
+  instagram:'', 
+  tiktok:'', 
+  facebook:'', 
+  xLink:'', 
+  youtube:'', 
+  email:'', 
+  formEmbed:'',
+  googleAnalytics: '', // Added for Google Analytics code
+  clarity: ''          // Added for Clarity code
+};
 var finalHTML   = '';
 
-window.onload=function(){
-  // Hero Section inputs
+// ============== ON LOAD ==============
+window.onload = function(){
+  // 1) Original code here
+  // Hero
   document.getElementById('logo').oninput     = updatePreview;
   document.getElementById('banner').oninput   = updatePreview;
   document.getElementById('heroText').oninput = updatePreview;
   document.getElementById('ctaText').oninput  = updatePreview;
 
-  // About Section inputs
+  // About
   document.getElementById('aboutTitle').oninput     = updatePreview;
   document.getElementById('aboutParagraph').oninput = updatePreview;
   document.getElementById('aboutImage').oninput     = updatePreview;
 
-  // Contact Section inputs
+  // Contact
+  document.getElementById('contactIntro').oninput     = updatePreview;
   document.getElementById('contactInstagram').oninput = updatePreview;
   document.getElementById('contactTiktok').oninput    = updatePreview;
   document.getElementById('contactFacebook').oninput  = updatePreview;
+  document.getElementById('contactX').oninput         = updatePreview;
+  document.getElementById('contactYoutube').oninput   = updatePreview;
   document.getElementById('contactEmail').oninput     = updatePreview;
 
-  // Add Products section events
+  // Payment Method
   document.getElementById('productPaymentMethod').onchange = function(){
     var method = this.value;
-    document.getElementById('productEmbedField').style.display = method === 'paypalEmbed' ? 'block' : 'none';
-    document.getElementById('productLinkField').style.display = method === 'paypalLink' ? 'block' : 'none';
+    document.getElementById('productLinkField').style.display = (method === 'paypalLink') ? 'block' : 'none';
+    document.getElementById('productEmbedField').style.display = (method === 'paypalEmbed') ? 'block' : 'none';
+    document.getElementById('otherPaymentField').style.display = (method === 'other') ? 'block' : 'none';
     updatePreview();
   };
-  document.getElementById('productEmbed').oninput = updatePreview;
-  document.getElementById('productLink').oninput = updatePreview;
+  document.getElementById('productLink').oninput   = updatePreview;
+  document.getElementById('productEmbed').oninput  = updatePreview;
+  document.getElementById('otherPaymentLink').oninput = updatePreview;
 
-  // Initialize Add Products payment method fields
+  // Initialize Payment Method Display
   updateAddProductFormFields();
+
+  // Contact Form Modal
+  setupContactFormModal();
+  
+  // Render management lists
+  updateManagementLists();
+  
+  // 2) Now also initialize Track Modal at the end
+  setupTrackModal();
 };
 
-/* Function to handle showing/hiding PayPal fields in Add Products */
-function updateAddProductFormFields() {
+// ============== CURRENCY DROPDOWN INIT ==============
+document.addEventListener('DOMContentLoaded', function() {
+  const currencyInput = document.getElementById('productCurrency');
+  const currencyList  = document.getElementById('currencyList');
+  const currencySearch= document.getElementById('currencySearch');
+
+  // Populate currency list
+  currencyData.forEach(currency => {
+    const item = document.createElement('div');
+    item.classList.add('currency-item');
+    item.innerHTML = `<span class="currency-flag">${currency.flag}</span>
+                      <span class="currency-code">${currency.code}</span>
+                      <span class="currency-name">${currency.name}</span>`;
+    item.addEventListener('click', () => {
+      currencyInput.value = `${currency.code} - ${currency.name}`;
+      currencyInput.setAttribute('data-code', currency.code);
+      currencyList.classList.remove('visible');
+    });
+    currencyList.appendChild(item);
+  });
+
+  // Default currency = EUR
+  const defaultCurrency = currencyData.find(c => c.code === "EUR");
+  if (defaultCurrency) {
+    currencyInput.value = `${defaultCurrency.code} - ${defaultCurrency.name}`;
+    currencyInput.setAttribute('data-code', defaultCurrency.code);
+  }
+
+  // Toggle list
+  currencyInput.addEventListener('click', () => {
+    currencyList.classList.toggle('visible');
+    currencySearch.focus();
+  });
+
+  // Close if clicked outside
+  document.addEventListener('click', function(e) {
+    if (!currencyInput.contains(e.target) && !currencyList.contains(e.target)) {
+      currencyList.classList.remove('visible');
+    }
+  });
+
+  // Search filter
+  currencySearch.addEventListener('input', function() {
+    const filter = currencySearch.value.toUpperCase();
+    const items = currencyList.getElementsByClassName('currency-item');
+    for (let i = 0; i < items.length; i++) {
+      const txtValue = items[i].textContent || items[i].innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        items[i].style.display = "";
+      } else {
+        items[i].style.display = "none";
+      }
+    }
+  });
+});
+
+// ============== FUNCTIONS ==============
+function updateAddProductFormFields(){
   var method = document.getElementById('productPaymentMethod').value;
-  if(method === 'paypalEmbed') {
-     document.getElementById('productEmbedField').style.display='block';
-     document.getElementById('productLinkField').style.display='none';
-  } else if(method === 'paypalLink') {
-     document.getElementById('productEmbedField').style.display='none';
-     document.getElementById('productLinkField').style.display='block';
-  } else {
-     document.getElementById('productEmbedField').style.display='none';
-     document.getElementById('productLinkField').style.display='none';
+  document.getElementById('productLinkField').style.display   = (method === 'paypalLink') ? 'block' : 'none';
+  document.getElementById('productEmbedField').style.display  = (method === 'paypalEmbed') ? 'block' : 'none';
+  document.getElementById('otherPaymentField').style.display  = (method === 'other') ? 'block' : 'none';
+}
+
+var imageCount = 1;
+function addImageField(){
+  imageCount++;
+  if(imageCount === 2){
+    document.getElementById('additionalImage2').style.display = 'block';
+  } else if(imageCount === 3){
+    document.getElementById('additionalImage3').style.display = 'block';
+    document.getElementById('addImagesBtn').style.display = 'none';
   }
 }
 
-/* --- PRODUCTS --- */
 function addProduct(){
   var title        = document.getElementById('productTitle').value.trim();
   var img1         = document.getElementById('image1').value.trim();
-  var img2         =document.getElementById('image2').value.trim();
+  var img2         = document.getElementById('image2').value.trim();
   var img3         = document.getElementById('image3').value.trim();
-  var currency     = document.getElementById('productCurrency').value.trim();
+  var currencyInput= document.getElementById('productCurrency');
+  var currencyCode = currencyInput.getAttribute('data-code') || 'EUR';
   var sold         = document.getElementById('sold').value.trim();
   var price        = document.getElementById('price').value.trim();
   var shipping     = document.getElementById('shipping').value.trim();
@@ -381,147 +1354,175 @@ function addProduct(){
   var coloroptions = document.getElementById('colorOptions').value.trim();
   var sizeoptions  = document.getElementById('sizeOptions').value.trim();
   var desc         = document.getElementById('description').value.trim();
-  var paymentMethod = document.getElementById('productPaymentMethod').value;
-  var productEmbed = "";
-  var productLink = "";
+  var paymentMethod= document.getElementById('productPaymentMethod').value;
 
-  if(paymentMethod === 'paypalEmbed') {
+  var productLink       = "";
+  var productEmbed      = "";
+  var otherPaymentLink  = "";
+  if(paymentMethod === 'paypalLink'){
+    productLink  = document.getElementById('productLink').value.trim();
+  }
+  if(paymentMethod === 'paypalEmbed'){
     productEmbed = document.getElementById('productEmbed').value.trim();
   }
-  if(paymentMethod === 'paypalLink') {
-    productLink = document.getElementById('productLink').value.trim();
+  if(paymentMethod === 'other'){
+    otherPaymentLink = document.getElementById('otherPaymentLink').value.trim();
   }
 
-  if(!img1 || !price || !desc || !currency){
+  if(!img1 || !price || !desc || !currencyCode){
     alert("Please fill out at least: Currency, 1st Image, Price, and Description.");
     return;
   }
-  var imgs=[img1];
+  var imgs = [img1];
   if(img2) imgs.push(img2);
   if(img3) imgs.push(img3);
 
-  var shippingVal="FREE";
+  var shippingVal = "FREE";
   if(shipping && shipping!=="0"){
-    shippingVal=shipping; 
+    shippingVal = shipping; 
   }
-  var soldVal="";
+  var soldVal = "";
   if(sold && sold!=="0"){
-    soldVal=sold;
+    soldVal = sold;
   }
   var product = {
-    title:title,
-    images:imgs,
-    sold:soldVal,
-    price:price,
-    currency:currency,
-    shipping:shippingVal,
-    returns:returns,
-    coloroptions:coloroptions,
-    sizeoptions:sizeoptions,
-    description:desc
+    title: title,
+    images: imgs,
+    sold: soldVal,
+    price: price,
+    currency: currencyCode,
+    shipping: shippingVal,
+    returns: returns,
+    coloroptions: coloroptions,
+    sizeoptions: sizeoptions,
+    description: desc,
+    paymentMethod: paymentMethod,
+    paypalLink: productLink,
+    paypalEmbed: productEmbed,
+    otherPaymentLink: otherPaymentLink
   };
-  if(paymentMethod === 'paypalEmbed') {
-    product.paypalEmbed = productEmbed;
-  }
-  if(paymentMethod === 'paypalLink') {
-    product.paypalLink = productLink;
-  }
-
   products.push(product);
 
-  // Clear the form fields
+  // Clear form
   document.getElementById('productTitle').value='';
   document.getElementById('image1').value='';
   document.getElementById('image2').value='';
   document.getElementById('image3').value='';
-  document.getElementById('productCurrency').value='';
+  currencyInput.value='';
+  currencyInput.removeAttribute('data-code');
   document.getElementById('sold').value='';
   document.getElementById('price').value='';
   document.getElementById('shipping').value='';
   document.getElementById('description').value='';
   document.getElementById('colorOptions').value='';
   document.getElementById('sizeOptions').value='';
-  if(paymentMethod === 'paypalEmbed') {
-    document.getElementById('productEmbed').value='';
-  }
-  if(paymentMethod === 'paypalLink') {
-    document.getElementById('productLink').value='';
+  document.getElementById('productPaymentMethod').value='paypalLink';
+  document.getElementById('productLink').value='';
+  document.getElementById('productEmbed').value='';
+  document.getElementById('otherPaymentLink').value='';
+  updateAddProductFormFields();
+
+  // Reset images
+  imageCount=1;
+  document.getElementById('additionalImage2').style.display='none';
+  document.getElementById('additionalImage3').style.display='none';
+  document.getElementById('addImagesBtn').style.display='block';
+
+  // Reset currency to default EUR
+  const defaultCurrency = currencyData.find(c => c.code === "EUR");
+  if(defaultCurrency){
+    currencyInput.value = `${defaultCurrency.code} - ${defaultCurrency.name}`;
+    currencyInput.setAttribute('data-code', defaultCurrency.code);
   }
 
   updatePreview();
-  showProductList();
+  renderAddedProductsList();
+}
+  
+  // Example: Added Products List
+function renderAddedProductsList() {
+  const container = document.getElementById('addedProductsList');
+  container.innerHTML = ''; // Clear old items
+  
+  products.forEach((prod, idx) => {
+    const row = document.createElement('div');
+    row.classList.add('builder-item-row');
+
+    const textSpan = document.createElement('span');
+    textSpan.textContent = prod.title || 'Untitled';
+    row.appendChild(textSpan);
+
+    const delBtn = document.createElement('button');
+    delBtn.classList.add('delete-btn');
+    delBtn.textContent = '×';
+    
+    delBtn.onclick = function() {
+      products.splice(idx, 1);
+      renderAddedProductsList();
+      updatePreview();
+    };
+
+    row.appendChild(delBtn);
+    container.appendChild(row);
+  });
 }
 
-function showProductList(){
-  var listing=document.getElementById('productListing');
-  listing.innerHTML='<h3 style="margin-top:20px;">Products in Builder</h3>';
-  for(var i=0;i<products.length;i++){
-    var p=products[i];
-    var div=document.createElement('div');
-    div.className='product-list-item';
-    var label=p.title||'(Untitled Product)';
-    div.innerHTML='<span>'+label+'</span>';
-    var btn=document.createElement('button');
-    btn.className='delete-btn';
-    btn.innerText='Delete';
-    btn.onclick=(function(idx){
-      return function(){
-        products.splice(idx,1);
-        updatePreview();
-        showProductList();
-      };
-    })(i);
-    div.appendChild(btn);
-    listing.appendChild(div);
-  }
-}
 
-/* --- REVIEWS --- */
+
+
+
 function addReview(){
-  if(reviews.length>=3){
+  if(reviews.length >= 3){
     alert("You can only add up to 3 reviews!");
     return;
   }
-  var name=document.getElementById('reviewerName').value.trim();
-  var s=document.getElementById('reviewStars').value;
-  var txt=document.getElementById('reviewText').value.trim();
-  if(!name||!txt){
+  var name = document.getElementById('reviewerName').value.trim();
+  var s    = document.getElementById('reviewStars').value;
+  var txt  = document.getElementById('reviewText').value.trim();
+  if(!name || !txt){
     alert("Please fill out reviewer's name and text!");
     return;
   }
-  reviews.push({ name:name, stars:s, text:txt });
+  reviews.push({ name, stars:s, text:txt });
   document.getElementById('reviewerName').value='';
   document.getElementById('reviewText').value='';
   document.getElementById('reviewStars').value='3';
 
   updatePreview();
-  showReviewList();
+  renderAddedReviewsList();
+}
+  
+  function renderAddedReviewsList() {
+  const container = document.getElementById('addedReviewsList');
+  container.innerHTML = ''; // Clear previous items
+
+  reviews.forEach((rev, idx) => {
+    const row = document.createElement('div');
+    row.classList.add('builder-item-row'); // Use the shared row style
+
+    // Left side: reviewer name
+    const nameSpan = document.createElement('span');
+    nameSpan.textContent = rev.name || "Unnamed";
+    row.appendChild(nameSpan);
+
+    // Right side: Delete button
+    const delBtn = document.createElement('button');
+    delBtn.classList.add('delete-btn'); // Use the shared delete button style
+    delBtn.textContent = '×';
+
+    delBtn.onclick = function () {
+      reviews.splice(idx, 1); // Remove review from the array
+      renderAddedReviewsList(); // Re-render the list
+      updatePreview(); // Update preview
+    };
+
+    row.appendChild(delBtn);
+    container.appendChild(row);
+  });
 }
 
-function showReviewList(){
-  var rlist=document.getElementById('reviewListing');
-  rlist.innerHTML='<h3 style="margin-top:20px;">Reviews in Builder</h3>';
-  for(var i=0;i<reviews.length;i++){
-    var rv=reviews[i];
-    var d=document.createElement('div');
-    d.className='review-list-item';
-    d.innerHTML='<span>'+ (rv.name||'(Unnamed Review)') +'</span>';
-    var btn=document.createElement('button');
-    btn.className='delete-btn';
-    btn.innerText='Delete';
-    btn.onclick=(function(index){
-      return function(){
-        reviews.splice(index,1);
-        updatePreview();
-        showReviewList();
-      };
-    })(i);
-    d.appendChild(btn);
-    rlist.appendChild(d);
-  }
-}
 
-/* On each update, we read about, contact, and payment integration data, build final code, push to preview. */
+
 function updatePreview(){
   // hero
   heroData.logo     = document.getElementById('logo').value.trim();
@@ -535,28 +1536,38 @@ function updatePreview(){
   aboutData.image     = document.getElementById('aboutImage').value.trim();
 
   // contact
-  contactData.instagram=document.getElementById('contactInstagram').value.trim();
-  contactData.tiktok   =document.getElementById('contactTiktok').value.trim();
-  contactData.facebook =document.getElementById('contactFacebook').value.trim();
-  contactData.email    =document.getElementById('contactEmail').value.trim();
+  contactData.intro       = document.getElementById('contactIntro').value.trim();
+  contactData.instagram   = document.getElementById('contactInstagram').value.trim();
+  contactData.tiktok      = document.getElementById('contactTiktok').value.trim();
+  contactData.facebook    = document.getElementById('contactFacebook').value.trim();
+  contactData.xLink       = document.getElementById('contactX').value.trim();
+  contactData.youtube     = document.getElementById('contactYoutube').value.trim();
+  contactData.email       = document.getElementById('contactEmail').value.trim();
 
-  finalHTML=buildFinalHTML();
-  var iframe=document.getElementById('previewFrame');
-  var doc=iframe.contentDocument||iframe.contentWindow.document;
+  finalHTML = buildFinalHTML();
+  var iframe = document.getElementById('previewFrame');
+  var doc    = iframe.contentDocument || iframe.contentWindow.document;
   doc.open();
   doc.write(finalHTML);
   doc.close();
-
-  showReviewList();
 }
 
-/* Build final site with modern styling & smooth scrolling. */
+// Build full site
 function buildFinalHTML(){
   var top="";
   top+="<!DOCTYPE html><html><head><meta charset='UTF-8'><title>My Product Site (Static Version)</title>";
   top+="<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
   top+="<link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap' rel='stylesheet'>";
   top+=buildGlobalCSS();
+  
+  // Embed Tracking Codes in <head> if available
+  if(contactData.googleAnalytics){
+    top+="\n<!-- Google Analytics -->\n"+contactData.googleAnalytics+"\n";
+  }
+  if(contactData.clarity){
+    top+="\n<!-- Microsoft Clarity -->\n"+contactData.clarity+"\n";
+  }
+  
   top+="</head><body>";
 
   top+=buildTopHeader();
@@ -565,13 +1576,14 @@ function buildFinalHTML(){
   top+=buildReviewsSection();
   top+=buildAboutSection();
   top+=buildContactSection();
-  top+=buildModal();
+  top+=buildProductModalScript();
 
   top+="</body></html>";
   return top;
 }
 
-/* show/hide final code in <textarea> */
+
+// Show/hide final code
 function toggleCode(){
   if(!finalHTML.trim()){
     finalHTML=buildFinalHTML();
@@ -585,7 +1597,7 @@ function toggleCode(){
   }
 }
 
-/* Attempt to auto-download. If blocked, user can right-click fallback link. */
+// Attempt to download
 function downloadSite(){
   if(!finalHTML.trim()){
     finalHTML=buildFinalHTML();
@@ -597,9 +1609,9 @@ function downloadSite(){
     link.style.display='inline-block';
     link.style.marginTop='10px';
     link.style.padding='10px 20px';
-    link.style.background='#4caf50';
+    link.style.background='linear-gradient(to right, #6561e0, #a862ea)';
     link.style.color='#fff';
-    link.style.borderRadius='5px';
+    link.style.borderRadius='4px';
     link.style.textDecoration='none';
     link.style.fontWeight='bold';
     link.textContent='Right-click → “Save Link As…”';
@@ -609,108 +1621,105 @@ function downloadSite(){
   link.href=dataUri;
   link.download="my_product_site.html";
   link.click();
-  alert("If no file is downloaded automatically, right-click the green link and choose 'Save link as...' to download.");
+  alert("If no file is downloaded automatically, right-click the link and choose 'Save link as...' to download.");
 }
 
-/* Build the global CSS, enabling smooth scrolling. */
+// Global CSS for the generated site
 function buildGlobalCSS(){
-  var s="<style>html{scroll-behavior:smooth;} *{box-sizing:border-box;transition:all 0.3s ease;} html,body{margin:0;padding:0;font-family:'Roboto',sans-serif;background:#f7f9fc;color:#333;line-height:1.6;} a{text-decoration:none;color:inherit} a:hover{opacity:0.8} img{max-width:100%;height:auto;display:block}";
+  var s="<style>html{scroll-behavior:smooth;} *{box-sizing:border-box;transition:all 0.2s ease;} html,body{margin:0;padding:0;font-family:'Roboto',sans-serif;background:#faf9ff;color:#333;line-height:1.6;} a{text-decoration:none;color:#2196f3} a:hover{opacity:0.8} img{max-width:100%;height:auto;display:block}";
 
-  /* top header */
-  s+=".top-header{background:#fff;box-shadow:0 2px 4px rgba(0,0,0,0.1);padding:20px 10px;text-align:center}";
-  s+=".logo-wrapper{display:inline-block} .logo-wrapper img{max-width:200px}";
-  s+=".nav-links{margin-top:15px} .nav-links a{display:inline-block;margin:0 15px;padding:10px 15px;color:#555;font-weight:500;border-radius:4px;transition:background 0.2s,color 0.2s}";
+  // top header
+  s+=".top-header{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);padding:15px 10px;text-align:center}";
+  s+=".logo-wrapper{display:inline-block} .logo-wrapper img{max-height:50px;width:auto;}";
+  s+=".nav-links{margin-top:10px} .nav-links a{display:inline-block;margin:0 10px;padding:8px 12px;color:#555;font-weight:500;border-radius:4px;transition:background 0.2s,color 0.2s}";
 
-  /* hero banner */
-  s+=".hero-banner{position:relative;min-height:60vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}";
-  s+=".hero-overlay{position:relative;z-index:1;text-align:center;color:#fff;padding:20px}";
-  s+=".hero-title{font-size:3rem;margin:0 0 20px;text-shadow:2px 2px 5px rgba(0,0,0,0.3)}";
-  s+=".hero-cta{display:inline-block;padding:15px 30px;background:#fff;color:#000;font-weight:bold;border-radius:5px;box-shadow:0 4px 6px rgba(0,0,0,0.1);transition:background 0.3s}";
+  // hero
+  s+=".hero-banner{position:relative;min-height:50vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}";
+  s+=".hero-overlay{position:relative;z-index:1;text-align:center;color:#fff;padding:15px}";
+  s+=".hero-title{font-size:2.5rem;margin:0 0 15px;text-shadow:1px 1px 3px rgba(0,0,0,0.3)}";
+  s+=".hero-cta{display:inline-block;padding:12px 25px;background:#fff;color:#333;font-weight:600;border-radius:4px;transition:background 0.3s}";
   s+=".hero-cta:hover{background:#2196f3;color:#fff}";
 
-  /* products grid */
-  s+=".products-grid{display:grid;grid-gap:30px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));padding:40px 20px;max-width:1200px;margin:0 auto}";
-  s+=".product-item{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.1);cursor:pointer;text-align:left;transition:transform 0.2s,box-shadow 0.2s}";
-  s+=".product-item:hover{transform:translateY(-5px);box-shadow:0 4px 12px rgba(0,0,0,0.2)}";
-  s+=".product-img{width:100%;padding-bottom:100%;background-size:cover;background-position:center}";
-  s+=".product-content{padding:20px}";
-  s+=".product-content h3{margin:0 0 10px;font-size:1.3rem;font-weight:700;color:#222}";
-  s+=".product-content h2{margin:0 0 10px;font-size:1.1rem;font-weight:300;color:#109c15}";
-  s+=".product-content p{margin:0 0 15px;color:#555}";
-  s+=".buy-now{display:block;width:100%;padding:12px 0;background:#2196f3;color:#fff;text-align:center;border-radius:4px;font-weight:bold;transition:background 0.3s}";
-  s+=".buy-now:hover{background:#1976d2}";
+  // products
+  s+=".products-grid{display:grid;grid-gap:20px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));padding:30px 10px;max-width:1200px;margin:0 auto}";
+  s+=".product-item{background:#fff;border-radius:8px;overflow:hidden;border:1px solid #eee;cursor:pointer;text-align:left;transition:transform 0.2s,box-shadow 0.2s}";
+  s+=".product-item:hover{transform:translateY(-3px);box-shadow:0 3px 6px rgba(0,0,0,0.1)}";
+  s+=".product-img{width:100%;padding-bottom:75%;background-size:cover;background-position:center}";
+  s+=".product-content{padding:15px}";
+  s+=".product-content h3{margin:0 0 8px;font-size:1.2rem;font-weight:600;color:#222}";
+  s+=".product-content h2{margin:0 0 10px;font-size:1rem;font-weight:500;color:#28a745}";
+  s+=".buy-now{display:block;width:100%;padding:10px 0;background:linear-gradient(to right, #6561e0, #61a3ff);color:#fff;text-align:center;border-radius:4px;font-weight:600;transition:background 0.3s}";
 
-  /* reviews section */
-  s+=".reviews-section{background:linear-gradient(135deg,#f4f4f4,#e2e2e2);padding:60px 20px;text-align:center}";
-  s+=".reviews-section h2{margin-bottom:40px;font-size:2rem;color:#333}";
-  s+=".review-container{display:flex;justify-content:center;flex-wrap:wrap;gap:30px}";
-  s+=".review-item{background:#fff;border-radius:16px;padding:30px;box-shadow:0 4px 20px rgba(0,0,0,0.1);max-width:320px;transition:transform 0.3s ease,box-shadow 0.3s ease;text-align:left}";
-  s+=".review-item:hover{transform:translateY(-5px);box-shadow:0 8px 30px rgba(0,0,0,0.15)}";
-  s+=".review-item h4{margin:0 0 10px;font-weight:700;font-size:1.25rem}";
-  s+=".review-stars{color:#fbc02d;font-size:1.5rem;margin-bottom:10px}";
+  // buy now hover
+  s+=".buy-now:hover{background:linear-gradient(to right, #5450c0, #5090d0)}";
+
+  // reviews
+  s+=".reviews-section{background:#fff;padding:40px 20px;text-align:center}";
+  s+=".reviews-section h2{margin-bottom:30px;font-size:1.8rem;color:#555}";
+  s+=".review-container{display:flex;justify-content:center;flex-wrap:wrap;gap:20px}";
+  s+=".review-item{background:#f9f9f9;border-radius:8px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.05);max-width:300px;transition:transform 0.3s ease,box-shadow 0.3s ease;text-align:left}";
+  s+=".review-item:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(0,0,0,0.1)}";
+  s+=".review-item h4{margin:0 0 10px;font-weight:600;font-size:1.1rem}";
+  s+=".review-stars{color:#ffc107;font-size:1.2rem;margin-bottom:10px}";
   s+=".review-item p{margin:5px 0 0;color:#666}";
 
-  /* about section */
-  s+=".about-section{background:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;padding:60px 20px;max-width:1200px;margin:0 auto}";
-  s+=".about-left,.about-right{flex:1 1 300px;padding:20px}";
-  s+=".about-left h2{margin-top:0;color:#333;font-size:2.5rem}";
-  s+=".about-left p{color:#555;line-height:1.8;font-size:1.1rem}";
-  s+=".about-right img{border-radius:16px;height:500px;box-shadow:0 4px 20px rgba(0,0,0,0.1);transition:transform 0.3s}";
-  s+=".about-right img:hover{transform:scale(1.05)}";
+  // about
+  s+=".about-section{background:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;padding:40px 20px;max-width:1200px;margin:0 auto}";
+  s+=".about-left,.about-right{flex:1 1 300px;padding:15px}";
+  s+=".about-left h2{margin-top:0;color:#444;font-size:2rem}";
+  s+=".about-left p{color:#555;line-height:1.8;font-size:1rem}";
+  s+=".about-right img{border-radius:8px;max-width:100%;height:auto;box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:transform 0.3s}";
+  s+=".about-right img:hover{transform:scale(1.02)}";
 
-  /* contact section */
-  s+=".contact-section{background:linear-gradient(135deg,#f4f4f4,#e2e2e2);color:#333;text-align:center;padding:60px 20px;display:flex;flex-direction:column;align-items:center}";
-  s+=".contact-logo{max-width:200px;margin-bottom:20px}";
-  s+=".contact-section p{max-width:600px;margin-bottom:20px;font-size:1rem;color:#555}";
-  s+=".contact-links{margin:20px 0;display:flex;gap:20px;justify-content:center}";
-  s+=".contact-links img{width:40px;height:40px;cursor:pointer;transition:transform 0.3s;border-radius:50%}";
-  s+=".contact-links img:hover{transform:scale(1.1)}";
-  s+=".contact-email{margin-top:30px}";
-  s+=".contact-email span{display:block;font-size:1rem;margin-bottom:10px;color:#333}";
-  s+=".email-btn{display:inline-block;padding:12px 25px;background:#2196f3;color:#fff;font-weight:bold;border-radius:5px;text-transform:uppercase;letter-spacing:1px;box-shadow:0 2px 6px rgba(0,0,0,0.1)}";
+  // contact
+  s+=".contact-section{border:1px solid #ddd; background:#f8f9fa;color:#333;padding:40px 20px;max-width:1200px;margin:40px auto;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center}";
+  s+=".contact-left{flex:1 1 300px; text-align:left}";
+  s+=".contact-logo-left img{max-width:180px;margin-bottom:15px}";
+  s+=".contact-left p{font-size:0.95rem;color:#555; margin-bottom:15px;}";
+  s+=".contact-social-icons{display:flex;flex-wrap:wrap;gap:15px;margin-bottom:15px}";
+  s+=".contact-social-icons img{width:35px;height:35px;cursor:pointer;transition:transform 0.3s;border-radius:4px}";
+  s+=".contact-social-icons img:hover{transform:scale(1.05)}";
+  s+=".contact-email-line{margin-top:10px; color:#333; font-size:0.95rem; margin-bottom:8px}";
+  s+=".email-btn{display:inline-block;padding:10px 20px;background:#2196f3;color:#fff;font-weight:600;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px;transition:background 0.3s;text-align:center}";
   s+=".email-btn:hover{background:#1976d2}";
+  s+=".contact-right{flex:1 1 300px;}";
 
-  /* modal */
-  s+=".modal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.6);justify-content:center;align-items:center;padding:20px}";
-  s+=".modal-content{background:#fff;margin:auto;width:90%;max-width:1100px;border-radius:8px;position:relative;padding:20px}";
+  // product modal
+  s+=".modal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.5);justify-content:center;align-items:center;padding:20px}";
+  s+=".modal-content{background:#fff;margin:auto;width:90%;max-width:800px;border-radius:6px;position:relative;padding:20px}";
   s+=".modal-close{position:absolute;top:15px;right:20px;font-size:1.5rem;font-weight:bold;cursor:pointer;line-height:1}";
   s+=".modal-body{display:flex;flex-wrap:wrap;gap:20px}";
-  s+=".modal-left{flex:1 1 50%;display:flex;flex-direction:column}";
-  s+=".modal-main-image{width:85%;aspect-ratio:4/5;position:relative;overflow:hidden;border-radius:8px}";
+  s+=".modal-left{flex:1 1 45%;display:flex;flex-direction:column;align-items:center}";
+  s+=".modal-main-image{width:100%;aspect-ratio:4/5;position:relative;overflow:hidden;border-radius:6px}";
   s+=".modal-main-image img{width:100%;height:100%;object-fit:cover}";
-  s+=".arrow{position:absolute;top:50%;transform:translateY(-50%);background-color:rgba(255,255,255,0.8);color:#333;padding:0.3rem 0.6rem;border-radius:50%;cursor:pointer;user-select:none;font-weight:bold;box-shadow:0 2px 4px rgba(0,0,0,0.2)}";
-  s+=".arrow-left{left:5px}.arrow-right{right:5px}.arrow:hover{background-color:rgba(255,255,255,1)}";
-  s+=".modal-thumbs{display:flex;gap:10px;margin-top:10px}";
-  s+=".modal-thumbs img{width:80px;height:80px;object-fit:cover;border-radius:4px;cursor:pointer;box-shadow:0 2px 4px rgba(0,0,0,0.1);border:2px solid transparent}";
-  s+=".modal-thumbs img.selected{border:2px solid #2196f3}";
-  s+=".modal-right{flex:1 1 45%;display:flex;flex-direction:column}";
-  s+=".modal-product-price{font-size:1.6rem;color:#109c15;font-weight:700;margin-bottom:15px}";
-  s+=".modal-product-sold{font-size:1rem;color:#333;margin-bottom:15px}";
-  s+=".modal-product-title{font-size:1.8rem;margin:0 0 10px;font-weight:700;line-height:1.2}";
-  s+=".modal-description{margin-bottom:20px;color:#555}";
-  s+=".color-options,.size-options,.quantity-options{margin-bottom:15px}";
-  s+=".color-options label,.size-options label,.quantity-options label{font-weight:600;margin-right:10px}";
-  s+=".color-options span,.size-options span{display:inline-block;margin-right:5px;background:#f0f0f0;padding:5px 10px;border-radius:4px;cursor:pointer;font-size:0.9rem;border:1px solid transparent}";
-  s+=".color-options span.selected,.size-options span.selected{background:#d0e8ff;border:1px solid #2196f3}";
-  s+=".color-options span:hover,.size-options span:hover{background:#ddd}";
-  s+=".qty-controls{display:inline-flex;align-items:center;gap:10px}";
-  s+=".qty-btn{width:30px;height:30px;border:1px solid #ccc;background:#fff;cursor:pointer;font-size:1.2rem;line-height:1;border-radius:4px;display:flex;align-items:center;justify-content:center;transition:background 0.3s}";
-  s+=".qty-btn:hover{background:#eee}";
-  s+=".qty-display{min-width:25px;text-align:center;font-weight:600}";
-  s+=".order-details-panel{border:1px solid #eee;padding:15px;border-radius:8px;background:#fafafa}";
+  s+=".arrow{position:absolute;top:50%;transform:translateY(-50%);background-color:rgba(255,255,255,0.8);color:#333;padding:5px;border-radius:50%;cursor:pointer;user-select:none;font-weight:bold;box-shadow:0 1px 2px rgba(0,0,0,0.1)}";
+  s+=".arrow-left{left:10px}.arrow-right{right:10px}.arrow:hover{background-color:rgba(255,255,255,1)}";
+  s+=".modal-thumbnails{display:flex;gap:10px;margin-top:15px}";
+  s+=".modal-thumbnails img{width:60px;height:60px;object-fit:cover;border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,0.05);border:2px solid transparent;cursor:pointer}";
+  s+=".modal-right{flex:1 1 50%;display:flex;flex-direction:column}";
+  s+=".modal-product-price{font-size:1.4rem;color:#28a745;font-weight:600;margin-bottom:10px}";
+  s+=".modal-product-sold{font-size:0.9rem;color:#555;margin-bottom:10px}";
+  s+=".modal-product-title{font-size:1.6rem;margin:0 0 10px;font-weight:600;line-height:1.2}";
+  s+=".modal-description{margin-bottom:15px;color:#666}";
+  s+=".color-options,.size-options{margin-bottom:15px}";
+  s+=".color-options label,.size-options label{font-weight:500;margin-right:10px}";
+  s+=".color-options span,.size-options span{display:inline-block;margin-right:5px;background:#f0f0f0;padding:5px 10px;border-radius:4px;font-size:0.85rem;border:1px solid transparent;cursor:default}";
+  s+=".order-details-panel{border:1px solid #eee;padding:15px;border-radius:6px;background:#f0f0f0}";
   s+=".order-details-panel h3{margin-top:0;font-size:1.2rem;margin-bottom:15px}";
   s+=".order-item{display:flex;justify-content:space-between;margin-bottom:10px;font-size:0.95rem}";
-  s+=".order-item label{color:#555;margin-right:5px}";
+  s+=".order-item label{color:#555;font-weight:500}";
   s+=".order-item .value{font-weight:600}";
-  s+=".shipping-info{background:#fff7de;border-left:4px solid#ffc107;padding:10px;font-size:0.9rem;margin-top:10px}";
+  s+=".shipping-info{background:#fff3cd;border-left:4px solid #ffeeba;padding:10px;font-size:0.9rem;margin-top:10px}";
   s+=".subtotal{margin-top:10px;font-size:1rem;text-align:right;font-weight:bold}";
   s+=".modal-actions{display:flex;gap:10px;margin-top:20px}";
-  s+=".modal-actions button{flex:1;background:#2196f3;color:#fff;border:none;padding:12px;border-radius:4px;cursor:pointer;font-weight:600;font-size:1rem;height:50px;transition:background 0.3s}";
-  s+=".modal-actions button:hover{background:#1976d2}";
+  s+=".modal-actions button{flex:1;background:linear-gradient(to right, #6561e0, #61a3ff);color:#fff;border:none;padding:12px;border-radius:4px;cursor:pointer;font-weight:600;font-size:1rem;transition:background 0.3s}";
+  s+=".modal-actions button:hover{background:linear-gradient(to right, #5450c0, #5090d0)}";
+
   s+="</style>";
   return s;
 }
 
+// Build each top-level section
 function buildTopHeader(){
   var h="";
   h+="<header class='top-header'><div class='logo-wrapper'>";
@@ -725,7 +1734,6 @@ function buildTopHeader(){
   h+="</div></header>";
   return h;
 }
-
 function buildHero(){
   if(!heroData.banner){
     var minimal="";
@@ -753,53 +1761,40 @@ function buildHero(){
   s+="</div></section>";
   return s;
 }
-
 function buildProductsSection(){
-  if(products.length===0)return "<section id='products'><div class='products-grid'></div></section>";
+  if(products.length===0) return "<section id='products'><div class='products-grid'></div></section>";
   var html="";
   for(var i=0;i<products.length;i++){
     var p=products[i];
     var mainImg=(p.images.length>0)?escapeHTML(p.images[0]):"";
-    var currencySymbol = getCurrencySymbol(p.currency);
+    var symbol=getCurrencySymbol(p.currency);
     html+="<div class='product-item'"+
-      " data-title='"+escapeHTML(p.title||"")+"'"+
-      " data-img1='"+escapeHTML(p.images[0]||"")+"'"+
-      " data-img2='"+escapeHTML(p.images[1]||"")+"'"+
-      " data-img3='"+escapeHTML(p.images[2]||"")+"'"+
-      " data-sold='"+escapeHTML(p.sold||"")+"'"+
-      " data-price='"+escapeHTML(p.price||"0")+"'"+
-      " data-currency='"+escapeHTML(p.currency||"$")+"'"+
-      " data-coloroptions='"+escapeHTML(p.coloroptions||"")+"'"+
-      " data-sizeoptions='"+escapeHTML(p.sizeoptions||"")+"'"+
-      " data-description='"+escapeHTML(p.description||"")+"'"+
-      " data-shipping='"+escapeHTML(p.shipping||"FREE")+"'"+
-      " data-returns='"+escapeHTML(p.returns||"Accepted")+"'"+
-      " data-paypalembed='"+escapeHTML(p.paypalEmbed||"")+"'"+
-      " data-paypallink='"+escapeHTML(p.paypalLink||"")+"'"+
-      ">";
+         " data-title='"+escapeHTML(p.title||"")+"'"+
+         " data-sold='"+escapeHTML(p.sold||"")+"'"+
+         " data-price='"+escapeHTML(p.price||"0")+"'"+
+         " data-currency='"+escapeHTML(p.currency||"$")+"'"+
+         " data-description='"+escapeHTML(p.description||"")+"'"+
+         " data-shipping='"+escapeHTML(p.shipping||"FREE")+"'"+
+         " data-returns='"+escapeHTML(p.returns||"Accepted")+"'"+
+         " data-coloroptions='"+escapeHTML(p.coloroptions||"")+"'"+
+         " data-sizeoptions='"+escapeHTML(p.sizeoptions||"")+"'"+
+         " data-images1='"+(p.images[0]||"")+"'"+
+         " data-images2='"+(p.images[1]||"")+"'"+
+         " data-images3='"+(p.images[2]||"")+"'"+
+         " data-paymentmethod='"+escapeHTML(p.paymentMethod||"")+"'"+
+         " data-paypallink='"+escapeHTML(p.paypalLink||"")+"'"+
+         " data-paypalembed='"+escapeHTML(p.paypalEmbed||"")+"'"+
+         " data-otherpaymentlink='"+escapeHTML(p.otherPaymentLink||"")+"'"+
+         ">";
     html+="<div class='product-img' style=\"background-image:url('"+mainImg+"');\"></div>";
     html+="<div class='product-content'>";
-    html+= p.title ? "<h3>"+escapeHTML(p.title)+"</h3>" : "<h3>Untitled Product</h3>";
-    html+="<h2>"+currencySymbol+escapeHTML(p.price||"0")+"</h2>";
+    html+=(p.title? "<h3>"+escapeHTML(p.title)+"</h3>":"<h3>Untitled Product</h3>");
+    html+="<h2>"+symbol+escapeHTML(p.price||"0")+"</h2>";
     html+="<a class='buy-now' href='#'>Buy Now</a>";
     html+="</div></div>";
   }
   return "<section id='products'><div class='products-grid'>"+html+"</div></section>";
 }
-
-/* Function to get currency symbol from currency code */
-function getCurrencySymbol(currencyCode){
-  const symbols = {
-    USD: "$",
-    EUR: "€",
-    GBP: "£",
-    JPY: "¥",
-    // add more as needed
-  };
-  return symbols[currencyCode.toUpperCase()] || currencyCode + " ";
-}
-
-/* Build reviews from reviews[] */
 function buildReviewsSection(){
   if(reviews.length===0)return "";
   var r="<section class='reviews-section' id='reviews'><h2>Reviews</h2><div class='review-container'>";
@@ -807,20 +1802,19 @@ function buildReviewsSection(){
     var rv=reviews[i];
     var starCount=parseInt(rv.stars,10)||3;
     var starSymbols="";
-    for(var s=0;s<starCount;s++){starSymbols+="★";}
+    for(var s=0;s<starCount;s++){ starSymbols+="★";}
     for(var s2=starCount;s2<5;s2++){starSymbols+="☆";}
     r+="<div class='review-item'><h4>"+escapeHTML(rv.name)+"</h4><div class='review-stars'>"+starSymbols+"</div><p>"+escapeHTML(rv.text)+"</p></div>";
   }
   r+="</div></section>";
   return r;
 }
-
-/* Build about from aboutData */
 function buildAboutSection(){
-  if(!aboutData.title && !aboutData.paragraph && !aboutData.image)return "";
-  var a="<section class='about-section' id='about'><div class='about-left'>";
-  a+="<h2>"+escapeHTML(aboutData.title || "Who We Are")+"</h2>";
-  a+="<p>"+escapeHTML(aboutData.paragraph || "We are a small business, etc.")+"</p>";
+  if(!aboutData.title && !aboutData.paragraph && !aboutData.image) return "";
+  var a="";
+  a+="<section class='about-section' id='about'><div class='about-left'>";
+  a+="<h2>"+escapeHTML(aboutData.title||"Who We Are")+"</h2>";
+  a+="<p>"+escapeHTML(aboutData.paragraph||"We are a small business...")+"</p>";
   a+="</div><div class='about-right'>";
   if(aboutData.image){
     a+="<img src='"+escapeHTML(aboutData.image)+"' alt='About Image'>";
@@ -828,90 +1822,233 @@ function buildAboutSection(){
   a+="</div></section>";
   return a;
 }
-
-/* Build contact from contactData */
 function buildContactSection(){
-  if(!contactData.instagram && !contactData.tiktok && !contactData.facebook && !contactData.email)return "";
+  // If everything is empty, skip
+  var anyFilled = contactData.intro || contactData.instagram || contactData.tiktok || contactData.facebook || contactData.xLink || contactData.youtube || contactData.email || contactData.formEmbed;
+  if(!anyFilled) return "";
   var c="<section class='contact-section' id='contact'>";
-  if(heroData.logo){
-    c+="<img class='contact-logo' src='"+escapeHTML(heroData.logo)+"' alt='Logo'>";
-  }
-  c+="<p>We’d love to hear from you! Reach out with any questions or feedback and we’ll respond promptly.</p>";
-  c+="<div class='contact-links'>";
-  if(contactData.instagram){
-    c+="<a href='"+escapeHTML(contactData.instagram)+"' target='_blank'><img src='https://i.ibb.co/whYw9tf/Instagram-icon-png.png' alt='Instagram'></a>";
-  }
-  if(contactData.tiktok){
-    c+="<a href='"+escapeHTML(contactData.tiktok)+"' target='_blank'><img src='https://i.ibb.co/JvLtTqq/Tik-Tok-icon-png.png' alt='TikTok'></a>";
-  }
-  if(contactData.facebook){
-    c+="<a href='"+escapeHTML(contactData.facebook)+"' target='_blank'><img src='https://i.ibb.co/9nFXH9w/Facebook-icon-png.png' alt='Facebook'></a>";
+  // left
+  c+="<div class='contact-left'>";
+    c+="<div class='contact-logo-left'>";
+    if(heroData.logo){
+      c+="<img src='"+escapeHTML(heroData.logo)+"' alt='Logo'>";
+    }
+    c+="</div>";
+    if(contactData.intro){
+      c+="<p>"+escapeHTML(contactData.intro)+"</p>";
+    }
+    // Social icons row
+    let iconsHTML="";
+    if(contactData.instagram) iconsHTML+="<a href='"+escapeHTML(contactData.instagram)+"' target='_blank'><img src='https://i.ibb.co/L6zwnKk/Bella-50.png' alt='Instagram'></a>";
+    if(contactData.tiktok)    iconsHTML+="<a href='"+escapeHTML(contactData.tiktok)+"' target='_blank'><img src='https://i.ibb.co/2vSmtt0/Bella-49.png' alt='TikTok'></a>";
+    if(contactData.facebook)  iconsHTML+="<a href='"+escapeHTML(contactData.facebook)+"' target='_blank'><img src='https://i.ibb.co/gmDjkH3/Bella-48.png' alt='Facebook'></a>";
+    if(contactData.xLink)     iconsHTML+="<a href='"+escapeHTML(contactData.xLink)+"' target='_blank'><img src='https://i.ibb.co/fqp0KrB/Bella-63.png' alt='X'></a>";
+    if(contactData.youtube)   iconsHTML+="<a href='"+escapeHTML(contactData.youtube)+"' target='_blank'><img src='https://i.ibb.co/hC6CQzs/Bella-62.png' alt='Youtube'></a>";
+
+    if(iconsHTML){
+      c+="<div class='contact-social-icons'>"+iconsHTML+"</div>";
+    }
+    if(contactData.email){
+      c+="<div class='contact-email-line'>"+escapeHTML(contactData.email)+"</div>";
+      // If no form embed, show the button, else hide
+      if(!contactData.formEmbed){
+        c+="<a class='email-btn' href='mailto:"+escapeHTML(contactData.email)+"'>Send Us an Email</a>";
+      }
+    }
+  c+="</div>"; // end left
+
+  // right
+  c+="<div class='contact-right'>";
+  if(contactData.formEmbed){
+    c+="<div class='contact-embed'>"+contactData.formEmbed+"</div>";
   }
   c+="</div>";
-  if(contactData.email){
-    c+="<div class='contact-email'><span>"+escapeHTML(contactData.email)+"</span><a class='email-btn' href='mailto:"+escapeHTML(contactData.email)+"'>Send Us an Email</a></div>";
-  }
+
   c+="</section>";
   return c;
 }
 
-/* Build modal code for multi-image, color/size, shipping, returns. */
-function buildModal(){
+// ============== PRODUCT MODAL SCRIPT (internal) ==============
+function buildProductModalScript(){
   var m="";
-  m+="<div id='productModal' class='modal'><div class='modal-content'>";
-  m+="<span class='modal-close'>&times;</span>";
-  m+="<div class='modal-body'>";
-  m+="<div class='modal-left'><div class='modal-main-image'><div class='arrow arrow-left' id='arrowLeft'>❮</div><img id='modalMainImg' src='' alt='Main Product Image'><div class='arrow arrow-right' id='arrowRight'>❯</div></div><div class='modal-thumbs'><img id='modalThumb1' src='' alt='Thumb 1'><img id='modalThumb2' src='' alt='Thumb 2'><img id='modalThumb3' src='' alt='Thumb 3'></div></div>";
-  m+="<div class='modal-right'><h1 id='modalTitle' class='modal-product-title'></h1><div class='modal-price-line'><div id='modalPrice' class='modal-product-price'>$0.00</div><div id='modalSold' class='modal-product-sold'></div></div>";
-  m+="<div id='modalDescription' class='modal-description'></div><div class='color-options'><label>Color:</label><span id='colorPlaceholders'></span></div><div class='size-options'><label>Size:</label><span id='sizePlaceholders'></span></div>";
-  m+="<div class='quantity-options'><label>Quantity:</label><div class='qty-controls'><button class='qty-btn qty-minus'>-</button><span id='qtyValue' class='qty-display'>1</span><button class='qty-btn qty-plus'>+</button></div></div>";
-  m+="<div class='order-details-panel'><h3>Order Details</h3><div class='order-item'><label>Price x Quantity:</label><span class='value' id='itemTotal'>--</span></div><div class='order-item'><label>Selection:</label><span class='value' id='selectedCombos'>(Color, Size)</span></div><div class='order-item'><label>Shipping:</label><span class='value' id='shippingCost'>$0.00</span></div><div class='order-item'><label>Returns:</label><span class='value' id='returnPolicy'></span></div><div class='shipping-info' id='shippingInfo'><strong>Shipping Information:</strong> If your PayPal shipping address or contact details have changed, please update them at checkout so we send your goodies to the right place!</div><div class='subtotal'>Total: <span id='subtotalValue'>$0.00</span></div></div>";
-  m+="<div class='modal-actions'><button class='buy-now-btn'>Buy Now</button></div>";
-  
-  // Remove PayPal form as email integration is removed
-
   m+="<script>(function(){";
-  m+="var getCurrencySymbol = function(currencyCode){ const symbols = { USD: '$', EUR: '€', GBP: '£', JPY: '¥' }; return symbols[currencyCode.toUpperCase()] || currencyCode + ' '; };";
-  m+="var currentProduct = null;";
-  m+="var modal=document.getElementById('productModal'); var modalClose=document.querySelector('.modal-close'); var modalTitle=document.getElementById('modalTitle'); var modalPrice=document.getElementById('modalPrice'); var modalSold=document.getElementById('modalSold'); var modalDescription=document.getElementById('modalDescription'); var modalMainImg=document.getElementById('modalMainImg'); var modalThumb1=document.getElementById('modalThumb1'); var modalThumb2=document.getElementById('modalThumb2'); var modalThumb3=document.getElementById('modalThumb3'); var arrowLeft=document.getElementById('arrowLeft'); var arrowRight=document.getElementById('arrowRight'); var colorPH=document.getElementById('colorPlaceholders'); var sizePH=document.getElementById('sizePlaceholders'); var qtyValue=document.getElementById('qtyValue'); var itemTotal=document.getElementById('itemTotal'); var shippingCost=document.getElementById('shippingCost'); var returnPolicy=document.getElementById('returnPolicy'); var subtotalValue=document.getElementById('subtotalValue'); var selectedCombos=document.getElementById('selectedCombos'); var currentQty=1, basePrice=0, shippingFee=0, returnsText='Accepted'; var allImages=[], currentImgIndex=0; var selectedColor='', selectedSize='';";
+  m+="function getSymbol(cc){";
+  m+="  const known={USD:'$',EUR:'€',GBP:'£',JPY:'¥',AUD:'A$',CAD:'C$',CHF:'CHF',CNY:'¥',HKD:'HK$',NZD:'NZ$'};";
+  m+="  return known[cc.toUpperCase()]||cc+' ';}";
+  m+="var modal=document.createElement('div');";
+  m+="modal.id='productModal'; modal.className='modal';";
+  m+="modal.innerHTML=`";
+  m+="<div class='modal-content'>\
+     <span class='modal-close'>&times;</span>\
+     <div class='modal-body'>\
+       <div class='modal-left'>\
+         <div class='modal-main-image'>\
+           <div class='arrow arrow-left' id='arrowLeft'>❮</div>\
+           <img id='modalMainImg' src='' alt='Main Product Image'>\
+           <div class='arrow arrow-right' id='arrowRight'>❯</div>\
+         </div>\
+         <div class='modal-thumbnails' id='modalThumbnails'></div>\
+       </div>\
+       <div class='modal-right'>\
+         <h1 id='modalTitle' class='modal-product-title'></h1>\
+         <div style='display:flex;flex-direction:row;justify-content:space-between;align-items:center;'>\
+           <div id='modalPrice' class='modal-product-price'>$0.00</div>\
+           <div id='modalSold' class='modal-product-sold'></div>\
+         </div>\
+         <div id='modalDescription' class='modal-description'></div>\
+         <div class='color-options'><label>Color:</label><span id='colorPlaceholders'></span></div>\
+         <div class='size-options'><label>Size:</label><span id='sizePlaceholders'></span></div>\
+         <div class='order-details-panel'>\
+           <h3>Order Details</h3>\
+           <div class='order-item'><label>Price:</label><span class='value' id='itemPrice'>--</span></div>\
+           <div class='order-item'><label>Shipping:</label><span class='value' id='shippingCost'>$0.00</span></div>\
+           <div class='order-item'><label>Returns:</label><span class='value' id='returnPolicy'></span></div>\
+           <div class='shipping-info' id='shippingInfo'><strong>Shipping Information:</strong> If your PayPal shipping address or contact details have changed, please update them at checkout so we send your goodies to the right place!</div>\
+           <div class='subtotal'>Total: <span id='subtotalValue'>$0.00</span></div>\
+         </div>\
+         <div class='modal-actions'>\
+           <button class='buy-now-btn'>Buy Now</button>\
+         </div>\
+       </div>\
+     </div>\
+   </div>`;";
+  m+="document.body.appendChild(modal);";
+  m+="var productModal=document.getElementById('productModal');";
+  m+="var closeBtn=productModal.querySelector('.modal-close');";
+  m+="var mainImg=productModal.querySelector('#modalMainImg');";
+  m+="var modalTitle=productModal.querySelector('#modalTitle');";
+  m+="var modalPrice=productModal.querySelector('#modalPrice');";
+  m+="var modalSold=productModal.querySelector('#modalSold');";
+  m+="var modalDescription=productModal.querySelector('#modalDescription');";
+  m+="var colorPH=productModal.querySelector('#colorPlaceholders');";
+  m+="var sizePH=productModal.querySelector('#sizePlaceholders');";
+  m+="var itemPrice=productModal.querySelector('#itemPrice');";
+  m+="var shippingCost=productModal.querySelector('#shippingCost');";
+  m+="var returnPolicy=productModal.querySelector('#returnPolicy');";
+  m+="var subtotalValue=productModal.querySelector('#subtotalValue');";
+  m+="var arrowLeft=productModal.querySelector('#arrowLeft');";
+  m+="var arrowRight=productModal.querySelector('#arrowRight');";
+  m+="var thumbsContainer=productModal.querySelector('#modalThumbnails');";
+  m+="var buyNowBtn=productModal.querySelector('.buy-now-btn');";
 
-  m+="function openModal(p){ currentProduct = p; modalTitle.textContent=p.title||''; modalPrice.textContent=getCurrencySymbol(p.currency || '$')+(p.price||'0'); if(p.sold){modalSold.textContent=p.sold+' Sold';}else{modalSold.textContent='';} modalDescription.textContent=p.description||''; basePrice=parseFloat(p.price)||0; if(p.shipping==='FREE'){ shippingFee=0;} else{ shippingFee=parseFloat(p.shipping)||0;} returnsText=p.returns||'Accepted'; currentQty=1; qtyValue.textContent=currentQty;";
-  m+="allImages=[]; if(p.images[0])allImages.push(p.images[0]); if(p.images[1])allImages.push(p.images[1]); if(p.images[2])allImages.push(p.images[2]); currentImgIndex=0; if(allImages.length>0)modalMainImg.src=allImages[0]; else modalMainImg.src='https://via.placeholder.com/400?text=No+Image'; modalThumb1.src=allImages[0]||'https://via.placeholder.com/400?text=No+Image1'; modalThumb2.src=allImages[1]||'https://via.placeholder.com/400?text=No+Image2'; modalThumb3.src=allImages[2]||'https://via.placeholder.com/400?text=No+Image3'; resetThumbs(); if(allImages[0]) modalThumb1.classList.add('selected'); selectedColor=''; selectedSize=''; colorPH.innerHTML=''; sizePH.innerHTML=''; if(p.coloroptions){ var carr=p.coloroptions.split(','); for(var i=0;i<carr.length;i++){ var c=carr[i].trim(); if(!c)continue; var sp=document.createElement('span'); sp.innerText=c; sp.onclick=function(col,elm){return function(){ pickColor(col,elm);};}(c,sp); if(i===0){ sp.classList.add('selected'); selectedColor=c;} colorPH.appendChild(sp);}} if(p.sizeoptions){ var sarr=p.sizeoptions.split(','); for(var j=0;j<sarr.length;j++){ var sizeX=sarr[j].trim(); if(!sizeX)continue; var ssp=document.createElement('span'); ssp.innerText=sizeX; ssp.onclick=function(sz,elm){return function(){ pickSize(sz,elm);};}(sizeX,ssp); if(j===0){ ssp.classList.add('selected'); selectedSize=sizeX;} sizePH.appendChild(ssp);}} updateOrderDetails(); modal.style.display='flex';}";
+  m+="var currentProduct=null;";
+  m+="var allImages=[];";
+  m+="var currentIndex=0;";
+  m+="var basePrice=0; var shippingFee=0; var returnsText='Accepted';";
 
-  m+="function pickColor(c,span){ Array.from(colorPH.children).forEach(function(ch){ch.classList.remove('selected');}); span.classList.add('selected'); selectedColor=c; updateOrderDetails();}";
-  m+="function pickSize(c,span){ Array.from(sizePH.children).forEach(function(ch){ch.classList.remove('selected');}); span.classList.add('selected'); selectedSize=c; updateOrderDetails();}";
-  m+="function resetThumbs(){ modalThumb1.classList.remove('selected'); modalThumb2.classList.remove('selected'); modalThumb3.classList.remove('selected');}";
-  m+="arrowLeft.onclick=function(){ if(allImages.length<2)return; currentImgIndex=(currentImgIndex-1+allImages.length)%allImages.length; setMain();}; arrowRight.onclick=function(){ if(allImages.length<2)return; currentImgIndex=(currentImgIndex+1)%allImages.length; setMain();};";
-  m+="function setMain(){ modalMainImg.src=allImages[currentImgIndex]; resetThumbs(); if(currentImgIndex===0)modalThumb1.classList.add('selected'); if(currentImgIndex===1)modalThumb2.classList.add('selected'); if(currentImgIndex===2)modalThumb3.classList.add('selected');}";
-  m+="modalThumb1.onclick=function(){ if(!allImages[0])return; currentImgIndex=0; setMain();}; modalThumb2.onclick=function(){ if(!allImages[1])return; currentImgIndex=1; setMain();}; modalThumb3.onclick=function(){ if(!allImages[2])return; currentImgIndex=2; setMain();};";
-  m+="document.querySelector('.qty-minus').onclick=function(){ if(currentQty>1){ currentQty--; qtyValue.textContent=currentQty; updateOrderDetails();}};";
-  m+="document.querySelector('.qty-plus').onclick=function(){ currentQty++; qtyValue.textContent=currentQty; updateOrderDetails();};";
-  m+="function updateOrderDetails(){ var total=basePrice*currentQty; itemTotal.textContent=getCurrencySymbol(currentProduct.currency || '$')+basePrice.toFixed(2)+' x '+currentQty+' = '+getCurrencySymbol(currentProduct.currency || '$')+(total.toFixed(2)); if(shippingFee===0){ shippingCost.textContent='FREE'; } else{ shippingCost.textContent=getCurrencySymbol(currentProduct.currency || '$')+shippingFee.toFixed(2); } returnPolicy.textContent=returnsText; var grand=total+shippingFee; subtotalValue.textContent=getCurrencySymbol(currentProduct.currency || '$')+grand.toFixed(2); selectedCombos.textContent='('+selectedColor+', '+selectedSize+')';}";
+  m+="function updateOrderDetails(){";
+  m+="  var total=basePrice + shippingFee;";
+  m+="  itemPrice.textContent=getSymbol(currentProduct.currency||'$')+basePrice.toFixed(2);";
+  m+="  if(shippingFee===0){ shippingCost.textContent='FREE'; } else { shippingCost.textContent=getSymbol(currentProduct.currency||'$')+shippingFee.toFixed(2);}";
+  m+="  returnPolicy.textContent=returnsText;";
+  m+="  subtotalValue.textContent=getSymbol(currentProduct.currency||'$')+total.toFixed(2);";
+  m+="}";
 
-  m+="modalClose.onclick=function(){ modal.style.display='none'; currentProduct = null; }; window.onclick=function(e){ if(e.target===modal){ modal.style.display='none'; currentProduct = null;}};";
+  // change image function
+  m+="function showImageAt(idx){ if(idx<0||idx>=allImages.length)return; currentIndex=idx; mainImg.src=allImages[idx];";
+  m+="  Array.from(thumbsContainer.children).forEach((imgEl,i)=>{ imgEl.style.borderColor=(i===idx)?'#2196f3':'transparent';});";
+  m+="}";
 
-  // Add event listeners to product items
-  m+="document.querySelectorAll('.product-item').forEach(function(it){ var pd={}; pd.title=it.getAttribute('data-title')||''; pd.sold=it.getAttribute('data-sold')||''; pd.price=it.getAttribute('data-price')||'0'; pd.currency=it.getAttribute('data-currency')||'$'; pd.description=it.getAttribute('data-description')||''; pd.images=[]; pd.images.push(it.getAttribute('data-img1')||''); pd.images.push(it.getAttribute('data-img2')||''); pd.images.push(it.getAttribute('data-img3')||''); pd.coloroptions=it.getAttribute('data-coloroptions')||''; pd.sizeoptions=it.getAttribute('data-sizeoptions')||''; pd.shipping=it.getAttribute('data-shipping')||'FREE'; pd.returns=it.getAttribute('data-returns')||'Accepted'; pd.paypalEmbed=it.getAttribute('data-paypalembed')||''; pd.paypalLink=it.getAttribute('data-paypallink')||''; it.addEventListener('click',function(){ openModal(pd);}); var buy=it.querySelector('.buy-now'); if(buy){ buy.addEventListener('click',function(ev){ ev.stopPropagation(); ev.preventDefault(); openModal(pd);});}});";
-
-  // Handle Buy Now button in modal
-  m+="document.querySelector('.buy-now-btn').onclick = function(){";
-  m+="  if (!currentProduct) return;";
-  m+="  var currencySymbol = getCurrencySymbol(currentProduct.currency || '$');";
-  m+="  if (currentProduct.paypalEmbed) {";
-  m+="    var newWin = window.open('', '_blank');";
-  m+="    newWin.document.write(currentProduct.paypalEmbed);";
-  m+="  } else if (currentProduct.paypalLink) {";
-  m+="    window.open(currentProduct.paypalLink, '_blank');";
-  m+="  } else {";
-  m+="    alert('PayPal payment method not configured for this product.');";
+  m+="function openModal(prod){ currentProduct=prod; productModal.style.display='flex'; allImages=[];";
+  m+="  if(prod.images1)allImages.push(prod.images1); if(prod.images2)allImages.push(prod.images2); if(prod.images3)allImages.push(prod.images3);";
+  m+="  modalTitle.textContent=prod.title||'';";
+  m+="  if(prod.sold) modalSold.textContent=prod.sold+' Sold'; else modalSold.textContent='';";
+  m+="  modalPrice.textContent=getSymbol(prod.currency||'$')+(prod.price||'0');";
+  m+="  modalDescription.textContent=prod.description||'';";
+  m+="  basePrice=parseFloat(prod.price)||0;";
+  m+="  if(prod.shipping==='FREE') shippingFee=0; else shippingFee=parseFloat(prod.shipping)||0;";
+  m+="  returnsText=prod.returns||'Accepted';";
+  m+="  thumbsContainer.innerHTML='';";
+  m+="  if(allImages.length>0){ showImageAt(0);} else { mainImg.src='https://via.placeholder.com/400?text=No+Image';}";
+  m+="  for(var i=0;i<allImages.length;i++){";
+  m+="    var t=document.createElement('img'); t.src=allImages[i]; t.dataset.index=i; t.onclick=function(){ showImageAt(parseInt(this.dataset.index));};";
+  m+="    if(i===0){t.style.borderColor='#2196f3';}";
+  m+="    thumbsContainer.appendChild(t);";
   m+="  }";
+  m+="  colorPH.innerHTML='';";
+  m+="  if(prod.coloroptions){ var cArr=prod.coloroptions.split(','); cArr.forEach(function(c){ c=c.trim(); if(c){ var sp=document.createElement('span'); sp.textContent=c; colorPH.appendChild(sp);}});}";
+  m+="  sizePH.innerHTML='';";
+  m+="  if(prod.sizeoptions){ var sArr=prod.sizeoptions.split(','); sArr.forEach(function(sz){ sz=sz.trim(); if(sz){ var sp=document.createElement('span'); sp.textContent=sz; sizePH.appendChild(sp);}});}";
+  m+="  updateOrderDetails();";
+  m+="}";
+
+  // attach
+  m+="document.querySelectorAll('.product-item').forEach(function(pi){";
+  m+="  var pd={};";
+  m+="  pd.title=pi.getAttribute('data-title')||'';";
+  m+="  pd.sold=pi.getAttribute('data-sold')||'';";
+  m+="  pd.price=pi.getAttribute('data-price')||'0';";
+  m+="  pd.currency=pi.getAttribute('data-currency')||'$';";
+  m+="  pd.description=pi.getAttribute('data-description')||'';";
+  m+="  pd.shipping=pi.getAttribute('data-shipping')||'FREE';";
+  m+="  pd.returns=pi.getAttribute('data-returns')||'Accepted';";
+  m+="  pd.coloroptions=pi.getAttribute('data-coloroptions')||'';";
+  m+="  pd.sizeoptions=pi.getAttribute('data-sizeoptions')||'';";
+  m+="  pd.images1=pi.getAttribute('data-images1')||'';";
+  m+="  pd.images2=pi.getAttribute('data-images2')||'';";
+  m+="  pd.images3=pi.getAttribute('data-images3')||'';";
+  m+="  pd.paymentMethod=pi.getAttribute('data-paymentmethod')||'';";
+  m+="  pd.paypalLink=pi.getAttribute('data-paypallink')||'';";
+  m+="  pd.paypalEmbed=pi.getAttribute('data-paypalembed')||'';";
+  m+="  pd.otherPaymentLink=pi.getAttribute('data-otherpaymentlink')||'';";
+  m+="  pi.addEventListener('click',function(){ openModal(pd);});";
+  m+="  var buy=pi.querySelector('.buy-now');";
+  m+="  if(buy){";
+  m+="    buy.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); openModal(pd);});";
+  m+="  }";
+  m+="});";
+
+  // close
+  m+="closeBtn.onclick=function(){ productModal.style.display='none';};";
+  m+="window.onclick=function(e){ if(e.target===productModal){ productModal.style.display='none';}};";
+  // arrow left right
+  m+="arrowLeft.onclick=function(){ if(currentIndex>0){showImageAt(currentIndex-1);} };";
+  m+="arrowRight.onclick=function(){ if(currentIndex<allImages.length-1){showImageAt(currentIndex+1);} };";
+
+  // buy now
+  m+="buyNowBtn.onclick=function(){";
+  m+="  if(!currentProduct)return;";
+  m+="  if(currentProduct.paymentMethod==='paypalLink'){ window.open(currentProduct.paypalLink,'_blank');}";
+  m+="  else if(currentProduct.paymentMethod==='paypalEmbed'){ var newWin=window.open('','_blank'); newWin.document.write(currentProduct.paypalEmbed);}";
+  m+="  else if(currentProduct.paymentMethod==='other'){ if(currentProduct.otherPaymentLink){window.open(currentProduct.otherPaymentLink,'_blank');} else{alert('No other payment link provided.');}}";
+  m+="  else{ alert('Payment method not configured.'); }";
   m+="};";
 
   m+="})();<\/script>";
   return m;
 }
 
-/* Escape function for user text. */
+// ============== GET CURRENCY SYMBOL ==============
+function getCurrencySymbol(code){
+  const sym={
+    AED:"د.إ",AFN:"؋",ALL:"L",AMD:"֏",ANG:"ƒ",AOA:"Kz",ARS:"$",AUD:"A$",AWG:"ƒ",
+    AZN:"₼",BAM:"KM",BBD:"Bds$",BDT:"৳",BGN:"лв",BHD:"د.ب",BIF:"FBu",BMD:"$",
+    BND:"B$",BOB:"$b",BRL:"R$",BSD:"$",BTN:"Nu.",BWP:"P",BYN:"Br",BZD:"BZ$",
+    CAD:"C$",CDF:"FC",CHF:"CHF",CLP:"$",CNY:"¥",COP:"$",CRC:"₡",CUC:"$",CUP:"$",
+    CVE:"$",CZK:"Kč",DJF:"Fdj",DKK:"kr",DOP:"RD$",DZD:"د.ج",EGP:"£",ERN:"Nfk",
+    ETB:"Br",EUR:"€",FJD:"FJ$",FKP:"£",FOK:"kr",GBP:"£",GEL:"₾",GGP:"£",GHS:"₵",
+    GIP:"£",GMD:"D",GNF:"FG",GTQ:"Q",GYD:"G$",HKD:"HK$",HNL:"L",HRK:"kn",
+    HTG:"G",HUF:"Ft",IDR:"Rp",ILS:"₪",IMP:"£",INR:"₹",IQD:"ع.د",IRR:"﷼",
+    ISK:"kr",JEP:"£",JMD:"J$",JOD:"د.ا",JPY:"¥",KES:"KSh",KGS:"сом",KHR:"៛",
+    KMF:"CF",KPW:"₩",KRW:"₩",KWD:"د.ك",KYD:"KYD",KZT:"₸",LAK:"₭",LBP:"£",
+    LKR:"Rs",LRD:"L$",LSL:"L",LYD:"ل.د",MAD:"د.م.",MDL:"L",MGA:"Ar",MKD:"ден",
+    MMK:"K",MNT:"₮",MOP:"MOP$",MRU:"UM",MUR:"₨",MVR:"Rf",MWK:"MK",MXN:"$",
+    MYR:"RM",MZN:"MT",NAD:"N$",NGN:"₦",NIO:"C$",NOK:"kr",NPR:"₨",NZD:"NZ$",
+    OMR:"ر.ع.",PAB:"B/.",PEN:"S/.",PGK:"K",PHP:"₱",PKR:"₨",PLN:"zł",PYG:"₲",
+    QAR:"ر.ق",RON:"lei",RSD:"din",RUB:"₽",RWF:"FRw",SAR:"ر.س",SBD:"SI$",
+    SCR:"₨",SDG:"£",SEK:"kr",SGD:"S$",
+    SHP:"£",SLL:"Le",SOS:"S",SRD:"$",
+    SSP:"£",STD:"Db",STN:"Db",
+    SVC:"$",SYP:"£",SZL:"E",
+    THB:"฿",TJS:"ЅМ",TMT:"m",TND:"د.ت",TOP:"T$",TRY:"₺",TTD:"TT$",TWD:"NT$",
+    TZS:"TSh",UAH:"₴",UGX:"USh",USD:"$",UYU:"$U",UZS:"UZS",VES:"Bs.S",
+    VND:"₫",VUV:"VT",WST:"WS$",XAF:"FCFA",XCD:"EC$",XDR:"XDR",XOF:"CFA",
+    XPF:"CFPF",YER:"﷼",ZAR:"R",ZMW:"ZK",ZWL:"Z$"
+  };
+  return sym[code.toUpperCase()]||code+" ";
+}
+
+// ============== ESCAPE HTML ==============
 function escapeHTML(str){
   if(!str)return "";
   return str.replace(/[<>"'&]/g,function(c){
@@ -925,6 +2062,1202 @@ function escapeHTML(str){
   });
 }
 
+// ============== IMGBB REDIRECT ==============
+function redirectToUpload(){
+  window.open("https://imgbb.com","_blank");
+}
+
+// ============== MANAGEMENT LISTS ==============
+function updateManagementLists(){
+  const cont = document.getElementById('managementContainer');
+  cont.innerHTML = "";
+
+  // Products
+  if(products.length>0){
+    const pDiv = document.createElement('div');
+    pDiv.innerHTML = "<h3>Products in Website</h3>";
+    products.forEach((prod, idx)=>{
+      const row = document.createElement('div');
+      row.style.display="flex"; 
+      row.style.alignItems="center"; 
+      row.style.justifyContent="space-between"; 
+      row.style.marginBottom="8px";
+      row.innerHTML = `<span>${escapeHTML(prod.title||"Untitled")}</span>`;
+      const delBtn = document.createElement('button');
+      delBtn.textContent="Delete";
+      delBtn.style.background="red";
+      delBtn.style.color="#fff";
+      delBtn.style.border="none";
+      delBtn.style.cursor="pointer";
+      delBtn.onclick=function(){
+        products.splice(idx,1);
+        updatePreview();
+        updateManagementLists();
+      };
+      row.appendChild(delBtn);
+      pDiv.appendChild(row);
+    });
+    cont.appendChild(pDiv);
+  }
+  // Reviews
+  if(reviews.length>0){
+    const rDiv = document.createElement('div');
+    rDiv.innerHTML="<h3>Reviews in Website</h3>";
+    reviews.forEach((rev, idx)=>{
+      const row=document.createElement('div');
+      row.style.display="flex";
+      row.style.alignItems="center";
+      row.style.justifyContent="space-between";
+      row.style.marginBottom="8px";
+      row.innerHTML=`<span>${escapeHTML(rev.name||"Unnamed")}</span>`;
+      const delBtn=document.createElement('button');
+      delBtn.textContent="Delete";
+      delBtn.style.background="red";
+      delBtn.style.color="#fff";
+      delBtn.style.border="none";
+      delBtn.style.cursor="pointer";
+      delBtn.onclick=function(){
+        reviews.splice(idx,1);
+        updatePreview();
+        updateManagementLists();
+      };
+      row.appendChild(delBtn);
+      rDiv.appendChild(row);
+    });
+    cont.appendChild(rDiv);
+  }
+  // Contact Form
+  if(contactData.formEmbed){
+    const cfDiv=document.createElement('div');
+    cfDiv.innerHTML="<h3>Contact Form</h3><span>Contact Form</span>";
+    const delBtn=document.createElement('button');
+    delBtn.textContent="Delete";
+    delBtn.style.background="red";
+    delBtn.style.color="#fff";
+    delBtn.style.border="none";
+    delBtn.style.cursor="pointer";
+    delBtn.style.marginLeft="20px";
+    delBtn.onclick=function(){
+      contactData.formEmbed="";
+      const addBtn = document.getElementById('addContactFormButton');
+      addBtn.classList.remove('success');
+      addBtn.textContent="Add Form";
+      updatePreview();
+      updateManagementLists();
+    };
+    cfDiv.appendChild(delBtn);
+    cont.appendChild(cfDiv);
+  }
+}
+
+// ============== SETUP CONTACT FORM MODAL ==============
+function setupContactFormModal(){
+  var modal = document.getElementById('contactFormModal');
+  var openBtn = document.getElementById('addContactFormButton');
+  var closeBtn = document.getElementById('closeContactFormModal');
+  var confirmBtn = document.getElementById('confirmAddContactFormButton');
+  var textarea = document.getElementById('contactFormIframe');
+  
+  openBtn.onclick = function(){
+    if(contactData.formEmbed){
+      alert("A contact form is already added. You can delete it before adding a new one.");
+      return;
+    }
+    modal.style.display = 'flex';
+  };
+  
+  closeBtn.onclick = function(){
+    modal.style.display = 'none';
+  };
+  
+  confirmBtn.onclick = function() {
+  var embedCode = textarea.value.trim();
+  if (embedCode) {
+    contactData.formEmbed = embedCode;
+    modal.style.display = 'none';
+    textarea.value = '';
+
+    var addBtn = document.getElementById('addContactFormButton');
+    addBtn.textContent = 'Form Added Successfully';
+
+    // Create & show the "Delete Form" button
+    const statusDiv = document.getElementById('contactFormStatus');
+    statusDiv.innerHTML = '';  // Clear
+    
+    const delFormBtn = document.createElement('button');
+    delFormBtn.textContent = 'Delete Form';
+    delFormBtn.style.background = 'red';
+    delFormBtn.style.color = '#fff';
+    delFormBtn.style.border = 'none';
+    delFormBtn.style.cursor = 'pointer';
+    delFormBtn.style.borderRadius = '4px';
+    delFormBtn.style.padding = '5px 10px';
+
+    delFormBtn.onclick = function() {
+      contactData.formEmbed = '';
+      addBtn.textContent = 'Add Form';
+      statusDiv.innerHTML = '';
+      updatePreview();
+    };
+
+    statusDiv.appendChild(delFormBtn);
+
+    updatePreview();
+  } else {
+    alert("Please paste your contact form embed code.");
+  }
+};
+
+  
+  // Close modal when clicking outside
+  window.onclick = function(event){
+    if(event.target == modal){
+      modal.style.display = 'none';
+    }
+  };
+}
+
+// ============== GET CURRENCY SYMBOL ==============
+function getCurrencySymbol(code){
+  const sym={
+    AED:"د.إ",AFN:"؋",ALL:"L",AMD:"֏",ANG:"ƒ",AOA:"Kz",ARS:"$",AUD:"A$",AWG:"ƒ",
+    AZN:"₼",BAM:"KM",BBD:"Bds$",BDT:"৳",BGN:"лв",BHD:"د.ب",BIF:"FBu",BMD:"$",
+    BND:"B$",BOB:"$b",BRL:"R$",BSD:"$",BTN:"Nu.",BWP:"P",BYN:"Br",BZD:"BZ$",
+    CAD:"C$",CDF:"FC",CHF:"CHF",CLP:"$",CNY:"¥",COP:"$",CRC:"₡",CUC:"$",CUP:"$",
+    CVE:"$",CZK:"Kč",DJF:"Fdj",DKK:"kr",DOP:"RD$",DZD:"د.ج",EGP:"£",ERN:"Nfk",
+    ETB:"Br",EUR:"€",FJD:"FJ$",FKP:"£",FOK:"kr",GBP:"£",GEL:"₾",GGP:"£",GHS:"₵",
+    GIP:"£",GMD:"D",GNF:"FG",GTQ:"Q",GYD:"G$",HKD:"HK$",HNL:"L",HRK:"kn",
+    HTG:"G",HUF:"Ft",IDR:"Rp",ILS:"₪",IMP:"£",INR:"₹",IQD:"ع.د",IRR:"﷼",
+    ISK:"kr",JEP:"£",JMD:"J$",JOD:"د.ا",JPY:"¥",KES:"KSh",KGS:"сом",KHR:"៛",
+    KMF:"CF",KPW:"₩",KRW:"₩",KWD:"د.ك",KYD:"KYD",KZT:"₸",LAK:"₭",LBP:"£",
+    LKR:"Rs",LRD:"L$",LSL:"L",LYD:"ل.د",MAD:"د.م.",MDL:"L",MGA:"Ar",MKD:"ден",
+    MMK:"K",MNT:"₮",MOP:"MOP$",MRU:"UM",MUR:"₨",MVR:"Rf",MWK:"MK",MXN:"$",
+    MYR:"RM",MZN:"MT",NAD:"N$",NGN:"₦",NIO:"C$",NOK:"kr",NPR:"₨",NZD:"NZ$",
+    OMR:"ر.ع.",PAB:"B/.",PEN:"S/.",PGK:"K",PHP:"₱",PKR:"₨",PLN:"zł",PYG:"₲",
+    QAR:"ر.ق",RON:"lei",RSD:"din",RUB:"₽",RWF:"FRw",SAR:"ر.س",SBD:"SI$",
+    SCR:"₨",SDG:"£",SEK:"kr",SGD:"S$",
+    SHP:"£",SLL:"Le",SOS:"S",SRD:"$",
+    SSP:"£",STD:"Db",STN:"Db",
+    SVC:"$",SYP:"£",SZL:"E",
+    THB:"฿",TJS:"ЅМ",TMT:"m",TND:"د.ت",TOP:"T$",TRY:"₺",TTD:"TT$",TWD:"NT$",
+    TZS:"TSh",UAH:"₴",UGX:"USh",USD:"$",UYU:"$U",UZS:"UZS",VES:"Bs.S",
+    VND:"₫",VUV:"VT",WST:"WS$",XAF:"FCFA",XCD:"EC$",XDR:"XDR",XOF:"CFA",
+    XPF:"CFPF",YER:"﷼",ZAR:"R",ZMW:"ZK",ZWL:"Z$"
+  };
+  return sym[code.toUpperCase()]||code+" ";
+}
+
+// ============== ESCAPE HTML ==============
+function escapeHTML(str){
+  if(!str)return "";
+  return str.replace(/[<>"'&]/g,function(c){
+    switch(c){
+      case '<':return '&lt;';
+      case '>':return '&gt;';
+      case '"':return '&quot;';
+      case "'":return '&#39;';
+      case '&':return '&amp;';
+    }
+  });
+}
+
+// ============== IMGBB REDIRECT ==============
+function redirectToUpload(){
+  window.open("https://imgbb.com","_blank");
+}
+
+// ============== MANAGEMENT LISTS ==============
+function updateManagementLists(){
+  const cont = document.getElementById('managementContainer');
+  cont.innerHTML = "";
+
+  // Products
+  if(products.length>0){
+    const pDiv = document.createElement('div');
+    pDiv.innerHTML = "<h3>Products in Website</h3>";
+    products.forEach((prod, idx)=>{
+      const row = document.createElement('div');
+      row.style.display="flex"; 
+      row.style.alignItems="center"; 
+      row.style.justifyContent="space-between"; 
+      row.style.marginBottom="8px";
+      row.innerHTML = `<span>${escapeHTML(prod.title||"Untitled")}</span>`;
+      const delBtn = document.createElement('button');
+      delBtn.textContent="Delete";
+      delBtn.style.background="red";
+      delBtn.style.color="#fff";
+      delBtn.style.border="none";
+      delBtn.style.cursor="pointer";
+      delBtn.onclick=function(){
+        products.splice(idx,1);
+        updatePreview();
+        updateManagementLists();
+      };
+      row.appendChild(delBtn);
+      pDiv.appendChild(row);
+    });
+    cont.appendChild(pDiv);
+  }
+  // Reviews
+  if(reviews.length>0){
+    const rDiv = document.createElement('div');
+    rDiv.innerHTML="<h3>Reviews in Website</h3>";
+    reviews.forEach((rev, idx)=>{
+      const row=document.createElement('div');
+      row.style.display="flex";
+      row.style.alignItems="center";
+      row.style.justifyContent="space-between";
+      row.style.marginBottom="8px";
+      row.innerHTML=`<span>${escapeHTML(rev.name||"Unnamed")}</span>`;
+      const delBtn=document.createElement('button');
+      delBtn.textContent="Delete";
+      delBtn.style.background="red";
+      delBtn.style.color="#fff";
+      delBtn.style.border="none";
+      delBtn.style.cursor="pointer";
+      delBtn.onclick=function(){
+        reviews.splice(idx,1);
+        updatePreview();
+        updateManagementLists();
+      };
+      row.appendChild(delBtn);
+      rDiv.appendChild(row);
+    });
+    cont.appendChild(rDiv);
+  }
+  // Contact Form
+  if(contactData.formEmbed){
+    const cfDiv=document.createElement('div');
+    cfDiv.innerHTML="<h3>Contact Form</h3><span>Contact Form</span>";
+    const delBtn=document.createElement('button');
+    delBtn.textContent="Delete";
+    delBtn.style.background="red";
+    delBtn.style.color="#fff";
+    delBtn.style.border="none";
+    delBtn.style.cursor="pointer";
+    delBtn.style.marginLeft="20px";
+    delBtn.onclick=function(){
+      contactData.formEmbed="";
+      const addBtn = document.getElementById('addContactFormButton');
+      addBtn.classList.remove('success');
+      addBtn.textContent="Add Form";
+      updatePreview();
+      updateManagementLists();
+    };
+    cfDiv.appendChild(delBtn);
+    cont.appendChild(cfDiv);
+  }
+}
+
+// ============== SETUP CONTACT FORM MODAL ==============
+function setupContactFormModal(){
+  var modal = document.getElementById('contactFormModal');
+  var openBtn = document.getElementById('addContactFormButton');
+  var closeBtn = document.getElementById('closeContactFormModal');
+  var confirmBtn = document.getElementById('confirmAddContactFormButton');
+  var textarea = document.getElementById('contactFormIframe');
+  
+  openBtn.onclick = function(){
+    if(contactData.formEmbed){
+      alert("A contact form is already added. You can delete it before adding a new one.");
+      return;
+    }
+    modal.style.display = 'flex';
+  };
+  
+  closeBtn.onclick = function(){
+    modal.style.display = 'none';
+  };
+  
+  // Inside setupContactFormModal()
+confirmBtn.onclick = function() {
+  const embedCode = textarea.value.trim();
+  if (embedCode) {
+    // 1) Store the form code
+    contactData.formEmbed = embedCode;
+    
+    // 2) Close the modal & clear the textarea
+    modal.style.display = 'none';
+    textarea.value = '';
+
+    // 3) Mark the "Add Form" button as "Form Added"
+    const addBtn = document.getElementById('addContactFormButton');
+    addBtn.classList.add('success');
+    addBtn.textContent = 'Form Added';
+
+    // 4) Now create and show the Delete Form button BELOW the Add Form button
+    const statusDiv = document.getElementById('contactFormStatus');
+    statusDiv.innerHTML = ''; // Clear whatever was in it
+    
+    // Create the delete button
+    const delFormBtn = document.createElement('button');
+    delFormBtn.textContent = 'Delete Form';
+    delFormBtn.style.background = 'red';
+    delFormBtn.style.color = '#fff';
+    delFormBtn.style.border = 'none';
+    delFormBtn.style.cursor = 'pointer';
+    delFormBtn.style.borderRadius = '4px';
+    delFormBtn.style.padding = '5px 10px';
+
+    // Clicking "Delete Form" sets formEmbed to ""
+    delFormBtn.onclick = function() {
+      contactData.formEmbed = '';      // remove embed
+      addBtn.classList.remove('success');
+      addBtn.textContent = 'Add Form'; // reset button text
+      statusDiv.innerHTML = '';        // remove the delete button
+      updatePreview();                 // re-render preview
+    };
+
+    // Finally, place the delete button into #contactFormStatus
+    statusDiv.appendChild(delFormBtn);
+
+    // 5) Re-render the preview + management
+    updatePreview();
+    updateManagementLists();
+  } else {
+    alert("Please paste your contact form embed code.");
+  }
+};
+
+
+  
+  // Close modal when clicking outside
+  window.onclick = function(event){
+    if(event.target == modal){
+      modal.style.display = 'none';
+    }
+  };
+}
+
+// ============== BUILD PRODUCT MODAL SCRIPT (internal) ==============
+function buildProductModalScript(){
+  var m="";
+  m+="<script>(function(){";
+  m+="function getSymbol(cc){";
+  m+="  const known={USD:'$',EUR:'€',GBP:'£',JPY:'¥',AUD:'A$',CAD:'C$',CHF:'CHF',CNY:'¥',HKD:'HK$',NZD:'NZ$'};";
+  m+="  return known[cc.toUpperCase()]||cc+' ';}";
+  m+="var modal=document.createElement('div');";
+  m+="modal.id='productModal'; modal.className='modal';";
+  m+="modal.innerHTML=`";
+  m+="<div class='modal-content'>\
+     <span class='modal-close'>&times;</span>\
+     <div class='modal-body'>\
+       <div class='modal-left'>\
+         <div class='modal-main-image'>\
+           <div class='arrow arrow-left' id='arrowLeft'>❮</div>\
+           <img id='modalMainImg' src='' alt='Main Product Image'>\
+           <div class='arrow arrow-right' id='arrowRight'>❯</div>\
+         </div>\
+         <div class='modal-thumbnails' id='modalThumbnails'></div>\
+       </div>\
+       <div class='modal-right'>\
+         <h1 id='modalTitle' class='modal-product-title'></h1>\
+         <div style='display:flex;flex-direction:row;justify-content:space-between;align-items:center;'>\
+           <div id='modalPrice' class='modal-product-price'>$0.00</div>\
+           <div id='modalSold' class='modal-product-sold'></div>\
+         </div>\
+         <div id='modalDescription' class='modal-description'></div>\
+         <div class='color-options'><label>Color:</label><span id='colorPlaceholders'></span></div>\
+         <div class='size-options'><label>Size:</label><span id='sizePlaceholders'></span></div>\
+         <div class='order-details-panel'>\
+           <h3>Order Details</h3>\
+           <div class='order-item'><label>Price:</label><span class='value' id='itemPrice'>--</span></div>\
+           <div class='order-item'><label>Shipping:</label><span class='value' id='shippingCost'>$0.00</span></div>\
+           <div class='order-item'><label>Returns:</label><span class='value' id='returnPolicy'></span></div>\
+           <div class='shipping-info' id='shippingInfo'><strong>Shipping Information:</strong> If your PayPal shipping address or contact details have changed, please update them at checkout so we send your goodies to the right place!</div>\
+           <div class='subtotal'>Total: <span id='subtotalValue'>$0.00</span></div>\
+         </div>\
+         <div class='modal-actions'>\
+           <button class='buy-now-btn'>Buy Now</button>\
+         </div>\
+       </div>\
+     </div>\
+   </div>`;";
+  m+="document.body.appendChild(modal);";
+  m+="var productModal=document.getElementById('productModal');";
+  m+="var closeBtn=productModal.querySelector('.modal-close');";
+  m+="var mainImg=productModal.querySelector('#modalMainImg');";
+  m+="var modalTitle=productModal.querySelector('#modalTitle');";
+  m+="var modalPrice=productModal.querySelector('#modalPrice');";
+  m+="var modalSold=productModal.querySelector('#modalSold');";
+  m+="var modalDescription=productModal.querySelector('#modalDescription');";
+  m+="var colorPH=productModal.querySelector('#colorPlaceholders');";
+  m+="var sizePH=productModal.querySelector('#sizePlaceholders');";
+  m+="var itemPrice=productModal.querySelector('#itemPrice');";
+  m+="var shippingCost=productModal.querySelector('#shippingCost');";
+  m+="var returnPolicy=productModal.querySelector('#returnPolicy');";
+  m+="var subtotalValue=productModal.querySelector('#subtotalValue');";
+  m+="var arrowLeft=productModal.querySelector('#arrowLeft');";
+  m+="var arrowRight=productModal.querySelector('#arrowRight');";
+  m+="var thumbsContainer=productModal.querySelector('#modalThumbnails');";
+  m+="var buyNowBtn=productModal.querySelector('.buy-now-btn');";
+
+  m+="var currentProduct=null;";
+  m+="var allImages=[];";
+  m+="var currentIndex=0;";
+  m+="var basePrice=0; var shippingFee=0; var returnsText='Accepted';";
+
+  m+="function updateOrderDetails(){";
+  m+="  var total=basePrice + shippingFee;";
+  m+="  itemPrice.textContent=getSymbol(currentProduct.currency||'$')+basePrice.toFixed(2);";
+  m+="  if(shippingFee===0){ shippingCost.textContent='FREE'; } else { shippingCost.textContent=getSymbol(currentProduct.currency||'$')+shippingFee.toFixed(2);}";
+  m+="  returnPolicy.textContent=returnsText;";
+  m+="  subtotalValue.textContent=getSymbol(currentProduct.currency||'$')+total.toFixed(2);";
+  m+="}";
+
+  // change image function
+  m+="function showImageAt(idx){ if(idx<0||idx>=allImages.length)return; currentIndex=idx; mainImg.src=allImages[idx];";
+  m+="  Array.from(thumbsContainer.children).forEach((imgEl,i)=>{ imgEl.style.borderColor=(i===idx)?'#2196f3':'transparent';});";
+  m+="}";
+
+  m+="function openModal(prod){ currentProduct=prod; productModal.style.display='flex'; allImages=[];";
+  m+="  if(prod.images1)allImages.push(prod.images1); if(prod.images2)allImages.push(prod.images2); if(prod.images3)allImages.push(prod.images3);";
+  m+="  modalTitle.textContent=prod.title||'';";
+  m+="  if(prod.sold) modalSold.textContent=prod.sold+' Sold'; else modalSold.textContent='';";
+  m+="  modalPrice.textContent=getSymbol(prod.currency||'$')+(prod.price||'0');";
+  m+="  modalDescription.textContent=prod.description||'';";
+  m+="  basePrice=parseFloat(prod.price)||0;";
+  m+="  if(prod.shipping==='FREE') shippingFee=0; else shippingFee=parseFloat(prod.shipping)||0;";
+  m+="  returnsText=prod.returns||'Accepted';";
+  m+="  thumbsContainer.innerHTML='';";
+  m+="  if(allImages.length>0){ showImageAt(0);} else { mainImg.src='https://via.placeholder.com/400?text=No+Image';}";
+  m+="  for(var i=0;i<allImages.length;i++){";
+  m+="    var t=document.createElement('img'); t.src=allImages[i]; t.dataset.index=i; t.onclick=function(){ showImageAt(parseInt(this.dataset.index));};";
+  m+="    if(i===0){t.style.borderColor='#2196f3';}";
+  m+="    thumbsContainer.appendChild(t);";
+  m+="  }";
+  m+="  colorPH.innerHTML='';";
+  m+="  if(prod.coloroptions){ var cArr=prod.coloroptions.split(','); cArr.forEach(function(c){ c=c.trim(); if(c){ var sp=document.createElement('span'); sp.textContent=c; colorPH.appendChild(sp);}});}";
+  m+="  sizePH.innerHTML='';";
+  m+="  if(prod.sizeoptions){ var sArr=prod.sizeoptions.split(','); sArr.forEach(function(sz){ sz=sz.trim(); if(sz){ var sp=document.createElement('span'); sp.textContent=sz; sizePH.appendChild(sp);}});}";
+  m+="  updateOrderDetails();";
+  m+="}";
+
+  // attach
+  m+="document.querySelectorAll('.product-item').forEach(function(pi){";
+  m+="  var pd={};";
+  m+="  pd.title=pi.getAttribute('data-title')||'';";
+  m+="  pd.sold=pi.getAttribute('data-sold')||'';";
+  m+="  pd.price=pi.getAttribute('data-price')||'0';";
+  m+="  pd.currency=pi.getAttribute('data-currency')||'$';";
+  m+="  pd.description=pi.getAttribute('data-description')||'';";
+  m+="  pd.shipping=pi.getAttribute('data-shipping')||'FREE';";
+  m+="  pd.returns=pi.getAttribute('data-returns')||'Accepted';";
+  m+="  pd.coloroptions=pi.getAttribute('data-coloroptions')||'';";
+  m+="  pd.sizeoptions=pi.getAttribute('data-sizeoptions')||'';";
+  m+="  pd.images1=pi.getAttribute('data-images1')||'';";
+  m+="  pd.images2=pi.getAttribute('data-images2')||'';";
+  m+="  pd.images3=pi.getAttribute('data-images3')||'';";
+  m+="  pd.paymentMethod=pi.getAttribute('data-paymentmethod')||'';";
+  m+="  pd.paypalLink=pi.getAttribute('data-paypallink')||'';";
+  m+="  pd.paypalEmbed=pi.getAttribute('data-paypalembed')||'';";
+  m+="  pd.otherPaymentLink=pi.getAttribute('data-otherpaymentlink')||'';";
+  m+="  pi.addEventListener('click',function(){ openModal(pd);});";
+  m+="  var buy=pi.querySelector('.buy-now');";
+  m+="  if(buy){";
+  m+="    buy.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); openModal(pd);});";
+  m+="  }";
+  m+="});";
+
+  // close
+  m+="closeBtn.onclick=function(){ productModal.style.display='none';};";
+  m+="window.onclick=function(e){ if(e.target===productModal){ productModal.style.display='none';}};";
+  // arrow left right
+  m+="arrowLeft.onclick=function(){ if(currentIndex>0){showImageAt(currentIndex-1);} };";
+  m+="arrowRight.onclick=function(){ if(currentIndex<allImages.length-1){showImageAt(currentIndex+1);} };";
+
+  // buy now
+  m+="buyNowBtn.onclick=function(){";
+  m+="  if(!currentProduct)return;";
+  m+="  if(currentProduct.paymentMethod==='paypalLink'){ window.open(currentProduct.paypalLink,'_blank');}";
+  m+="  else if(currentProduct.paymentMethod==='paypalEmbed'){ var newWin=window.open('','_blank'); newWin.document.write(currentProduct.paypalEmbed);}";
+  m+="  else if(currentProduct.paymentMethod==='other'){ if(currentProduct.otherPaymentLink){window.open(currentProduct.otherPaymentLink,'_blank');} else{alert('No other payment link provided.');}}";
+  m+="  else{ alert('Payment method not configured.'); }";
+  m+="};";
+
+  m+="})();<\/script>";
+  return m;
+}
+
+// ============== BUILD FINAL HTML ==============
+function buildFinalHTML(){
+  var top="";
+  top+="<!DOCTYPE html><html><head><meta charset='UTF-8'><title>My Product Site (Static Version)</title>";
+  top+="<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+  top+="<link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap' rel='stylesheet'>";
+  top+=buildGlobalCSS();
+  top+="</head><body>";
+
+  top+=buildTopHeader();
+  top+=buildHero();
+  top+=buildProductsSection();
+  top+=buildReviewsSection();
+  top+=buildAboutSection();
+  top+=buildContactSection();
+  top+=buildProductModalScript();
+
+  top+="</body></html>";
+  return top;
+}
+
+// ============== SHOW/HIDE FINAL CODE ==============
+function toggleCode(){
+  if(!finalHTML.trim()){
+    finalHTML=buildFinalHTML();
+  }
+  var out=document.getElementById('output');
+  if(out.style.display==='none'||!out.style.display){
+    out.value=finalHTML;
+    out.style.display='block';
+  } else {
+    out.style.display='none';
+  }
+}
+
+// ============== DOWNLOAD SITE FUNCTION ==============
+function downloadSite(){
+  if(!finalHTML.trim()){
+    finalHTML=buildFinalHTML();
+  }
+  var link=document.getElementById('manualDownloadLink');
+  if(!link){
+    link=document.createElement('a');
+    link.id='manualDownloadLink';
+    link.style.display='inline-block';
+    link.style.marginTop='10px';
+    link.style.padding='10px 20px';
+    link.style.background='linear-gradient(to right, #6561e0, #a862ea)';
+    link.style.color='#fff';
+    link.style.borderRadius='4px';
+    link.style.textDecoration='none';
+    link.style.fontWeight='bold';
+    link.textContent='Right-click → “Save Link As…”';
+    document.body.appendChild(link);
+  }
+  var dataUri="data:text/html;charset=utf-8,"+encodeURIComponent(finalHTML);
+  link.href=dataUri;
+  link.download="my_product_site.html";
+  link.click();
+  alert("If no file is downloaded automatically, right-click the link and choose 'Save link as...' to download.");
+}
+
+// ============== GET CURRENCY SYMBOL FUNCTION ==============
+function getCurrencySymbol(code){
+  const sym={
+    AED:"د.إ",AFN:"؋",ALL:"L",AMD:"֏",ANG:"ƒ",AOA:"Kz",ARS:"$",AUD:"A$",AWG:"ƒ",
+    AZN:"₼",BAM:"KM",BBD:"Bds$",BDT:"৳",BGN:"лв",BHD:"د.ب",BIF:"FBu",BMD:"$",
+    BND:"B$",BOB:"$b",BRL:"R$",BSD:"$",BTN:"Nu.",BWP:"P",BYN:"Br",BZD:"BZ$",
+    CAD:"C$",CDF:"FC",CHF:"CHF",CLP:"$",CNY:"¥",COP:"$",CRC:"₡",CUC:"$",CUP:"$",
+    CVE:"$",CZK:"Kč",DJF:"Fdj",DKK:"kr",DOP:"RD$",DZD:"د.ج",EGP:"£",ERN:"Nfk",
+    ETB:"Br",EUR:"€",FJD:"FJ$",FKP:"£",FOK:"kr",GBP:"£",GEL:"₾",GGP:"£",GHS:"₵",
+    GIP:"£",GMD:"D",GNF:"FG",GTQ:"Q",GYD:"G$",HKD:"HK$",HNL:"L",HRK:"kn",
+    HTG:"G",HUF:"Ft",IDR:"Rp",ILS:"₪",IMP:"£",INR:"₹",IQD:"ع.د",IRR:"﷼",
+    ISK:"kr",JEP:"£",JMD:"J$",JOD:"د.ا",JPY:"¥",KES:"KSh",KGS:"сом",KHR:"៛",
+    KMF:"CF",KPW:"₩",KRW:"₩",KWD:"د.ك",KYD:"KYD",KZT:"₸",LAK:"₭",LBP:"£",
+    LKR:"Rs",LRD:"L$",LSL:"L",LYD:"ل.د",MAD:"د.م.",MDL:"L",MGA:"Ar",MKD:"ден",
+    MMK:"K",MNT:"₮",MOP:"MOP$",MRU:"UM",MUR:"₨",MVR:"Rf",MWK:"MK",MXN:"$",
+    MYR:"RM",MZN:"MT",NAD:"N$",NGN:"₦",NIO:"C$",NOK:"kr",NPR:"₨",NZD:"NZ$",
+    OMR:"ر.ع.",PAB:"B/.",PEN:"S/.",PGK:"K",PHP:"₱",PKR:"₨",PLN:"zł",PYG:"₲",
+    QAR:"ر.ق",RON:"lei",RSD:"din",RUB:"₽",RWF:"FRw",SAR:"ر.س",SBD:"SI$",
+    SCR:"₨",SDG:"£",SEK:"kr",SGD:"S$",
+    SHP:"£",SLL:"Le",SOS:"S",SRD:"$",
+    SSP:"£",STD:"Db",STN:"Db",
+    SVC:"$",SYP:"£",SZL:"E",
+    THB:"฿",TJS:"ЅМ",TMT:"m",TND:"د.ت",TOP:"T$",TRY:"₺",TTD:"TT$",TWD:"NT$",
+    TZS:"TSh",UAH:"₴",UGX:"USh",USD:"$",UYU:"$U",UZS:"UZS",VES:"Bs.S",
+    VND:"₫",VUV:"VT",WST:"WS$",XAF:"FCFA",XCD:"EC$",XDR:"XDR",XOF:"CFA",
+    XPF:"CFPF",YER:"﷼",ZAR:"R",ZMW:"ZK",ZWL:"Z$"
+  };
+  return sym[code.toUpperCase()]||code+" ";
+}
+
+// ============== ESCAPE HTML FUNCTION ==============
+function escapeHTML(str){
+  if(!str)return "";
+  return str.replace(/[<>"'&]/g,function(c){
+    switch(c){
+      case '<':return '&lt;';
+      case '>':return '&gt;';
+      case '"':return '&quot;';
+      case "'":return '&#39;';
+      case '&':return '&amp;';
+    }
+  });
+}
+
+// ============== IMGBB REDIRECT FUNCTION ==============
+function redirectToUpload(){
+  window.open("https://imgbb.com","_blank");
+}
+
+// ============== MANAGMENT LISTS FUNCTION ==============
+function updateManagementLists(){
+  const cont = document.getElementById('managementContainer');
+  cont.innerHTML = "";
+
+  // Products
+  if(products.length>0){
+    const pDiv = document.createElement('div');
+    pDiv.innerHTML = "<h3>Products in Website</h3>";
+    products.forEach((prod, idx)=>{
+      const row = document.createElement('div');
+      row.style.display="flex"; 
+      row.style.alignItems="center"; 
+      row.style.justifyContent="space-between"; 
+      row.style.marginBottom="8px";
+      row.innerHTML = `<span>${escapeHTML(prod.title||"Untitled")}</span>`;
+      const delBtn = document.createElement('button');
+      delBtn.textContent="Delete";
+      delBtn.style.background="red";
+      delBtn.style.color="#fff";
+      delBtn.style.border="none";
+      delBtn.style.cursor="pointer";
+      delBtn.onclick=function(){
+        products.splice(idx,1);
+        updatePreview();
+        updateManagementLists();
+      };
+      row.appendChild(delBtn);
+      pDiv.appendChild(row);
+    });
+    cont.appendChild(pDiv);
+  }
+  // Reviews
+  if(reviews.length>0){
+    const rDiv = document.createElement('div');
+    rDiv.innerHTML="<h3>Reviews in Website</h3>";
+    reviews.forEach((rev, idx)=>{
+      const row=document.createElement('div');
+      row.style.display="flex";
+      row.style.alignItems="center";
+      row.style.justifyContent="space-between";
+      row.style.marginBottom="8px";
+      row.innerHTML=`<span>${escapeHTML(rev.name||"Unnamed")}</span>`;
+      const delBtn=document.createElement('button');
+      delBtn.textContent="Delete";
+      delBtn.style.background="red";
+      delBtn.style.color="#fff";
+      delBtn.style.border="none";
+      delBtn.style.cursor="pointer";
+      delBtn.onclick=function(){
+        reviews.splice(idx,1);
+        updatePreview();
+        updateManagementLists();
+      };
+      row.appendChild(delBtn);
+      rDiv.appendChild(row);
+    });
+    cont.appendChild(rDiv);
+  }
+}
+
+// ============== SETUP CONTACT FORM MODAL FUNCTION ==============
+function setupContactFormModal(){
+  var modal = document.getElementById('contactFormModal');
+  var openBtn = document.getElementById('addContactFormButton');
+  var closeBtn = document.getElementById('closeContactFormModal');
+  var confirmBtn = document.getElementById('confirmAddContactFormButton');
+  var textarea = document.getElementById('contactFormIframe');
+  
+  openBtn.onclick = function(){
+    if(contactData.formEmbed){
+      alert("A contact form is already added. You can delete it before adding a new one.");
+      return;
+    }
+    modal.style.display = 'flex';
+  };
+  
+  closeBtn.onclick = function(){
+    modal.style.display = 'none';
+  };
+  
+  // Contact Form Modal "Confirm" button
+confirmBtn.onclick = function() {
+  var embedCode = textarea.value.trim();
+  if (embedCode) {
+    // 1) Store the form code
+    contactData.formEmbed = embedCode;
+    
+    // 2) Close the modal & clear the textarea
+    modal.style.display = 'none';
+    textarea.value = '';
+
+    // 3) Mark the "Add Form" button as "Form Added"
+    var addBtn = document.getElementById('addContactFormButton');
+    addBtn.classList.add('success');
+    addBtn.textContent = 'Form Added';
+
+    // 4) Now create and show the Delete Form button BELOW the Add Form button
+    const statusDiv = document.getElementById('contactFormStatus');
+    statusDiv.innerHTML = ''; // Clear whatever was in it
+    
+    // Create the delete button
+    const delFormBtn = document.createElement('button');
+    delFormBtn.textContent = 'Delete Form';
+    delFormBtn.style.background = 'red';
+    delFormBtn.style.color = '#fff';
+    delFormBtn.style.border = 'none';
+    delFormBtn.style.cursor = 'pointer';
+    delFormBtn.style.borderRadius = '4px';
+    delFormBtn.style.padding = '5px 10px';
+
+    // Clicking "Delete Form" sets formEmbed to ""
+    delFormBtn.onclick = function() {
+      contactData.formEmbed = '';
+      addBtn.classList.remove('success');
+      addBtn.textContent = 'Add Form';
+      statusDiv.innerHTML = '';
+      updatePreview();
+      updateManagementLists();  // Re-render after deleting
+    };
+
+    // Finally, place the delete button into #contactFormStatus
+    statusDiv.appendChild(delFormBtn);
+
+    // 5) Re-render the preview + management
+    updatePreview();
+    updateManagementLists();
+  } else {
+    alert("Please paste your contact form embed code.");
+  }
+};
+
+  
+  // Close modal when clicking outside
+  window.onclick = function(event){
+    if(event.target == modal){
+      modal.style.display = 'none';
+    }
+  };
+}
+
+// ============== BUILD PRODUCT MODAL SCRIPT (internal) ==============
+function buildProductModalScript(){
+  var m="";
+  m+="<script>(function(){";
+  m+="function getSymbol(cc){";
+  m+="  const known={USD:'$',EUR:'€',GBP:'£',JPY:'¥',AUD:'A$',CAD:'C$',CHF:'CHF',CNY:'¥',HKD:'HK$',NZD:'NZ$'};";
+  m+="  return known[cc.toUpperCase()]||cc+' ';}";
+  m+="var modal=document.createElement('div');";
+  m+="modal.id='productModal'; modal.className='modal';";
+  m+="modal.innerHTML=`";
+  m+="<div class='modal-content'>\
+     <span class='modal-close'>&times;</span>\
+     <div class='modal-body'>\
+       <div class='modal-left'>\
+         <div class='modal-main-image'>\
+           <div class='arrow arrow-left' id='arrowLeft'>❮</div>\
+           <img id='modalMainImg' src='' alt='Main Product Image'>\
+           <div class='arrow arrow-right' id='arrowRight'>❯</div>\
+         </div>\
+         <div class='modal-thumbnails' id='modalThumbnails'></div>\
+       </div>\
+       <div class='modal-right'>\
+         <h1 id='modalTitle' class='modal-product-title'></h1>\
+         <div style='display:flex;flex-direction:row;justify-content:space-between;align-items:center;'>\
+           <div id='modalPrice' class='modal-product-price'>$0.00</div>\
+           <div id='modalSold' class='modal-product-sold'></div>\
+         </div>\
+         <div id='modalDescription' class='modal-description'></div>\
+         <div class='color-options'><label>Color:</label><span id='colorPlaceholders'></span></div>\
+         <div class='size-options'><label>Size:</label><span id='sizePlaceholders'></span></div>\
+         <div class='order-details-panel'>\
+           <h3>Order Details</h3>\
+           <div class='order-item'><label>Price:</label><span class='value' id='itemPrice'>--</span></div>\
+           <div class='order-item'><label>Shipping:</label><span class='value' id='shippingCost'>$0.00</span></div>\
+           <div class='order-item'><label>Returns:</label><span class='value' id='returnPolicy'></span></div>\
+           <div class='shipping-info' id='shippingInfo'><strong>Shipping Information:</strong> If your PayPal shipping address or contact details have changed, please update them at checkout so we send your goodies to the right place!</div>\
+           <div class='subtotal'>Total: <span id='subtotalValue'>$0.00</span></div>\
+         </div>\
+         <div class='modal-actions'>\
+           <button class='buy-now-btn'>Buy Now</button>\
+         </div>\
+       </div>\
+     </div>\
+   </div>`;";
+  m+="document.body.appendChild(modal);";
+  m+="var productModal=document.getElementById('productModal');";
+  m+="var closeBtn=productModal.querySelector('.modal-close');";
+  m+="var mainImg=productModal.querySelector('#modalMainImg');";
+  m+="var modalTitle=productModal.querySelector('#modalTitle');";
+  m+="var modalPrice=productModal.querySelector('#modalPrice');";
+  m+="var modalSold=productModal.querySelector('#modalSold');";
+  m+="var modalDescription=productModal.querySelector('#modalDescription');";
+  m+="var colorPH=productModal.querySelector('#colorPlaceholders');";
+  m+="var sizePH=productModal.querySelector('#sizePlaceholders');";
+  m+="var itemPrice=productModal.querySelector('#itemPrice');";
+  m+="var shippingCost=productModal.querySelector('#shippingCost');";
+  m+="var returnPolicy=productModal.querySelector('#returnPolicy');";
+  m+="var subtotalValue=productModal.querySelector('#subtotalValue');";
+  m+="var arrowLeft=productModal.querySelector('#arrowLeft');";
+  m+="var arrowRight=productModal.querySelector('#arrowRight');";
+  m+="var thumbsContainer=productModal.querySelector('#modalThumbnails');";
+  m+="var buyNowBtn=productModal.querySelector('.buy-now-btn');";
+
+  m+="var currentProduct=null;";
+  m+="var allImages=[];";
+  m+="var currentIndex=0;";
+  m+="var basePrice=0; var shippingFee=0; var returnsText='Accepted';";
+
+  m+="function updateOrderDetails(){";
+  m+="  var total=basePrice + shippingFee;";
+  m+="  itemPrice.textContent=getSymbol(currentProduct.currency||'$')+basePrice.toFixed(2);";
+  m+="  if(shippingFee===0){ shippingCost.textContent='FREE'; } else { shippingCost.textContent=getSymbol(currentProduct.currency||'$')+shippingFee.toFixed(2);}";
+  m+="  returnPolicy.textContent=returnsText;";
+  m+="  subtotalValue.textContent=getSymbol(currentProduct.currency||'$')+total.toFixed(2);";
+  m+="}";
+
+  // change image function
+  m+="function showImageAt(idx){ if(idx<0||idx>=allImages.length)return; currentIndex=idx; mainImg.src=allImages[idx];";
+  m+="  Array.from(thumbsContainer.children).forEach((imgEl,i)=>{ imgEl.style.borderColor=(i===idx)?'#2196f3':'transparent';});";
+  m+="}";
+
+  m+="function openModal(prod){ currentProduct=prod; productModal.style.display='flex'; allImages=[];";
+  m+="  if(prod.images1)allImages.push(prod.images1); if(prod.images2)allImages.push(prod.images2); if(prod.images3)allImages.push(prod.images3);";
+  m+="  modalTitle.textContent=prod.title||'';";
+  m+="  if(prod.sold) modalSold.textContent=prod.sold+' Sold'; else modalSold.textContent='';";
+  m+="  modalPrice.textContent=getSymbol(prod.currency||'$')+(prod.price||'0');";
+  m+="  modalDescription.textContent=prod.description||'';";
+  m+="  basePrice=parseFloat(prod.price)||0;";
+  m+="  if(prod.shipping==='FREE') shippingFee=0; else shippingFee=parseFloat(prod.shipping)||0;";
+  m+="  returnsText=prod.returns||'Accepted';";
+  m+="  thumbsContainer.innerHTML='';";
+  m+="  if(allImages.length>0){ showImageAt(0);} else { mainImg.src='https://via.placeholder.com/400?text=No+Image';}";
+  m+="  for(var i=0;i<allImages.length;i++){";
+  m+="    var t=document.createElement('img'); t.src=allImages[i]; t.dataset.index=i; t.onclick=function(){ showImageAt(parseInt(this.dataset.index));};";
+  m+="    if(i===0){t.style.borderColor='#2196f3';}";
+  m+="    thumbsContainer.appendChild(t);";
+  m+="  }";
+  m+="  colorPH.innerHTML='';";
+  m+="  if(prod.coloroptions){ var cArr=prod.coloroptions.split(','); cArr.forEach(function(c){ c=c.trim(); if(c){ var sp=document.createElement('span'); sp.textContent=c; colorPH.appendChild(sp);}});}";
+  m+="  sizePH.innerHTML='';";
+  m+="  if(prod.sizeoptions){ var sArr=prod.sizeoptions.split(','); sArr.forEach(function(sz){ sz=sz.trim(); if(sz){ var sp=document.createElement('span'); sp.textContent=sz; sizePH.appendChild(sp);}});}";
+  m+="  updateOrderDetails();";
+  m+="}";
+
+  // attach
+  m+="document.querySelectorAll('.product-item').forEach(function(pi){";
+  m+="  var pd={};";
+  m+="  pd.title=pi.getAttribute('data-title')||'';";
+  m+="  pd.sold=pi.getAttribute('data-sold')||'';";
+  m+="  pd.price=pi.getAttribute('data-price')||'0';";
+  m+="  pd.currency=pi.getAttribute('data-currency')||'$';";
+  m+="  pd.description=pi.getAttribute('data-description')||'';";
+  m+="  pd.shipping=pi.getAttribute('data-shipping')||'FREE';";
+  m+="  pd.returns=pi.getAttribute('data-returns')||'Accepted';";
+  m+="  pd.coloroptions=pi.getAttribute('data-coloroptions')||'';";
+  m+="  pd.sizeoptions=pi.getAttribute('data-sizeoptions')||'';";
+  m+="  pd.images1=pi.getAttribute('data-images1')||'';";
+  m+="  pd.images2=pi.getAttribute('data-images2')||'';";
+  m+="  pd.images3=pi.getAttribute('data-images3')||'';";
+  m+="  pd.paymentMethod=pi.getAttribute('data-paymentmethod')||'';";
+  m+="  pd.paypalLink=pi.getAttribute('data-paypallink')||'';";
+  m+="  pd.paypalEmbed=pi.getAttribute('data-paypalembed')||'';";
+  m+="  pd.otherPaymentLink=pi.getAttribute('data-otherpaymentlink')||'';";
+  m+="  pi.addEventListener('click',function(){ openModal(pd);});";
+  m+="  var buy=pi.querySelector('.buy-now');";
+  m+="  if(buy){";
+  m+="    buy.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); openModal(pd);});";
+  m+="  }";
+  m+="});";
+
+  // close
+  m+="closeBtn.onclick=function(){ productModal.style.display='none';};";
+  m+="window.onclick=function(e){ if(e.target===productModal){ productModal.style.display='none';}};";
+  // arrow left right
+  m+="arrowLeft.onclick=function(){ if(currentIndex>0){showImageAt(currentIndex-1);} };";
+  m+="arrowRight.onclick=function(){ if(currentIndex<allImages.length-1){showImageAt(currentIndex+1);} };";
+
+  // buy now
+  m+="buyNowBtn.onclick=function(){";
+  m+="  if(!currentProduct)return;";
+  m+="  if(currentProduct.paymentMethod==='paypalLink'){ window.open(currentProduct.paypalLink,'_blank');}";
+  m+="  else if(currentProduct.paymentMethod==='paypalEmbed'){ var newWin=window.open('','_blank'); newWin.document.write(currentProduct.paypalEmbed);}";
+  m+="  else if(currentProduct.paymentMethod==='other'){ if(currentProduct.otherPaymentLink){window.open(currentProduct.otherPaymentLink,'_blank');} else{alert('No other payment link provided.');}}";
+  m+="  else{ alert('Payment method not configured.'); }";
+  m+="};";
+
+  m+="})();<\/script>";
+  return m;
+}
+
+// ============== BUILD FINAL HTML ==============
+function buildFinalHTML(){
+  var top="";
+  top+="<!DOCTYPE html><html><head><meta charset='UTF-8'><title>My Product Site (Static Version)</title>";
+  top+="<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+  top+="<link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap' rel='stylesheet'>";
+  top+=buildGlobalCSS();
+  top+="</head><body>";
+
+  top+=buildTopHeader();
+  top+=buildHero();
+  top+=buildProductsSection();
+  top+=buildReviewsSection();
+  top+=buildAboutSection();
+  top+=buildContactSection();
+  top+=buildProductModalScript();
+
+  top+="</body></html>";
+  return top;
+}
+
+// ============== DOWNLOAD SITE FUNCTION ==============
+function downloadSite(){
+  if(!finalHTML.trim()){
+    finalHTML=buildFinalHTML();
+  }
+  var link=document.getElementById('manualDownloadLink');
+  if(!link){
+    link=document.createElement('a');
+    link.id='manualDownloadLink';
+    link.style.display='inline-block';
+    link.style.marginTop='10px';
+    link.style.padding='10px 20px';
+    link.style.background='linear-gradient(to right, #6561e0, #a862ea)';
+    link.style.color='#fff';
+    link.style.borderRadius='4px';
+    link.style.textDecoration='none';
+    link.style.fontWeight='bold';
+    link.textContent='Right-click → “Save Link As…”';
+    document.body.appendChild(link);
+  }
+  var dataUri="data:text/html;charset=utf-8,"+encodeURIComponent(finalHTML);
+  link.href=dataUri;
+  link.download="my_product_site.html";
+  link.click();
+  alert("If no file is downloaded automatically, right-click the link and choose 'Save link as...' to download.");
+}
+
+// ============== ESCAPE HTML FUNCTION ==============
+function escapeHTML(str){
+  if(!str)return "";
+  return str.replace(/[<>"'&]/g,function(c){
+    switch(c){
+      case '<':return '&lt;';
+      case '>':return '&gt;';
+      case '"':return '&quot;';
+      case "'":return '&#39;';
+      case '&':return '&amp;';
+    }
+  });
+}
+
+// ============== PRODUCT MODAL SCRIPT ==============
+function buildProductModalScript(){
+  var m="";
+  m+="<script>(function(){";
+  m+="function getSymbol(cc){";
+  m+="  const known={USD:'$',EUR:'€',GBP:'£',JPY:'¥',AUD:'A$',CAD:'C$',CHF:'CHF',CNY:'¥',HKD:'HK$',NZD:'NZ$'};";
+  m+="  return known[cc.toUpperCase()]||cc+' ';}";
+  m+="var modal=document.createElement('div');";
+  m+="modal.id='productModal'; modal.className='modal';";
+  m+="modal.innerHTML=`";
+  m+="<div class='modal-content'>\
+     <span class='modal-close'>&times;</span>\
+     <div class='modal-body'>\
+       <div class='modal-left'>\
+         <div class='modal-main-image'>\
+           <div class='arrow arrow-left' id='arrowLeft'>❮</div>\
+           <img id='modalMainImg' src='' alt='Main Product Image'>\
+           <div class='arrow arrow-right' id='arrowRight'>❯</div>\
+         </div>\
+         <div class='modal-thumbnails' id='modalThumbnails'></div>\
+       </div>\
+       <div class='modal-right'>\
+         <h1 id='modalTitle' class='modal-product-title'></h1>\
+         <div style='display:flex;flex-direction:row;justify-content:space-between;align-items:center;'>\
+           <div id='modalPrice' class='modal-product-price'>$0.00</div>\
+           <div id='modalSold' class='modal-product-sold'></div>\
+         </div>\
+         <div id='modalDescription' class='modal-description'></div>\
+         <div class='color-options'><label>Color:</label><span id='colorPlaceholders'></span></div>\
+         <div class='size-options'><label>Size:</label><span id='sizePlaceholders'></span></div>\
+         <div class='order-details-panel'>\
+           <h3>Order Details</h3>\
+           <div class='order-item'><label>Price:</label><span class='value' id='itemPrice'>--</span></div>\
+           <div class='order-item'><label>Shipping:</label><span class='value' id='shippingCost'>$0.00</span></div>\
+           <div class='order-item'><label>Returns:</label><span class='value' id='returnPolicy'></span></div>\
+           <div class='shipping-info' id='shippingInfo'><strong>Shipping Information:</strong> If your PayPal shipping address or contact details have changed, please update them at checkout so we send your goodies to the right place!</div>\
+           <div class='subtotal'>Total: <span id='subtotalValue'>$0.00</span></div>\
+         </div>\
+         <div class='modal-actions'>\
+           <button class='buy-now-btn'>Buy Now</button>\
+         </div>\
+       </div>\
+     </div>\
+   </div>`;";
+  m+="document.body.appendChild(modal);";
+  m+="var productModal=document.getElementById('productModal');";
+  m+="var closeBtn=productModal.querySelector('.modal-close');";
+  m+="var mainImg=productModal.querySelector('#modalMainImg');";
+  m+="var modalTitle=productModal.querySelector('#modalTitle');";
+  m+="var modalPrice=productModal.querySelector('#modalPrice');";
+  m+="var modalSold=productModal.querySelector('#modalSold');";
+  m+="var modalDescription=productModal.querySelector('#modalDescription');";
+  m+="var colorPH=productModal.querySelector('#colorPlaceholders');";
+  m+="var sizePH=productModal.querySelector('#sizePlaceholders');";
+  m+="var itemPrice=productModal.querySelector('#itemPrice');";
+  m+="var shippingCost=productModal.querySelector('#shippingCost');";
+  m+="var returnPolicy=productModal.querySelector('#returnPolicy');";
+  m+="var subtotalValue=productModal.querySelector('#subtotalValue');";
+  m+="var arrowLeft=productModal.querySelector('#arrowLeft');";
+  m+="var arrowRight=productModal.querySelector('#arrowRight');";
+  m+="var thumbsContainer=productModal.querySelector('#modalThumbnails');";
+  m+="var buyNowBtn=productModal.querySelector('.buy-now-btn');";
+
+  m+="var currentProduct=null;";
+  m+="var allImages=[];";
+  m+="var currentIndex=0;";
+  m+="var basePrice=0; var shippingFee=0; var returnsText='Accepted';";
+
+  m+="function updateOrderDetails(){";
+  m+="  var total=basePrice + shippingFee;";
+  m+="  itemPrice.textContent=getSymbol(currentProduct.currency||'$')+basePrice.toFixed(2);";
+  m+="  if(shippingFee===0){ shippingCost.textContent='FREE'; } else { shippingCost.textContent=getSymbol(currentProduct.currency||'$')+shippingFee.toFixed(2);}";
+  m+="  returnPolicy.textContent=returnsText;";
+  m+="  subtotalValue.textContent=getSymbol(currentProduct.currency||'$')+total.toFixed(2);";
+  m+="}";
+
+  // change image function
+  m+="function showImageAt(idx){ if(idx<0||idx>=allImages.length)return; currentIndex=idx; mainImg.src=allImages[idx];";
+  m+="  Array.from(thumbsContainer.children).forEach((imgEl,i)=>{ imgEl.style.borderColor=(i===idx)?'#2196f3':'transparent';});";
+  m+="}";
+
+  m+="function openModal(prod){ currentProduct=prod; productModal.style.display='flex'; allImages=[];";
+  m+="  if(prod.images1)allImages.push(prod.images1); if(prod.images2)allImages.push(prod.images2); if(prod.images3)allImages.push(prod.images3);";
+  m+="  modalTitle.textContent=prod.title||'';";
+  m+="  if(prod.sold) modalSold.textContent=prod.sold+' Sold'; else modalSold.textContent='';";
+  m+="  modalPrice.textContent=getSymbol(prod.currency||'$')+(prod.price||'0');";
+  m+="  modalDescription.textContent=prod.description||'';";
+  m+="  basePrice=parseFloat(prod.price)||0;";
+  m+="  if(prod.shipping==='FREE') shippingFee=0; else shippingFee=parseFloat(prod.shipping)||0;";
+  m+="  returnsText=prod.returns||'Accepted';";
+  m+="  thumbsContainer.innerHTML='';";
+  m+="  if(allImages.length>0){ showImageAt(0);} else { mainImg.src='https://via.placeholder.com/400?text=No+Image';}";
+  m+="  for(var i=0;i<allImages.length;i++){";
+  m+="    var t=document.createElement('img'); t.src=allImages[i]; t.dataset.index=i; t.onclick=function(){ showImageAt(parseInt(this.dataset.index));};";
+  m+="    if(i===0){t.style.borderColor='#2196f3';}";
+  m+="    thumbsContainer.appendChild(t);";
+  m+="  }";
+  m+="  colorPH.innerHTML='';";
+  m+="  if(prod.coloroptions){ var cArr=prod.coloroptions.split(','); cArr.forEach(function(c){ c=c.trim(); if(c){ var sp=document.createElement('span'); sp.textContent=c; colorPH.appendChild(sp);}});}";
+  m+="  sizePH.innerHTML='';";
+  m+="  if(prod.sizeoptions){ var sArr=prod.sizeoptions.split(','); sArr.forEach(function(sz){ sz=sz.trim(); if(sz){ var sp=document.createElement('span'); sp.textContent=sz; sizePH.appendChild(sp);}});}";
+  m+="  updateOrderDetails();";
+  m+="}";
+
+  // attach
+  m+="document.querySelectorAll('.product-item').forEach(function(pi){";
+  m+="  var pd={};";
+  m+="  pd.title=pi.getAttribute('data-title')||'';";
+  m+="  pd.sold=pi.getAttribute('data-sold')||'';";
+  m+="  pd.price=pi.getAttribute('data-price')||'0';";
+  m+="  pd.currency=pi.getAttribute('data-currency')||'$';";
+  m+="  pd.description=pi.getAttribute('data-description')||'';";
+  m+="  pd.shipping=pi.getAttribute('data-shipping')||'FREE';";
+  m+="  pd.returns=pi.getAttribute('data-returns')||'Accepted';";
+  m+="  pd.coloroptions=pi.getAttribute('data-coloroptions')||'';";
+  m+="  pd.sizeoptions=pi.getAttribute('data-sizeoptions')||'';";
+  m+="  pd.images1=pi.getAttribute('data-images1')||'';";
+  m+="  pd.images2=pi.getAttribute('data-images2')||'';";
+  m+="  pd.images3=pi.getAttribute('data-images3')||'';";
+  m+="  pd.paymentMethod=pi.getAttribute('data-paymentmethod')||'';";
+  m+="  pd.paypalLink=pi.getAttribute('data-paypallink')||'';";
+  m+="  pd.paypalEmbed=pi.getAttribute('data-paypalembed')||'';";
+  m+="  pd.otherPaymentLink=pi.getAttribute('data-otherpaymentlink')||'';";
+  m+="  pi.addEventListener('click',function(){ openModal(pd);});";
+  m+="  var buy=pi.querySelector('.buy-now');";
+  m+="  if(buy){";
+  m+="    buy.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); openModal(pd);});";
+  m+="  }";
+  m+="});";
+
+  // close
+  m+="closeBtn.onclick=function(){ productModal.style.display='none';};";
+  m+="window.onclick=function(e){ if(e.target===productModal){ productModal.style.display='none';}};";
+  // arrow left right
+  m+="arrowLeft.onclick=function(){ if(currentIndex>0){showImageAt(currentIndex-1);} };";
+  m+="arrowRight.onclick=function(){ if(currentIndex<allImages.length-1){showImageAt(currentIndex+1);} };";
+
+  // buy now
+  m+="buyNowBtn.onclick=function(){";
+  m+="  if(!currentProduct)return;";
+  m+="  if(currentProduct.paymentMethod==='paypalLink'){ window.open(currentProduct.paypalLink,'_blank');}";
+  m+="  else if(currentProduct.paymentMethod==='paypalEmbed'){ var newWin=window.open('','_blank'); newWin.document.write(currentProduct.paypalEmbed);}";
+  m+="  else if(currentProduct.paymentMethod==='other'){ if(currentProduct.otherPaymentLink){window.open(currentProduct.otherPaymentLink,'_blank');} else{alert('No other payment link provided.');}}";
+  m+="  else{ alert('Payment method not configured.'); }";
+  m+="};";
+
+  m+="})();<\/script>";
+  return m;
+}
+  
+  // ============== TRACK CUSTOMERS SECTION ==============
+
+// Initialize tracking features count
+var trackingFeaturesCount = 0;
+
+// Setup Track Customers Modal
+function setupTrackModal() {
+  var modal = document.getElementById('trackModal');
+  var openBtn = document.getElementById('addFeatureBtn');
+  var closeBtn = document.getElementById('closeTrackModal');
+  var confirmBtn = document.getElementById('confirmAddFeatureBtn');
+  
+  openBtn.onclick = function() {
+    if (trackingFeaturesCount >= 2) {
+      alert("You have already linked the maximum number of features.");
+      return;
+    }
+    modal.style.display = 'flex';
+  };
+  
+  closeBtn.onclick = function() {
+    modal.style.display = 'none';
+  };
+  
+  confirmBtn.onclick = function() {
+    var gaCode = document.getElementById('googleAnalyticsCode').value.trim();
+    var clarityCode = document.getElementById('clarityCode').value.trim();
+    
+    if (!gaCode && !clarityCode) {
+      alert("Please paste at least one tracking code.");
+      return;
+    }
+    
+    // Update tracking data structures
+    if (gaCode) {
+      contactData.googleAnalytics = gaCode;
+      trackingFeaturesCount++;
+    }
+    if (clarityCode) {
+      contactData.clarity = clarityCode;
+      trackingFeaturesCount++;
+    }
+    
+    modal.style.display = 'none';
+    
+    // Update Add Feature Button Text
+    if (trackingFeaturesCount === 1) {
+      openBtn.textContent = '1 Feature Added';
+    } else if (trackingFeaturesCount === 2) {
+      openBtn.textContent = 'Linked Successfully';
+      openBtn.disabled = true; // Disable if maximum features are linked
+    }
+    
+    updatePreview();
+    updateManagementLists();
+  };
+  
+  // Close modal when clicking outside
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  };
+}
 </script>
+
 </body>
 </html>
