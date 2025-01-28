@@ -730,7 +730,61 @@ form {
   background: #eee;
   color: #555;
 }
+    
+    /* Payment Section Container */
+.payment-section {
+  border: 1px solid #ccc; 
+  padding: 20px; 
+  margin-top: 20px; 
+  background: transparent; /* or any color you prefer */
+}
 
+.payment-section h2 {
+  margin-bottom: 10px;
+}
+
+.payment-section p {
+  font-size: 0.9rem; 
+  color: #555; 
+  line-height: 1.4; 
+  margin-bottom: 15px;
+}
+
+/* The Pay €5.99 Button */
+.payment-btn {
+  background: #007bff; 
+  color: #fff; 
+  border: none; 
+  border-radius: 4px; 
+  padding: 10px 20px; 
+  font-size: 14px; 
+  cursor: pointer;
+}
+
+/* Flex row for the two big buttons side by side */
+.download-row {
+  display: flex;             /* horizontal layout */
+  align-items: center;       /* keep them on the same baseline/level */
+  gap: 10px;                 /* space between them */
+  margin-top: 20px; 
+  flex-wrap: wrap;           /* wrap on smaller screens, if needed */
+}
+
+/* Shared class for "Generate & Download" and "Show Generated Code" */
+.unlock-button {
+  flex: 1;                   /* each takes equal width in the row */
+  background: gray;          /* start out gray/disabled */
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  opacity: 0.5;             /* visually dim to show disabled */
+  cursor: not-allowed;      /* not clickable initially */
+  
+  /* Force both buttons to have the same height. 
+     Adjust if you want them shorter or taller. */
+  height: 50px;
+}
 
   </style>
 </head>
@@ -843,9 +897,6 @@ form {
         <label class="payment-method-label">
           <div class="payment-method-row">
             <img src="https://i.ibb.co/tC9LHLG/Bella-52.png" alt="PayPal" />
-            <img src="https://i.ibb.co/V3gG6tw/Bella-56.png" alt="Icon2" />
-            <img src="https://i.ibb.co/cCtHLKs/Bella-58.png" alt="Icon3" />
-            <img src="https://i.ibb.co/QJY6Cp7/Bella-57.png" alt="Icon4" />
             <img src="https://i.ibb.co/m496tmj/Bella-53.png" alt="Icon5" />
             <span>Select Payment Method</span>
           </div>
@@ -995,9 +1046,44 @@ form {
     <button type="button" id="confirmAddFeatureBtn">Add</button>
   </div>
 </div>
-
-      <button id="downloadBtn" onclick="downloadSite()">Generate & Download</button>
-      <button id="showCodeBtn" onclick="toggleCode()">Show Generated Code</button>
+      
+      <!-- Payment Section: Get Your Website -->
+<section id="paymentSection" class="payment-section">
+  <h2 class="section-title">Get your website</h2>
+  <p>
+    Pay to unlock the download button. If you refresh this page, you will lose the website 
+    that you created, so pay and download the website before losing the website you created.
+  </p>
+  
+  <!-- Payment Button -->
+  <button id="payBtn" class="payment-btn">
+    Pay €5.99
+  </button>
+  
+  <!-- Row for Download & Show Code buttons -->
+  <div class="download-row">
+    <!-- Generate & Download button (initially disabled) -->
+    <button 
+      id="downloadBtn" 
+      onclick="downloadSite()" 
+      disabled 
+      class="unlock-button"
+    >
+      Generate & Download
+    </button>
+    
+    <!-- Show Generated Code button (initially disabled) -->
+    <button 
+      id="showCodeBtn" 
+      onclick="toggleCode()" 
+      disabled 
+      class="unlock-button"
+    >
+      Show Generated Code
+    </button>
+  </div>
+</section>
+      
     </div>
     
 
@@ -1626,7 +1712,7 @@ function downloadSite(){
 
 // Global CSS for the generated site
 function buildGlobalCSS(){
-  var s="<style>html{scroll-behavior:smooth;} *{box-sizing:border-box;transition:all 0.2s ease;} html,body{margin:0;padding:0;font-family:'Roboto',sans-serif;background:#faf9ff;color:#333;line-height:1.6;} a{text-decoration:none;color:#2196f3} a:hover{opacity:0.8} img{max-width:100%;height:auto;display:block}";
+  var s="<style>html{scroll-behavior:smooth;} *{box-sizing:border-box;transition:all 0.2s ease;} html,body{margin:0;padding:0;font-family:'Roboto',sans-serif;background:#ffffff;color:#333;line-height:1.6;} a{text-decoration:none;color:#2196f3} a:hover{opacity:0.8} img{max-width:100%;height:auto;display:block}";
 
   // top header
   s+=".top-header{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);padding:15px 10px;text-align:center}";
@@ -1634,24 +1720,29 @@ function buildGlobalCSS(){
   s+=".nav-links{margin-top:10px} .nav-links a{display:inline-block;margin:0 10px;padding:8px 12px;color:#555;font-weight:500;border-radius:4px;transition:background 0.2s,color 0.2s}";
 
   // hero
-  s+=".hero-banner{position:relative;min-height:50vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}";
+  s+=".hero-banner{position:relative;min-height:70vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}";
   s+=".hero-overlay{position:relative;z-index:1;text-align:center;color:#fff;padding:15px}";
   s+=".hero-title{font-size:2.5rem;margin:0 0 15px;text-shadow:1px 1px 3px rgba(0,0,0,0.3)}";
   s+=".hero-cta{display:inline-block;padding:12px 25px;background:#fff;color:#333;font-weight:600;border-radius:4px;transition:background 0.3s}";
   s+=".hero-cta:hover{background:#2196f3;color:#fff}";
 
-  // products
-  s+=".products-grid{display:grid;grid-gap:20px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));padding:30px 10px;max-width:1200px;margin:0 auto}";
-  s+=".product-item{background:#fff;border-radius:8px;overflow:hidden;border:1px solid #eee;cursor:pointer;text-align:left;transition:transform 0.2s,box-shadow 0.2s}";
-  s+=".product-item:hover{transform:translateY(-3px);box-shadow:0 3px 6px rgba(0,0,0,0.1)}";
-  s+=".product-img{width:100%;padding-bottom:75%;background-size:cover;background-position:center}";
-  s+=".product-content{padding:15px}";
-  s+=".product-content h3{margin:0 0 8px;font-size:1.2rem;font-weight:600;color:#222}";
-  s+=".product-content h2{margin:0 0 10px;font-size:1rem;font-weight:500;color:#28a745}";
-  s+=".buy-now{display:block;width:100%;padding:10px 0;background:linear-gradient(to right, #6561e0, #61a3ff);color:#fff;text-align:center;border-radius:4px;font-weight:600;transition:background 0.3s}";
+  // // products
+  s += ".products-grid{display:grid;grid-gap:20px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));padding:30px 10px;max-width:1300px;margin:0 auto}";
+  s += ".product-item{background:#fff;border-radius:8px;overflow:hidden;border:1px solid #eee;cursor:pointer;text-align:left;transition:transform 0.2s,box-shadow 0.2s}";
+  s += ".product-item:hover{transform:translateY(-3px);box-shadow:0 3px 6px rgba(0,0,0,0.1)}";
+  
+  // Updated to make image square
+  s += ".product-img{width:100%;padding-bottom:100%;background-size:cover;background-position:center}";
+  
+  s += ".product-content{padding:15px}";
+  s += ".product-content h3{margin:0 0 8px;font-size:1.2rem;font-weight:600;color:#222}";
+  s += ".product-content h2{margin:0 0 10px;font-size:1rem;font-weight:500;color:#28a745}";
+  
+  // Updated Buy Now button
+  s += ".buy-now{display:block;width:100%;padding:10px 0;background:#007bff;color:#fff;text-align:center;border-radius:4px;font-weight:600;transition:background 0.3s}";
 
   // buy now hover
-  s+=".buy-now:hover{background:linear-gradient(to right, #5450c0, #5090d0)}";
+  s+= ".buy-now:hover{background:#0056b3}";
 
   // reviews
   s+=".reviews-section{background:#fff;padding:40px 20px;text-align:center}";
@@ -1664,15 +1755,15 @@ function buildGlobalCSS(){
   s+=".review-item p{margin:5px 0 0;color:#666}";
 
   // about
-  s+=".about-section{background:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;padding:40px 20px;max-width:1200px;margin:0 auto}";
+  s+=".about-section{background:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;padding:40px 20px;max-width:100%px;margin:0 auto}";
   s+=".about-left,.about-right{flex:1 1 300px;padding:15px}";
   s+=".about-left h2{margin-top:0;color:#444;font-size:2rem}";
   s+=".about-left p{color:#555;line-height:1.8;font-size:1rem}";
-  s+=".about-right img{border-radius:8px;max-width:100%;height:auto;box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:transform 0.3s}";
+  s+=".about-right img{border-radius:8px;max-width:70%;height:auto;box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:transform 0.3s}";
   s+=".about-right img:hover{transform:scale(1.02)}";
 
   // contact
-  s+=".contact-section{border:1px solid #ddd; background:#f8f9fa;color:#333;padding:40px 20px;max-width:1200px;margin:40px auto;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center}";
+  s+=".contact-section{border:0px solid #ddd; background:#ffffff;color:#333;padding:40px 20px;max-width:1200px;margin:40px auto;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center}";
   s+=".contact-left{flex:1 1 300px; text-align:left}";
   s+=".contact-logo-left img{max-width:180px;margin-bottom:15px}";
   s+=".contact-left p{font-size:0.95rem;color:#555; margin-bottom:15px;}";
@@ -1712,7 +1803,7 @@ function buildGlobalCSS(){
   s+=".shipping-info{background:#fff3cd;border-left:4px solid #ffeeba;padding:10px;font-size:0.9rem;margin-top:10px}";
   s+=".subtotal{margin-top:10px;font-size:1rem;text-align:right;font-weight:bold}";
   s+=".modal-actions{display:flex;gap:10px;margin-top:20px}";
-  s+=".modal-actions button{flex:1;background:linear-gradient(to right, #6561e0, #61a3ff);color:#fff;border:none;padding:12px;border-radius:4px;cursor:pointer;font-weight:600;font-size:1rem;transition:background 0.3s}";
+  s+=".modal-actions button{flex:1;background:#007bff;;color:#fff;border:none;padding:12px;border-radius:4px;cursor:pointer;font-weight:600;font-size:1rem;transition:background 0.3s}";
   s+=".modal-actions button:hover{background:linear-gradient(to right, #5450c0, #5090d0)}";
 
   s+="</style>";
@@ -3258,6 +3349,62 @@ function setupTrackModal() {
   };
 }
 </script>
+  <script>
+// ---- Payment Button Logic ----
+var payBtn = document.getElementById('payBtn');
+var downloadBtn = document.getElementById('downloadBtn');
+var showCodeBtn = document.getElementById('showCodeBtn');
+
+// Just in case, ensure they're disabled by default
+downloadBtn.disabled = true;
+showCodeBtn.disabled = true;
+
+// Gray them out in case something overwrote their styles
+downloadBtn.style.background = "gray";
+showCodeBtn.style.background = "gray";
+downloadBtn.style.opacity = "0.5";
+showCodeBtn.style.opacity = "0.5";
+downloadBtn.style.cursor = "not-allowed";
+showCodeBtn.style.cursor = "not-allowed";
+
+payBtn.onclick = function() {
+  // Open a PayPal link in a popup. 
+  // This is just an example link. 
+  // For a real "Buy Now" button, you'd generate the link from PayPal with the correct business email & price.
+  var paypalPopup = window.open(
+    "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=workpoost%40gmail.com&item_name=Website+Builder+Download&amount=5.99&currency_code=EUR",
+    "_blank",
+    "width=500,height=700"
+  );
+  
+  // Now we poll every half-second to see if the popup is closed
+  var popupTimer = setInterval(function() {
+    // If the popup is closed (user completed payment or exited)
+    if (paypalPopup && paypalPopup.closed) {
+      clearInterval(popupTimer);
+      
+      // Mark Payment successful
+      payBtn.textContent = "Payment Successful";
+      payBtn.style.background = "green";
+      payBtn.disabled = true;
+      
+      // Enable the 2 main buttons
+      downloadBtn.disabled = false;
+      showCodeBtn.disabled = false;
+      
+      // Reset styling so they're clickable
+      downloadBtn.style.background = "linear-gradient(to right, #6561e0, #61a3ff)";
+      downloadBtn.style.opacity = "1";
+      downloadBtn.style.cursor = "pointer";
+      
+      showCodeBtn.style.background = "#17a2b8";
+      showCodeBtn.style.opacity = "1";
+      showCodeBtn.style.cursor = "pointer";
+    }
+  }, 500);
+};
+</script>
+
 
 </body>
 </html>
