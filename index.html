@@ -748,6 +748,7 @@ form {
   color: #555; 
   line-height: 1.4; 
   margin-bottom: 15px;
+  text-align: left;
 }
 
 /* The Pay €5.99 Button */
@@ -783,7 +784,6 @@ form {
   
   /* Force both buttons to have the same height. 
      Adjust if you want them shorter or taller. */
-  height: 50px;
 }
 
   </style>
@@ -1069,7 +1069,7 @@ form {
       disabled 
       class="unlock-button"
     >
-      Generate & Download
+      Download Website File
     </button>
     
     <!-- Show Generated Code button (initially disabled) -->
@@ -1079,7 +1079,7 @@ form {
       disabled 
       class="unlock-button"
     >
-      Show Generated Code
+      Copy Website Code
     </button>
   </div>
 </section>
@@ -3351,58 +3351,52 @@ function setupTrackModal() {
 </script>
   <script>
 // ---- Payment Button Logic ----
-var payBtn = document.getElementById('payBtn');
-var downloadBtn = document.getElementById('downloadBtn');
-var showCodeBtn = document.getElementById('showCodeBtn');
-
-// Just in case, ensure they're disabled by default
-downloadBtn.disabled = true;
-showCodeBtn.disabled = true;
-
-// Gray them out in case something overwrote their styles
-downloadBtn.style.background = "gray";
-showCodeBtn.style.background = "gray";
-downloadBtn.style.opacity = "0.5";
-showCodeBtn.style.opacity = "0.5";
-downloadBtn.style.cursor = "not-allowed";
-showCodeBtn.style.cursor = "not-allowed";
-
-payBtn.onclick = function() {
-  // Open a PayPal link in a popup. 
-  // This is just an example link. 
-  // For a real "Buy Now" button, you'd generate the link from PayPal with the correct business email & price.
+payBtn.onclick = function () {
   var paypalPopup = window.open(
     "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=workpoost%40gmail.com&item_name=Website+Builder+Download&amount=5.99&currency_code=EUR",
     "_blank",
     "width=500,height=700"
   );
-  
-  // Now we poll every half-second to see if the popup is closed
-  var popupTimer = setInterval(function() {
-    // If the popup is closed (user completed payment or exited)
+
+  // Start tracking time
+  var startTime = Date.now();
+  var thresholdTime = 10 * 1000; // 10 seconds in milliseconds
+
+  // Poll every 500ms to check if the popup is closed
+  var popupTimer = setInterval(function () {
+    // Check if the popup is closed
     if (paypalPopup && paypalPopup.closed) {
-      clearInterval(popupTimer);
-      
-      // Mark Payment successful
-      payBtn.textContent = "Payment Successful";
-      payBtn.style.background = "green";
-      payBtn.disabled = true;
-      
-      // Enable the 2 main buttons
-      downloadBtn.disabled = false;
-      showCodeBtn.disabled = false;
-      
-      // Reset styling so they're clickable
-      downloadBtn.style.background = "linear-gradient(to right, #6561e0, #61a3ff)";
-      downloadBtn.style.opacity = "1";
-      downloadBtn.style.cursor = "pointer";
-      
-      showCodeBtn.style.background = "#17a2b8";
-      showCodeBtn.style.opacity = "1";
-      showCodeBtn.style.cursor = "pointer";
+      clearInterval(popupTimer); // Stop checking once the popup is closed
+
+      // Calculate how long the popup stayed open
+      var elapsedTime = Date.now() - startTime;
+
+      if (elapsedTime >= thresholdTime) {
+        // Consider payment successful
+        payBtn.textContent = "Payment Successful";
+        payBtn.style.background = "green";
+        payBtn.disabled = true;
+
+        // Enable other buttons
+        downloadBtn.disabled = false;
+        showCodeBtn.disabled = false;
+
+        // Reset button styling
+        downloadBtn.style.background = "linear-gradient(to right, #6561e0, #61a3ff)";
+        downloadBtn.style.opacity = "1";
+        downloadBtn.style.cursor = "pointer";
+
+        showCodeBtn.style.background = "#17a2b8";
+        showCodeBtn.style.opacity = "1";
+        showCodeBtn.style.cursor = "pointer";
+      } else {
+        // If less than 10 seconds, assume payment not completed
+        alert("Payment was not completed. Please try again.");
+      }
     }
-  }, 500);
+  }, 500); // Check every 500ms
 };
+
 </script>
 
 
