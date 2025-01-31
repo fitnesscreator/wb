@@ -428,6 +428,21 @@ form {
       color: #333;
       cursor: pointer;
     }
+    
+    #howtocreatepaypalbutton {
+  padding: 10px 20px;
+  background: linear-gradient(to right, #6561e0, #a862ea);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+#howtocreatepaypalbutton:hover {
+  background: linear-gradient(to right, #5450c0, #a862ea);
+}
 
     /* Add Contact Form row */
     .add-contact-form-row {
@@ -975,6 +990,10 @@ form {
             <input id="otherPaymentLink" type="text" placeholder="https://example.com/checkout" spellcheck="false" maxlength="1000">
           </label>
         </div>
+        
+        <button type="button" id="howtocreatepaypalbutton" onclick="window.open('https://www.youtube.com/watch?v=YOUR_VIDEO_ID', '_blank');">
+    How to create Paypal button
+</button>
 
         <button type="button" onclick="addProduct()">Add Product</button>
         <div id="addedProductsList">
