@@ -733,7 +733,7 @@ form {
     
     /* Payment Section Container */
 .payment-section {
-  border: 1px solid #ccc; 
+  border: 0px solid #ccc; 
   padding: 20px; 
   margin-top: 20px; 
   background: transparent; /* or any color you prefer */
@@ -751,7 +751,7 @@ form {
   text-align: left;
 }
 
-/* The Pay €5.99 Button */
+/* The Pay Button */
 .payment-btn {
   background: #007bff; 
   color: #fff; 
@@ -785,6 +785,54 @@ form {
   /* Force both buttons to have the same height. 
      Adjust if you want them shorter or taller. */
 }
+    
+    /* Modal Overlay */
+#exitConfirm-modalOverlay.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: none; /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal Content */
+#exitConfirm-modal.modal {
+  background-color: #fff;
+  padding: 20px 30px;
+  border-radius: 8px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Buttons */
+#exitConfirm-modal .modal-buttons {
+  margin-top: 20px;
+}
+
+#exitConfirm-modal .modal-buttons button {
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#exitConfirm-modal .btn-ok {
+  background-color: #4CAF50;
+  color: white;
+}
+
+#exitConfirm-modal .btn-cancel {
+  background-color: #f44336;
+  color: white;
+}
+
 
   </style>
 </head>
@@ -897,7 +945,8 @@ form {
         <label class="payment-method-label">
           <div class="payment-method-row">
             <img src="https://i.ibb.co/tC9LHLG/Bella-52.png" alt="PayPal" />
-            <img src="https://i.ibb.co/m496tmj/Bella-53.png" alt="Icon5" />
+            <img src="https://i.ibb.co/cCtHLKs/Bella-58.png" alt="Stripe" />
+            <img src="https://i.ibb.co/m496tmj/Bella-53.png" alt="Checkout Page" />
             <span>Select Payment Method</span>
           </div>
           <div class="payment-method-select">
@@ -928,8 +977,7 @@ form {
         </div>
 
         <button type="button" onclick="addProduct()">Add Product</button>
-        <div id="addedProductsList" 
-       style="margin-top: 20px; border-top: 1px solid #5e91ff; padding-top: 10px;">
+        <div id="addedProductsList">
   </div>
       </form>
 
@@ -955,8 +1003,7 @@ form {
         </label>
 
         <button type="button" onclick="addReview()">Add Review</button>
-        <div id="addedReviewsList" 
-       style="margin-top: 20px; border: 1px solid #5e91ff; padding: 10px; border-radius: 8px;">
+        <div id="addedReviewsList">
   </div>
       </form>
 
@@ -1057,7 +1104,7 @@ form {
   
   <!-- Payment Button -->
   <button id="payBtn" class="payment-btn">
-    Pay €5.99
+    Pay €12
   </button>
   
   <!-- Row for Download & Show Code buttons -->
@@ -1091,9 +1138,6 @@ form {
     <div class="preview-section">
       <h2>Live Preview</h2>
       <iframe id="previewFrame"></iframe>
-
-      <!-- Items in Your Website, below the preview on the right side -->
-      <div id="managementContainer"></div>
     </div>
   </div>
 
@@ -1114,6 +1158,18 @@ form {
       <button type="button" id="confirmAddContactFormButton">Add</button>
     </div>
   </div>
+  
+  <!-- Custom Exit Confirmation Modal -->
+<div id="exitConfirm-modalOverlay" class="modal-overlay">
+  <div id="exitConfirm-modal" class="modal">
+    <p>Wait, if you refresh or leave this website builder, the website you created will be lost forever. Please complete the process to download your website.</p>
+    <div class="modal-buttons">
+      <button id="exitConfirm-stayButton" class="btn-ok">Oky</button>
+      <button id="exitConfirm-leaveButton" class="btn-cancel">I'm sure I want to leave</button>
+    </div>
+  </div>
+</div>
+
 
 
 <script>
@@ -3398,6 +3454,85 @@ payBtn.onclick = function () {
 };
 
 </script>
+  
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const exitModalOverlay = document.getElementById('exitConfirm-modalOverlay');
+    const exitModal = document.getElementById('exitConfirm-modal');
+    const stayButton = document.getElementById('exitConfirm-stayButton');
+    const leaveButton = document.getElementById('exitConfirm-leaveButton');
+    let intendedAction = null;
+
+    // Function to show the custom modal
+    function showExitModal(action) {
+      intendedAction = action;
+      exitModalOverlay.style.display = 'flex';
+    }
+
+    // Function to hide the custom modal
+    function hideExitModal() {
+      exitModalOverlay.style.display = 'none';
+      intendedAction = null;
+    }
+
+    // Handle the "Oky" button click
+    stayButton.addEventListener('click', function () {
+      hideExitModal();
+    });
+
+    // Handle the "I'm sure I want to leave" button click
+    leaveButton.addEventListener('click', function () {
+      hideExitModal();
+      if (typeof intendedAction === 'function') {
+        intendedAction();
+      } else if (typeof intendedAction === 'string') {
+        window.location.href = intendedAction;
+      }
+    });
+
+    // Intercept link clicks
+    const links = document.querySelectorAll('a');
+    links.forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        // Ignore links that trigger other modals by checking a data attribute
+        if (this.hasAttribute('data-ignore-exit-confirm')) return;
+
+        e.preventDefault();
+        const href = this.getAttribute('href');
+        showExitModal(function () {
+          window.location.href = href;
+        });
+      });
+    });
+
+    // Intercept form submissions
+    const forms = document.querySelectorAll('form');
+    forms.forEach(function (form) {
+      form.addEventListener('submit', function (e) {
+        // Ignore forms that trigger other modals by checking a data attribute
+        if (this.hasAttribute('data-ignore-exit-confirm')) return;
+
+        e.preventDefault();
+        showExitModal(function () {
+          form.submit();
+        });
+      });
+    });
+
+    // Handle the beforeunload event for closing, refreshing, or navigating away
+    window.addEventListener('beforeunload', function (e) {
+      // If the modal is visible, allow the unload
+      if (exitModalOverlay.style.display === 'flex') {
+        return;
+      }
+      // Prevent the unload and show the browser's confirmation dialog
+      e.preventDefault();
+      e.returnValue = '';
+    });
+  });
+</script>
+
+
 
 
 </body>
