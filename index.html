@@ -558,6 +558,32 @@
         max-width: 100%;
       }
     }
+    /* --- Custom Builder Added Items Styling --- */
+    .builder-item-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 5px;
+    }
+    .builder-item-row span {
+      flex: 1;
+      text-align: left;
+    }
+    .delete-btn {
+      background-color: red;
+      color: #fff;
+      border: none;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -804,7 +830,7 @@
   <!-- Custom Exit Confirmation Modal -->
   <div id="exitConfirm-modalOverlay" class="modal-overlay">
     <div id="exitConfirm-modal" class="modal">
-      <p>Wait, if you refresh or leave this website builder, the website you created will be lost forever. Please complete the process to download your website.</p>
+      <p>To download your website, please complete your purchase. If you refresh this page, your progress will be lost. Make sure to download your website now to keep your work safe.</p>
       <div class="modal-buttons">
         <button id="exitConfirm-stayButton" class="btn-ok">Oky</button>
         <button id="exitConfirm-leaveButton" class="btn-cancel">I'm sure I want to leave</button>
@@ -1979,7 +2005,6 @@
       window.open("https://imgbb.com","_blank");
     }
     function updateManagementLists(){
-      // (This function remains unchanged.)
       const cont = document.getElementById('managementContainer');
       cont.innerHTML = "";
       if(products.length>0){
@@ -1987,17 +2012,11 @@
         pDiv.innerHTML = "<h3>Products in Website</h3>";
         products.forEach((prod, idx)=>{
           const row = document.createElement('div');
-          row.style.display="flex";
-          row.style.alignItems="center";
-          row.style.justifyContent="space-between";
-          row.style.marginBottom="8px";
+          row.classList.add('builder-item-row');
           row.innerHTML = `<span>${escapeHTML(prod.title||"Untitled")}</span>`;
           const delBtn = document.createElement('button');
-          delBtn.textContent="Delete";
-          delBtn.style.background="red";
-          delBtn.style.color="#fff";
-          delBtn.style.border="none";
-          delBtn.style.cursor="pointer";
+          delBtn.classList.add('delete-btn');
+          delBtn.textContent="×";
           delBtn.onclick=function(){
             products.splice(idx,1);
             updatePreview();
@@ -2013,18 +2032,11 @@
         rDiv.innerHTML="<h3>Reviews in Website</h3>";
         reviews.forEach((rev, idx)=>{
           const row=document.createElement('div');
-          row.style.display="flex";
-          row.style.alignItems="center";
-          row.style.justifyContent="space-between";
-          row.style.marginBottom="8px";
+          row.classList.add('builder-item-row');
           row.innerHTML=`<span>${escapeHTML(rev.name||"Unnamed")}</span>`;
           const delBtn=document.createElement('button');
-          delBtn.textContent="Delete";
-          delBtn.style.background="red";
-          delBtn.style.color="#fff";
-          delBtn.style.border="none";
-          delBtn.style.cursor="pointer";
-          delBtn.style.marginLeft="20px";
+          delBtn.classList.add('delete-btn');
+          delBtn.textContent="×";
           delBtn.onclick=function(){
             reviews.splice(idx,1);
             updatePreview();
@@ -2039,12 +2051,8 @@
         const cfDiv=document.createElement('div');
         cfDiv.innerHTML="<h3>Contact Form</h3><span>Contact Form</span>";
         const delBtn=document.createElement('button');
-        delBtn.textContent="Delete";
-        delBtn.style.background="red";
-        delBtn.style.color="#fff";
-        delBtn.style.border="none";
-        delBtn.style.cursor="pointer";
-        delBtn.style.marginLeft="20px";
+        delBtn.classList.add('delete-btn');
+        delBtn.textContent="×";
         delBtn.onclick=function(){
           contactData.formEmbed="";
           const addBtn = document.getElementById('addContactFormButton');
@@ -2056,61 +2064,6 @@
         cfDiv.appendChild(delBtn);
         cont.appendChild(cfDiv);
       }
-    }
-    function setupContactFormModal(){
-      var modal = document.getElementById('contactFormModal');
-      var openBtn = document.getElementById('addContactFormButton');
-      var closeBtn = document.getElementById('closeContactFormModal');
-      var confirmBtn = document.getElementById('confirmAddContactFormButton');
-      var textarea = document.getElementById('contactFormIframe');
-      openBtn.onclick = function(){
-        if(contactData.formEmbed){
-          alert("A contact form is already added. You can delete it before adding a new one.");
-          return;
-        }
-        modal.style.display = 'flex';
-      };
-      closeBtn.onclick = function(){
-        modal.style.display = 'none';
-      };
-      confirmBtn.onclick = function() {
-        const embedCode = textarea.value.trim();
-        if (embedCode) {
-          contactData.formEmbed = embedCode;
-          modal.style.display = 'none';
-          textarea.value = '';
-          const addBtn = document.getElementById('addContactFormButton');
-          addBtn.classList.add('success');
-          addBtn.textContent = 'Form Added';
-          const statusDiv = document.getElementById('contactFormStatus');
-          statusDiv.innerHTML = '';
-          const delFormBtn = document.createElement('button');
-          delFormBtn.textContent = 'Delete Form';
-          delFormBtn.style.background = 'red';
-          delFormBtn.style.color = '#fff';
-          delFormBtn.style.border = 'none';
-          delFormBtn.style.cursor = 'pointer';
-          delFormBtn.style.borderRadius = '4px';
-          delFormBtn.style.padding = '5px 10px';
-          delFormBtn.onclick = function() {
-            contactData.formEmbed = '';
-            addBtn.classList.remove('success');
-            addBtn.textContent = 'Add Form';
-            statusDiv.innerHTML = '';
-            updatePreview();
-          };
-          statusDiv.appendChild(delFormBtn);
-          updatePreview();
-          updateManagementLists();
-        } else {
-          alert("Please paste your contact form embed code.");
-        }
-      };
-      window.onclick = function(event){
-        if(event.target == modal){
-          modal.style.display = 'none';
-        }
-      };
     }
     // ---- Payment Button Logic ----
     document.getElementById('payBtn').onclick = function () {
@@ -2144,7 +2097,6 @@
         return;
       }
       var payBtn = document.getElementById('payBtn');
-      // Remove the icon and update text for successful payment:
       payBtn.innerHTML = "Payment Successful";
       payBtn.style.background = "green";
       payBtn.disabled = true;
@@ -2227,6 +2179,61 @@
         e.returnValue = '';
       });
     });
+    function setupContactFormModal(){
+      var modal = document.getElementById('contactFormModal');
+      var openBtn = document.getElementById('addContactFormButton');
+      var closeBtn = document.getElementById('closeContactFormModal');
+      var confirmBtn = document.getElementById('confirmAddContactFormButton');
+      var textarea = document.getElementById('contactFormIframe');
+      openBtn.onclick = function(){
+        if(contactData.formEmbed){
+          alert("A contact form is already added. You can delete it before adding a new one.");
+          return;
+        }
+        modal.style.display = 'flex';
+      };
+      closeBtn.onclick = function(){
+        modal.style.display = 'none';
+      };
+      confirmBtn.onclick = function() {
+        const embedCode = textarea.value.trim();
+        if (embedCode) {
+          contactData.formEmbed = embedCode;
+          modal.style.display = 'none';
+          textarea.value = '';
+          const addBtn = document.getElementById('addContactFormButton');
+          addBtn.classList.add('success');
+          addBtn.textContent = 'Form Added';
+          const statusDiv = document.getElementById('contactFormStatus');
+          statusDiv.innerHTML = '';
+          const delFormBtn = document.createElement('button');
+          delFormBtn.textContent = 'Delete Form';
+          delFormBtn.style.background = 'red';
+          delFormBtn.style.color = '#fff';
+          delFormBtn.style.border = 'none';
+          delFormBtn.style.cursor = 'pointer';
+          delFormBtn.style.borderRadius = '4px';
+          delFormBtn.style.padding = '5px 10px';
+          delFormBtn.onclick = function() {
+            contactData.formEmbed = '';
+            addBtn.classList.remove('success');
+            addBtn.textContent = 'Add Form';
+            statusDiv.innerHTML = '';
+            updatePreview();
+          };
+          statusDiv.appendChild(delFormBtn);
+          updatePreview();
+          updateManagementLists();
+        } else {
+          alert("Please paste your contact form embed code.");
+        }
+      };
+      window.onclick = function(event){
+        if(event.target == modal){
+          modal.style.display = 'none';
+        }
+      };
+    }
   </script>
 </body>
 </html>
