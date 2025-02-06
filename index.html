@@ -609,6 +609,20 @@
       cursor: pointer;
     }
     
+    .color-options span.selected,
+.size-options span.selected,
+.paypal-embed-option span.selected {
+  border: 2px solid #2196f3;
+  background: #eef6ff;
+}
+    
+    .paypal-embed-option span.selected {
+  border: 2px solid #2196f3;
+  background: #eef6ff;
+}
+
+
+    
   </style>
 </head>
 <body>
@@ -705,6 +719,7 @@
               <option value="paypalLink">PayPal Button Link</option>
               <option value="paypalEmbed">PayPal Button Embed Code</option>
               <option value="other">Other Payment Button or Checkout Page</option>
+              <option value="paypalEmail">PayPal Email (Add to Cart)</option>
             </select>
           </div>
         </label>
@@ -723,6 +738,12 @@
             <input id="otherPaymentLink" type="text" placeholder="https://example.com/checkout" spellcheck="false" maxlength="1000">
           </label>
         </div>
+        <div id="paypalEmailField" style="display: none;">
+  <label>PayPal Email
+    <input id="paypalEmailInput" type="email" placeholder="your@email.com" 
+           spellcheck="false" maxlength="200">
+  </label>
+</div>
         <button type="button" id="howtocreatepaypalbutton" onclick="window.open('https://www.youtube.com/watch?v=YOUR_VIDEO_ID', '_blank');">
           How to create Paypal button
         </button>
@@ -872,1424 +893,1395 @@
   </div>
   
   <script>
-    // ============== CURRENCY DATA ==============
-    const currencyData = [
-      { code: "AED", name: "United Arab Emirates Dirham", symbol: "د.إ", flag: "🇦🇪" },
-      { code: "AFN", name: "Afghan Afghani", symbol: "؋", flag: "🇦🇫" },
-      { code: "ALL", name: "Albanian Lek", symbol: "L", flag: "🇦🇱" },
-      { code: "AMD", name: "Armenian Dram", symbol: "֏", flag: "🇦🇲" },
-      { code: "ANG", name: "Netherlands Antillean Guilder", symbol: "ƒ", flag: "🇳🇱" },
-      { code: "AOA", name: "Angolan Kwanza", symbol: "Kz", flag: "🇦🇴" },
-      { code: "ARS", name: "Argentine Peso", symbol: "$", flag: "🇦🇷" },
-      { code: "AUD", name: "Australian Dollar", symbol: "A$", flag: "🇦🇺" },
-      { code: "AWG", name: "Aruban Florin", symbol: "ƒ", flag: "🇦🇼" },
-      { code: "AZN", name: "Azerbaijani Manat", symbol: "₼", flag: "🇦🇿" },
-      { code: "BAM", name: "Bosnia-Herzegovina Convertible Mark", symbol: "KM", flag: "🇧🇦" },
-      { code: "BBD", name: "Barbadian Dollar", symbol: "Bds$", flag: "🇧🇧" },
-      { code: "BDT", name: "Bangladeshi Taka", symbol: "৳", flag: "🇧🇩" },
-      { code: "BGN", name: "Bulgarian Lev", symbol: "лв", flag: "🇧🇬" },
-      { code: "BHD", name: "Bahraini Dinar", symbol: "د.ب", flag: "🇧🇭" },
-      { code: "BIF", name: "Burundian Franc", symbol: "FBu", flag: "🇧🇮" },
-      { code: "BMD", name: "Bermudan Dollar", symbol: "$", flag: "🇧🇲" },
-      { code: "BND", name: "Brunei Dollar", symbol: "B$", flag: "🇧🇳" },
-      { code: "BOB", name: "Bolivian Boliviano", symbol: "$b", flag: "🇧🇴" },
-      { code: "BRL", name: "Brazilian Real", symbol: "R$", flag: "🇧🇷" },
-      { code: "BSD", name: "Bahamian Dollar", symbol: "$", flag: "🇧🇸" },
-      { code: "BTN", name: "Bhutanese Ngultrum", symbol: "Nu.", flag: "🇧🇹" },
-      { code: "BWP", name: "Botswanan Pula", symbol: "P", flag: "🇧🇼" },
-      { code: "BYN", name: "Belarusian Ruble", symbol: "Br", flag: "🇧🇾" },
-      { code: "BZD", name: "Belize Dollar", symbol: "BZ$", flag: "🇧🇿" },
-      { code: "CAD", name: "Canadian Dollar", symbol: "C$", flag: "🇨🇦" },
-      { code: "CDF", name: "Congolese Franc", symbol: "FC", flag: "🇨🇩" },
-      { code: "CHF", name: "Swiss Franc", symbol: "CHF", flag: "🇨🇭" },
-      { code: "CLP", name: "Chilean Peso", symbol: "$", flag: "🇨🇱" },
-      { code: "CNY", name: "Chinese Yuan", symbol: "¥", flag: "🇨🇳" },
-      { code: "COP", name: "Colombian Peso", symbol: "$", flag: "🇨🇴" },
-      { code: "CRC", name: "Costa Rican Colón", symbol: "₡", flag: "🇨🇷" },
-      { code: "CUC", name: "Cuban Convertible Peso", symbol: "$", flag: "🇨🇺" },
-      { code: "CUP", name: "Cuban Peso", symbol: "$", flag: "🇨🇺" },
-      { code: "CVE", name: "Cape Verdean Escudo", symbol: "$", flag: "🇨🇻" },
-      { code: "CZK", name: "Czech Koruna", symbol: "Kč", flag: "🇨🇿" },
-      { code: "DJF", name: "Djiboutian Franc", symbol: "Fdj", flag: "🇩🇯" },
-      { code: "DKK", name: "Danish Krone", symbol: "kr", flag: "🇩🇰" },
-      { code: "DOP", name: "Dominican Peso", symbol: "RD$", flag: "🇩🇴" },
-      { code: "DZD", name: "Algerian Dinar", symbol: "د.ج", flag: "🇩🇿" },
-      { code: "EGP", name: "Egyptian Pound", symbol: "£", flag: "🇪🇬" },
-      { code: "ERN", name: "Eritrean Nakfa", symbol: "Nfk", flag: "🇪🇷" },
-      { code: "ETB", name: "Ethiopian Birr", symbol: "Br", flag: "🇪🇹" },
-      { code: "EUR", name: "Euro", symbol: "€", flag: "🇪🇺" },
-      { code: "FJD", name: "Fijian Dollar", symbol: "FJ$", flag: "🇫🇯" },
-      { code: "FKP", name: "Falkland Islands Pound", symbol: "£", flag: "🇫🇰" },
-      { code: "FOK", name: "Faroese Króna", symbol: "kr", flag: "🇫🇴" },
-      { code: "GBP", name: "British Pound Sterling", symbol: "£", flag: "🇬🇧" },
-      { code: "GEL", name: "Georgian Lari", symbol: "₾", flag: "🇬🇪" },
-      { code: "GGP", name: "Guernsey Pound", symbol: "£", flag: "🇬🇬" },
-      { code: "GHS", name: "Ghanaian Cedi", symbol: "₵", flag: "🇬🇭" },
-      { code: "GIP", name: "Gibraltar Pound", symbol: "£", flag: "🇬🇮" },
-      { code: "GMD", name: "Gambian Dalasi", symbol: "D", flag: "🇬🇲" },
-      { code: "GNF", name: "Guinean Franc", symbol: "FG", flag: "🇬🇳" },
-      { code: "GTQ", name: "Guatemalan Quetzal", symbol: "Q", flag: "🇬🇹" },
-      { code: "GYD", name: "Guyanese Dollar", symbol: "G$", flag: "🇬🇾" },
-      { code: "HKD", name: "Hong Kong Dollar", symbol: "HK$", flag: "🇭🇰" },
-      { code: "HNL", name: "Honduran Lempira", symbol: "L", flag: "🇭🇳" },
-      { code: "HRK", name: "Croatian Kuna", symbol: "kn", flag: "🇭🇷" },
-      { code: "HTG", name: "Haitian Gourde", symbol: "G", flag: "🇭🇹" },
-      { code: "HUF", name: "Hungarian Forint", symbol: "Ft", flag: "🇭🇺" },
-      { code: "IDR", name: "Indonesian Rupiah", symbol: "Rp", flag: "🇮🇩" },
-      { code: "ILS", name: "Israeli New Shekel", symbol: "₪", flag: "🇮🇱" },
-      { code: "IMP", name: "Isle of Man Pound", symbol: "£", flag: "🇮🇲" },
-      { code: "INR", name: "Indian Rupee", symbol: "₹", flag: "🇮🇳" },
-      { code: "IQD", name: "Iraqi Dinar", symbol: "ع.د", flag: "🇮🇶" },
-      { code: "IRR", name: "Iranian Rial", symbol: "﷼", flag: "🇮🇷" },
-      { code: "ISK", name: "Icelandic Króna", symbol: "kr", flag: "🇮🇸" },
-      { code: "JEP", name: "Jersey Pound", symbol: "£", flag: "🇯🇪" },
-      { code: "JMD", name: "Jamaican Dollar", symbol: "J$", flag: "🇯🇲" },
-      { code: "JOD", name: "Jordanian Dinar", symbol: "د.ا", flag: "🇯🇴" },
-      { code: "JPY", name: "Japanese Yen", symbol: "¥", flag: "🇯🇵" },
-      { code: "KES", name: "Kenyan Shilling", symbol: "KSh", flag: "🇰🇪" },
-      { code: "KGS", name: "Kyrgyzstani Som", symbol: "сом", flag: "🇰🇬" },
-      { code: "KHR", name: "Cambodian Riel", symbol: "៛", flag: "🇰🇭" },
-      { code: "KMF", name: "Comorian Franc", symbol: "CF", flag: "🇰🇲" },
-      { code: "KPW", name: "North Korean Won", symbol: "₩", flag: "🇰🇵" },
-      { code: "KRW", name: "South Korean Won", symbol: "₩", flag: "🇰🇷" },
-      { code: "KWD", name: "Kuwaiti Dinar", symbol: "د.ك", flag: "🇰🇼" },
-      { code: "KYD", name: "Cayman Islands Dollar", symbol: "KYD", flag: "🇰🇾" },
-      { code: "KZT", name: "Kazakhstani Tenge", symbol: "₸", flag: "🇰🇿" },
-      { code: "LAK", name: "Laotian Kip", symbol: "₭", flag: "🇱🇦" },
-      { code: "LBP", name: "Lebanese Pound", symbol: "£", flag: "🇱🇧" },
-      { code: "LKR", name: "Sri Lankan Rupee", symbol: "Rs", flag: "🇱🇰" },
-      { code: "LRD", name: "Liberian Dollar", symbol: "L$", flag: "🇱🇷" },
-      { code: "LSL", name: "Lesotho Loti", symbol: "L", flag: "🇱🇸" },
-      { code: "LYD", name: "Libyan Dinar", symbol: "ل.د", flag: "🇱🇾" },
-      { code: "MAD", name: "Moroccan Dirham", symbol: "د.م.", flag: "🇲🇦" },
-      { code: "MDL", name: "Moldovan Leu", symbol: "L", flag: "🇲🇩" },
-      { code: "MGA", name: "Malagasy Ariary", symbol: "Ar", flag: "🇲🇬" },
-      { code: "MKD", name: "Macedonian Denar", symbol: "ден", flag: "🇲🇰" },
-      { code: "MMK", name: "Myanmar Kyat", symbol: "K", flag: "🇲🇲" },
-      { code: "MNT", name: "Mongolian Tugrik", symbol: "₮", flag: "🇲🇳" },
-      { code: "MOP", name: "Macanese Pataca", symbol: "MOP$", flag: "🇲🇴" },
-      { code: "MRU", name: "Mauritanian Ouguiya", symbol: "UM", flag: "🇲🇷" },
-      { code: "MUR", name: "Mauritian Rupee", symbol: "₨", flag: "🇲🇺" },
-      { code: "MVR", name: "Maldivian Rufiyaa", symbol: "Rf", flag: "🇲🇻" },
-      { code: "MWK", name: "Malawian Kwacha", symbol: "MK", flag: "🇲🇼" },
-      { code: "MXN", name: "Mexican Peso", symbol: "$", flag: "🇲🇽" },
-      { code: "MYR", name: "Malaysian Ringgit", symbol: "RM", flag: "🇲🇾" },
-      { code: "MZN", name: "Mozambican Metical", symbol: "MT", flag: "🇲🇿" },
-      { code: "NAD", name: "Namibian Dollar", symbol: "N$", flag: "🇳🇦" },
-      { code: "NGN", name: "Nigerian Naira", symbol: "₦", flag: "🇳🇬" },
-      { code: "NIO", name: "Nicaraguan Córdoba", symbol: "C$", flag: "🇳🇮" },
-      { code: "NOK", name: "Norwegian Krone", symbol: "kr", flag: "🇳🇴" },
-      { code: "NPR", name: "Nepalese Rupee", symbol: "₨", flag: "🇳🇵" },
-      { code: "NZD", name: "New Zealand Dollar", symbol: "NZ$", flag: "🇳🇿" },
-      { code: "OMR", name: "Omani Rial", symbol: "ر.ع.", flag: "🇴🇲" },
-      { code: "PAB", name: "Panamanian Balboa", symbol: "B/.", flag: "🇵🇦" },
-      { code: "PEN", name: "Peruvian Nuevo Sol", symbol: "S/.", flag: "🇵🇪" },
-      { code: "PGK", name: "Papua New Guinean Kina", symbol: "K", flag: "🇵🇬" },
-      { code: "PHP", name: "Philippine Peso", symbol: "₱", flag: "🇵🇭" },
-      { code: "PKR", name: "Pakistani Rupee", symbol: "₨", flag: "🇵🇰" },
-      { code: "PLN", name: "Polish Złoty", symbol: "zł", flag: "🇵🇱" },
-      { code: "PYG", name: "Paraguayan Guaraní", symbol: "₲", flag: "🇵🇾" },
-      { code: "QAR", name: "Qatari Rial", symbol: "ر.ق", flag: "🇶🇦" },
-      { code: "RON", name: "Romanian Leu", symbol: "lei", flag: "🇷🇴" },
-      { code: "RSD", name: "Serbian Dinar", symbol: "din", flag: "🇷🇸" },
-      { code: "RUB", name: "Russian Ruble", symbol: "₽", flag: "🇷🇺" },
-      { code: "RWF", name: "Rwandan Franc", symbol: "FRw", flag: "🇷🇼" },
-      { code: "SAR", name: "Saudi Riyal", symbol: "ر.س", flag: "🇸🇦" },
-      { code: "SBD", name: "Solomon Islands Dollar", symbol: "SI$", flag: "🇸🇧" },
-      { code: "SCR", name: "Seychellois Rupee", symbol: "₨", flag: "🇸🇨" },
-      { code: "SDG", name: "Sudanese Pound", symbol: "£", flag: "🇸🇩" },
-      { code: "SEK", name: "Swedish Krona", symbol: "kr", flag: "🇸🇪" },
-      { code: "SGD", name: "Singapore Dollar", symbol: "S$", flag: "🇸🇬" },
-      { code: "SHP", name: "Saint Helena Pound", symbol: "£", flag: "🇸🇭" },
-      { code: "SLL", name: "Sierra Leonean Leone", symbol: "Le", flag: "🇸🇱" },
-      { code: "SOS", name: "Somali Shilling", symbol: "S", flag: "🇸🇴" },
-      { code: "SRD", name: "Surinamese Dollar", symbol: "$", flag: "🇸🇷" },
-      { code: "SSP", name: "South Sudanese Pound", symbol: "£", flag: "🇸🇸" },
-      { code: "STD", name: "São Tomé and Príncipe Dobra", symbol: "Db", flag: "🇸🇹" },
-      { code: "STN", name: "São Tomé and Príncipe Dobra", symbol: "Db", flag: "🇸🇹" },
-      { code: "SVC", name: "Salvadoran Colón", symbol: "$", flag: "🇸🇻" },
-      { code: "SYP", name: "Syrian Pound", symbol: "£", flag: "🇸🇾" },
-      { code: "SZL", name: "Swazi Lilangeni", symbol: "E", flag: "🇸🇿" },
-      { code: "THB", name: "Thai Baht", symbol: "฿", flag: "🇹🇭" },
-      { code: "TJS", name: "Tajikistani Somoni", symbol: "ЅМ", flag: "🇹🇯" },
-      { code: "TMT", name: "Turkmenistani Manat", symbol: "m", flag: "🇹🇲" },
-      { code: "TND", name: "Tunisian Dinar", symbol: "د.ت", flag: "🇹🇳" },
-      { code: "TOP", name: "Tongan Paʻanga", symbol: "T$", flag: "🇹🇴" },
-      { code: "TRY", name: "Turkish Lira", symbol: "₺", flag: "🇹🇷" },
-      { code: "TTD", name: "Trinidad and Tobago Dollar", symbol: "TT$", flag: "🇹🇹" },
-      { code: "TWD", name: "New Taiwan Dollar", symbol: "NT$", flag: "🇹🇼" },
-      { code: "TZS", name: "Tanzanian Shilling", symbol: "TSh", flag: "🇹🇿" },
-      { code: "UAH", name: "Ukrainian Hryvnia", symbol: "₴", flag: "🇺🇦" },
-      { code: "UGX", name: "Ugandan Shilling", symbol: "USh", flag: "🇺🇬" },
-      { code: "USD", name: "United States Dollar", symbol: "$", flag: "🇺🇸" },
-      { code: "UYU", name: "Uruguayan Peso", symbol: "$U", flag: "🇺🇾" },
-      { code: "UZS", name: "Uzbekistan Som", symbol: "UZS", flag: "🇺🇿" },
-      { code: "VES", name: "Venezuelan Bolívar Soberano", symbol: "Bs.S", flag: "🇻🇪" },
-      { code: "VND", name: "Vietnamese Dong", symbol: "₫", flag: "🇻🇳" },
-      { code: "VUV", name: "Vanuatu Vatu", symbol: "VT", flag: "🇻🇺" },
-      { code: "WST", name: "Samoan Tala", symbol: "WS$", flag: "🇼🇸" },
-      { code: "XAF", name: "CFA Franc BEAC", symbol: "FCFA", flag: "🇨🇫" },
-      { code: "XCD", name: "East Caribbean Dollar", symbol: "EC$", flag: "🇨🇩" },
-      { code: "XDR", name: "Special Drawing Rights", symbol: "XDR", flag: "🇺🇳" },
-      { code: "XOF", name: "CFA Franc BCEAO", symbol: "CFA", flag: "🇨🇮" },
-      { code: "XPF", name: "CFP Franc", symbol: "CFPF", flag: "🇵🇫" },
-      { code: "YER", name: "Yemeni Rial", symbol: "﷼", flag: "🇾🇪" },
-      { code: "ZAR", name: "South African Rand", symbol: "R", flag: "🇿🇦" },
-      { code: "ZMW", name: "Zambian Kwacha", symbol: "ZK", flag: "🇿🇲" },
-      { code: "ZWL", name: "Zimbabwean Dollar", symbol: "Z$", flag: "🇿🇼" }
-    ];
-    // ============== DATA STRUCTURES ==============
-    var heroData    = { logo:'', banner:'', heroText:'', ctaText:'' };
-    var products    = [];
-    var reviews     = [];
-    var aboutData   = { title:'', paragraph:'', image:'' };
-    var contactData = { 
-      intro:'', 
-      instagram:'', 
-      tiktok:'', 
-      facebook:'', 
-      xLink:'', 
-      youtube:'', 
-      email:'', 
-      formEmbed:'',
-      googleAnalytics: ''
+  // ============== CURRENCY DATA ==============
+  const currencyData = [
+    { code: "AED", name: "United Arab Emirates Dirham", symbol: "د.إ", flag: "🇦🇪" },
+    { code: "AFN", name: "Afghan Afghani", symbol: "؋", flag: "🇦🇫" },
+    // ... (keep the rest of your currency data)
+    { code: "USD", name: "United States Dollar", symbol: "$", flag: "🇺🇸" }
+  ];
+
+  // ============== DATA STRUCTURES ==============
+  var heroData    = { logo:'', banner:'', heroText:'', ctaText:'' };
+  var products    = [];
+  var reviews     = [];
+  var aboutData   = { title:'', paragraph:'', image:'' };
+  var contactData = {
+    intro:'', 
+    instagram:'', 
+    tiktok:'', 
+    facebook:'', 
+    xLink:'', 
+    youtube:'', 
+    email:'', 
+    formEmbed:'',
+    googleAnalytics: ''
+  };
+  var finalHTML = '';
+
+  // ============== Mandatory Fields Check ==============
+  function checkMandatory() {
+    // Must have global fields plus at least 1 product + 1 review
+    if (document.getElementById('logo').value.trim() === "") return false;
+    if (document.getElementById('banner').value.trim() === "") return false;
+    if (document.getElementById('heroText').value.trim() === "") return false;
+    if (document.getElementById('ctaText').value.trim() === "") return false;
+    if (products.length < 1) return false;
+    if (reviews.length < 1) return false;
+    if (document.getElementById('aboutTitle').value.trim() === "") return false;
+    if (document.getElementById('aboutParagraph').value.trim() === "") return false;
+    if (document.getElementById('aboutImage').value.trim() === "") return false;
+    if (document.getElementById('contactEmail').value.trim() === "") return false;
+    return true;
+  }
+
+  // ============== ON LOAD ==============
+  window.onload = function() {
+    // Real-time preview watchers
+    document.getElementById('logo').oninput     = updatePreview;
+    document.getElementById('banner').oninput   = updatePreview;
+    document.getElementById('heroText').oninput = updatePreview;
+    document.getElementById('ctaText').oninput  = updatePreview;
+
+    document.getElementById('aboutTitle').oninput     = updatePreview;
+    document.getElementById('aboutParagraph').oninput = updatePreview;
+    document.getElementById('aboutImage').oninput     = updatePreview;
+
+    document.getElementById('contactIntro').oninput     = updatePreview;
+    document.getElementById('contactInstagram').oninput = updatePreview;
+    document.getElementById('contactTiktok').oninput    = updatePreview;
+    document.getElementById('contactFacebook').oninput  = updatePreview;
+    document.getElementById('contactX').oninput         = updatePreview;
+    document.getElementById('contactYoutube').oninput   = updatePreview;
+    document.getElementById('contactEmail').oninput     = updatePreview;
+
+    // Payment method event
+    document.getElementById('productPaymentMethod').onchange = function(){
+      var method = this.value;
+
+      document.getElementById('productLinkField').style.display   = (method === 'paypalLink')  ? 'block' : 'none';
+      document.getElementById('productEmbedField').style.display  = (method === 'paypalEmbed') ? 'block' : 'none';
+      document.getElementById('otherPaymentField').style.display  = (method === 'other')       ? 'block' : 'none';
+      document.getElementById('paypalEmailField').style.display   = (method === 'paypalEmail') ? 'block' : 'none';
+
+      // Hide color/size if embed
+      var colorInput = document.getElementById('colorOptions').parentElement;
+      var sizeInput  = document.getElementById('sizeOptions').parentElement;
+      if (method === 'paypalEmbed') {
+        colorInput.style.display = 'none';
+        sizeInput.style.display  = 'none';
+      } else {
+        colorInput.style.display = 'block';
+        sizeInput.style.display  = 'block';
+      }
+
+      updatePreview();
     };
-    var finalHTML   = '';
-    // ============== Mandatory Fields Check ==============
-    function checkMandatory() {
-      // Global mandatory fields plus at least one added product and review:
-      if (document.getElementById('logo').value.trim() === "") return false;
-      if (document.getElementById('banner').value.trim() === "") return false;
-      if (document.getElementById('heroText').value.trim() === "") return false;
-      if (document.getElementById('ctaText').value.trim() === "") return false;
-      if (products.length < 1) return false;
-      if (reviews.length < 1) return false;
-      if (document.getElementById('aboutTitle').value.trim() === "") return false;
-      if (document.getElementById('aboutParagraph').value.trim() === "") return false;
-      if (document.getElementById('aboutImage').value.trim() === "") return false;
-      if (document.getElementById('contactEmail').value.trim() === "") return false;
-      return true;
+
+    // Additional watchers
+    document.getElementById('productLink').oninput      = updatePreview;
+    document.getElementById('productEmbed').oninput     = updatePreview;
+    document.getElementById('otherPaymentLink').oninput = updatePreview;
+
+    updateAddProductFormFields();
+    setupContactFormModal();
+    updateManagementLists();
+  };
+
+  // ============== CURRENCY DROPDOWN INIT ==============
+  document.addEventListener('DOMContentLoaded', function() {
+    const currencyInput  = document.getElementById('productCurrency');
+    const currencyList   = document.getElementById('currencyList');
+    const currencySearch = document.getElementById('currencySearch');
+
+    // Populate currency data
+    currencyData.forEach(currency => {
+      const item = document.createElement('div');
+      item.classList.add('currency-item');
+      item.innerHTML = `
+        <span class="currency-flag">${currency.flag}</span>
+        <span class="currency-code">${currency.code}</span>
+        <span class="currency-name">${currency.name}</span>
+      `;
+      item.addEventListener('click', () => {
+        currencyInput.value = `${currency.code} - ${currency.name}`;
+        currencyInput.setAttribute('data-code', currency.code);
+        currencyList.classList.remove('visible');
+        updatePreview();
+      });
+      currencyList.appendChild(item);
+    });
+
+    // Default to EUR
+    const defaultCurrency = currencyData.find(c => c.code === "EUR");
+    if (defaultCurrency) {
+      currencyInput.value = `${defaultCurrency.code} - ${defaultCurrency.name}`;
+      currencyInput.setAttribute('data-code', defaultCurrency.code);
     }
-    // ============== ON LOAD ==============
-    window.onload = function(){
-      document.getElementById('logo').oninput     = updatePreview;
-      document.getElementById('banner').oninput   = updatePreview;
-      document.getElementById('heroText').oninput = updatePreview;
-      document.getElementById('ctaText').oninput  = updatePreview;
-      document.getElementById('aboutTitle').oninput     = updatePreview;
-      document.getElementById('aboutParagraph').oninput = updatePreview;
-      document.getElementById('aboutImage').oninput     = updatePreview;
-      document.getElementById('contactIntro').oninput     = updatePreview;
-      document.getElementById('contactInstagram').oninput = updatePreview;
-      document.getElementById('contactTiktok').oninput    = updatePreview;
-      document.getElementById('contactFacebook').oninput  = updatePreview;
-      document.getElementById('contactX').oninput         = updatePreview;
-      document.getElementById('contactYoutube').oninput   = updatePreview;
-      document.getElementById('contactEmail').oninput     = updatePreview;
-      document.getElementById('productPaymentMethod').onchange = function(){
-        var method = this.value;
-        document.getElementById('productLinkField').style.display = (method === 'paypalLink') ? 'block' : 'none';
-        document.getElementById('productEmbedField').style.display = (method === 'paypalEmbed') ? 'block' : 'none';
-        document.getElementById('otherPaymentField').style.display = (method === 'other') ? 'block' : 'none';
+
+    currencyInput.addEventListener('click', () => {
+      currencyList.classList.toggle('visible');
+      currencySearch.focus();
+    });
+
+    document.addEventListener('click', function(e) {
+      if (!currencyInput.contains(e.target) && !currencyList.contains(e.target)) {
+        currencyList.classList.remove('visible');
+      }
+    });
+
+    currencySearch.addEventListener('input', function() {
+      const filter = currencySearch.value.toUpperCase();
+      const items  = currencyList.getElementsByClassName('currency-item');
+      for (let i = 0; i < items.length; i++) {
+        const txtValue = items[i].textContent || items[i].innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          items[i].style.display = "";
+        } else {
+          items[i].style.display = "none";
+        }
+      }
+    });
+  });
+
+  // ============== FUNCTIONS ==============
+  function updateAddProductFormFields() {
+    var method = document.getElementById('productPaymentMethod').value;
+    document.getElementById('productLinkField').style.display   = (method === 'paypalLink')  ? 'block' : 'none';
+    document.getElementById('productEmbedField').style.display  = (method === 'paypalEmbed') ? 'block' : 'none';
+    document.getElementById('otherPaymentField').style.display  = (method === 'other')       ? 'block' : 'none';
+    document.getElementById('paypalEmailField').style.display   = (method === 'paypalEmail') ? 'block' : 'none';
+  }
+
+  var imageCount = 1;
+  function addImageField(){
+    imageCount++;
+    if(imageCount === 2){
+      document.getElementById('additionalImage2').style.display = 'block';
+    } else if(imageCount === 3){
+      document.getElementById('additionalImage3').style.display = 'block';
+      document.getElementById('addImagesBtn').style.display = 'none';
+    }
+  }
+
+  function addProduct(){
+    // Gather inputs
+    var title         = document.getElementById('productTitle').value.trim();
+    var img1          = document.getElementById('image1').value.trim();
+    var img2          = document.getElementById('image2').value.trim();
+    var img3          = document.getElementById('image3').value.trim();
+    var currencyInput = document.getElementById('productCurrency');
+    var currencyCode  = currencyInput.getAttribute('data-code') || 'EUR';
+    var sold          = document.getElementById('sold').value.trim();
+    var price         = document.getElementById('price').value.trim();
+    var shipping      = document.getElementById('shipping').value.trim();
+    var returns       = document.getElementById('returns').value;
+    var coloroptions  = document.getElementById('colorOptions').value.trim();
+    var sizeoptions   = document.getElementById('sizeOptions').value.trim();
+    var desc          = document.getElementById('description').value.trim();
+    var paymentMethod = document.getElementById('productPaymentMethod').value;
+    var paypalEmail   = document.getElementById('paypalEmailInput').value.trim();
+
+    var productLink      = "";
+    var productEmbed     = "";
+    var otherPaymentLink = "";
+
+    if(paymentMethod === 'paypalLink'){
+      productLink  = document.getElementById('productLink').value.trim();
+    }
+    if(paymentMethod === 'paypalEmbed'){
+      productEmbed = document.getElementById('productEmbed').value.trim();
+    }
+    if(paymentMethod === 'other'){
+      otherPaymentLink = document.getElementById('otherPaymentLink').value.trim();
+    }
+
+    // If not embed, coloroptions is required
+    if(!title || !img1 || !price || !desc ||
+       (paymentMethod !== 'paypalEmbed' && !coloroptions)) {
+      alert("Please fill out all mandatory fields before adding.");
+      return;
+    }
+
+    // Gather images
+    var imgs = [img1];
+    if(img2) imgs.push(img2);
+    if(img3) imgs.push(img3);
+
+    // shipping
+    var shippingVal = "FREE";
+    if(shipping && shipping !== "0"){
+      shippingVal = shipping;
+    }
+
+    // sold
+    var soldVal = "";
+    if(sold && sold !== "0"){
+      soldVal = sold;
+    }
+
+    // Build product object
+    var product = {
+      title        : title,
+      images       : imgs,
+      sold         : soldVal,
+      price        : price,
+      currency     : currencyCode,
+      shipping     : shippingVal,
+      returns      : returns,
+      coloroptions : coloroptions,
+      sizeoptions  : sizeoptions,
+      description  : desc,
+      paymentMethod: paymentMethod,
+      paypalLink   : productLink,
+      paypalEmbed  : productEmbed,
+      otherPaymentLink : otherPaymentLink,
+      paypalEmail  : paypalEmail
+    };
+
+    products.push(product);
+
+    // Clear form
+    document.getElementById('productTitle').value='';
+    document.getElementById('image1').value='';
+    document.getElementById('image2').value='';
+    document.getElementById('image3').value='';
+    currencyInput.value='';
+    currencyInput.removeAttribute('data-code');
+    document.getElementById('sold').value='';
+    document.getElementById('price').value='';
+    document.getElementById('shipping').value='';
+    document.getElementById('description').value='';
+    document.getElementById('colorOptions').value='';
+    document.getElementById('sizeOptions').value='';
+    document.getElementById('productPaymentMethod').value='paypalLink';
+    document.getElementById('productLink').value='';
+    document.getElementById('productEmbed').value='';
+    document.getElementById('otherPaymentLink').value='';
+    document.getElementById('paypalEmailInput').value='';
+    updateAddProductFormFields();
+
+    imageCount=1;
+    document.getElementById('additionalImage2').style.display='none';
+    document.getElementById('additionalImage3').style.display='none';
+    document.getElementById('addImagesBtn').style.display='block';
+
+    // revert currency to default (EUR)
+    const defaultCurrency = currencyData.find(c => c.code === "EUR");
+    if(defaultCurrency){
+      currencyInput.value = `${defaultCurrency.code} - ${defaultCurrency.name}`;
+      currencyInput.setAttribute('data-code', defaultCurrency.code);
+    }
+
+    updatePreview();
+    renderAddedProductsList();
+  }
+
+  function renderAddedProductsList() {
+    const container = document.getElementById('addedProductsList');
+    container.innerHTML = '';
+    products.forEach((prod, idx) => {
+      const row = document.createElement('div');
+      row.classList.add('builder-item-row');
+
+      const textSpan = document.createElement('span');
+      textSpan.textContent = prod.title || 'Untitled';
+      row.appendChild(textSpan);
+
+      const delBtn = document.createElement('button');
+      delBtn.classList.add('delete-btn');
+      delBtn.textContent = '×';
+      delBtn.onclick = function() {
+        products.splice(idx, 1);
+        renderAddedProductsList();
         updatePreview();
       };
-      document.getElementById('productLink').oninput   = updatePreview;
-      document.getElementById('productEmbed').oninput  = updatePreview;
-      document.getElementById('otherPaymentLink').oninput = updatePreview;
-      updateAddProductFormFields();
-      setupContactFormModal();
-      updateManagementLists();
-    };
-    // ============== CURRENCY DROPDOWN INIT ==============
-    document.addEventListener('DOMContentLoaded', function() {
-      const currencyInput = document.getElementById('productCurrency');
-      const currencyList  = document.getElementById('currencyList');
-      const currencySearch= document.getElementById('currencySearch');
-      currencyData.forEach(currency => {
-        const item = document.createElement('div');
-        item.classList.add('currency-item');
-        item.innerHTML = `<span class="currency-flag">${currency.flag}</span>
-                          <span class="currency-code">${currency.code}</span>
-                          <span class="currency-name">${currency.name}</span>`;
-        item.addEventListener('click', () => {
-          currencyInput.value = `${currency.code} - ${currency.name}`;
-          currencyInput.setAttribute('data-code', currency.code);
-          currencyList.classList.remove('visible');
-          updatePreview();
-        });
-        currencyList.appendChild(item);
-      });
-      const defaultCurrency = currencyData.find(c => c.code === "EUR");
-      if (defaultCurrency) {
-        currencyInput.value = `${defaultCurrency.code} - ${defaultCurrency.name}`;
-        currencyInput.setAttribute('data-code', defaultCurrency.code);
-      }
-      currencyInput.addEventListener('click', () => {
-        currencyList.classList.toggle('visible');
-        currencySearch.focus();
-      });
-      document.addEventListener('click', function(e) {
-        if (!currencyInput.contains(e.target) && !currencyList.contains(e.target)) {
-          currencyList.classList.remove('visible');
-        }
-      });
-      currencySearch.addEventListener('input', function() {
-        const filter = currencySearch.value.toUpperCase();
-        const items = currencyList.getElementsByClassName('currency-item');
-        for (let i = 0; i < items.length; i++) {
-          const txtValue = items[i].textContent || items[i].innerText;
-          if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            items[i].style.display = "";
-          } else {
-            items[i].style.display = "none";
-          }
-        }
-      });
+      row.appendChild(delBtn);
+      container.appendChild(row);
     });
-    // ============== FUNCTIONS ==============
-    function updateAddProductFormFields(){
-      var method = document.getElementById('productPaymentMethod').value;
-      document.getElementById('productLinkField').style.display   = (method === 'paypalLink') ? 'block' : 'none';
-      document.getElementById('productEmbedField').style.display  = (method === 'paypalEmbed') ? 'block' : 'none';
-      document.getElementById('otherPaymentField').style.display  = (method === 'other') ? 'block' : 'none';
+  }
+
+  function addReview(){
+    if(reviews.length >= 3){
+      alert("You can only add up to 3 reviews!");
+      return;
     }
-    var imageCount = 1;
-    function addImageField(){
-      imageCount++;
-      if(imageCount === 2){
-        document.getElementById('additionalImage2').style.display = 'block';
-      } else if(imageCount === 3){
-        document.getElementById('additionalImage3').style.display = 'block';
-        document.getElementById('addImagesBtn').style.display = 'none';
-      }
+    var name = document.getElementById('reviewerName').value.trim();
+    var s    = document.getElementById('reviewStars').value;
+    var txt  = document.getElementById('reviewText').value.trim();
+    if(!name || !txt){
+      alert("Please fill out reviewer's name and text!");
+      return;
     }
-    function addProduct(){
-      var title        = document.getElementById('productTitle').value.trim();
-      var img1         = document.getElementById('image1').value.trim();
-      var img2         = document.getElementById('image2').value.trim();
-      var img3         = document.getElementById('image3').value.trim();
-      var currencyInput= document.getElementById('productCurrency');
-      var currencyCode = currencyInput.getAttribute('data-code') || 'EUR';
-      var sold         = document.getElementById('sold').value.trim();
-      var price        = document.getElementById('price').value.trim();
-      var shipping     = document.getElementById('shipping').value.trim();
-      var returns      = document.getElementById('returns').value;
-      var coloroptions = document.getElementById('colorOptions').value.trim();
-      var sizeoptions  = document.getElementById('sizeOptions').value.trim();
-      var desc         = document.getElementById('description').value.trim();
-      var paymentMethod= document.getElementById('productPaymentMethod').value;
-      var productLink       = "";
-      var productEmbed      = "";
-      var otherPaymentLink  = "";
-      if(paymentMethod === 'paypalLink'){
-        productLink  = document.getElementById('productLink').value.trim();
-      }
-      if(paymentMethod === 'paypalEmbed'){
-        productEmbed = document.getElementById('productEmbed').value.trim();
-      }
-      if(paymentMethod === 'other'){
-        otherPaymentLink = document.getElementById('otherPaymentLink').value.trim();
-      }
-      // Validate product form fields before adding:
-      if(!title || !img1 || !price || !coloroptions || !desc){
-        alert("Please fill out all mandatory fields for the product before adding.");
-        return;
-      }
-      var imgs = [img1];
-      if(img2) imgs.push(img2);
-      if(img3) imgs.push(img3);
-      var shippingVal = "FREE";
-      if(shipping && shipping!=="0"){
-        shippingVal = shipping;
-      }
-      var soldVal = "";
-      if(sold && sold!=="0"){
-        soldVal = sold;
-      }
-      var product = {
-        title: title,
-        images: imgs,
-        sold: soldVal,
-        price: price,
-        currency: currencyCode,
-        shipping: shippingVal,
-        returns: returns,
-        coloroptions: coloroptions,
-        sizeoptions: sizeoptions,
-        description: desc,
-        paymentMethod: paymentMethod,
-        paypalLink: productLink,
-        paypalEmbed: productEmbed,
-        otherPaymentLink: otherPaymentLink
+    reviews.push({ name, stars:s, text:txt });
+    document.getElementById('reviewerName').value='';
+    document.getElementById('reviewText').value='';
+    document.getElementById('reviewStars').value='3';
+    updatePreview();
+    renderAddedReviewsList();
+  }
+
+  function renderAddedReviewsList() {
+    const container = document.getElementById('addedReviewsList');
+    container.innerHTML = '';
+    reviews.forEach((rev, idx) => {
+      const row = document.createElement('div');
+      row.classList.add('builder-item-row');
+
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = rev.name || "Unnamed";
+      row.appendChild(nameSpan);
+
+      const delBtn = document.createElement('button');
+      delBtn.classList.add('delete-btn');
+      delBtn.textContent = '×';
+      delBtn.onclick = function () {
+        reviews.splice(idx, 1);
+        renderAddedReviewsList();
+        updatePreview();
       };
-      products.push(product);
-      // Clear product form fields:
-      document.getElementById('productTitle').value='';
-      document.getElementById('image1').value='';
-      document.getElementById('image2').value='';
-      document.getElementById('image3').value='';
-      currencyInput.value='';
-      currencyInput.removeAttribute('data-code');
-      document.getElementById('sold').value='';
-      document.getElementById('price').value='';
-      document.getElementById('shipping').value='';
-      document.getElementById('description').value='';
-      document.getElementById('colorOptions').value='';
-      document.getElementById('sizeOptions').value='';
-      document.getElementById('productPaymentMethod').value='paypalLink';
-      document.getElementById('productLink').value='';
-      document.getElementById('productEmbed').value='';
-      document.getElementById('otherPaymentLink').value='';
-      updateAddProductFormFields();
-      imageCount=1;
-      document.getElementById('additionalImage2').style.display='none';
-      document.getElementById('additionalImage3').style.display='none';
-      document.getElementById('addImagesBtn').style.display='block';
-      const defaultCurrency = currencyData.find(c => c.code === "EUR");
-      if(defaultCurrency){
-        currencyInput.value = `${defaultCurrency.code} - ${defaultCurrency.name}`;
-        currencyInput.setAttribute('data-code', defaultCurrency.code);
-      }
-      updatePreview();
-      renderAddedProductsList();
+      row.appendChild(delBtn);
+      container.appendChild(row);
+    });
+  }
+
+  function updatePreview() {
+    // gather hero data
+    heroData.logo     = document.getElementById('logo').value.trim();
+    heroData.banner   = document.getElementById('banner').value.trim();
+    heroData.heroText = document.getElementById('heroText').value.trim();
+    heroData.ctaText  = document.getElementById('ctaText').value.trim();
+
+    // about data
+    aboutData.title     = document.getElementById('aboutTitle').value.trim();
+    aboutData.paragraph = document.getElementById('aboutParagraph').value.trim();
+    aboutData.image     = document.getElementById('aboutImage').value.trim();
+
+    // contact data
+    contactData.intro       = document.getElementById('contactIntro').value.trim();
+    contactData.instagram   = document.getElementById('contactInstagram').value.trim();
+    contactData.tiktok      = document.getElementById('contactTiktok').value.trim();
+    contactData.facebook    = document.getElementById('contactFacebook').value.trim();
+    contactData.xLink       = document.getElementById('contactX').value.trim();
+    contactData.youtube     = document.getElementById('contactYoutube').value.trim();
+    contactData.email       = document.getElementById('contactEmail').value.trim();
+
+    // build
+    finalHTML = buildFinalHTML();
+
+    // insert into iframe
+    var iframe = document.getElementById('previewFrame');
+    var doc    = iframe.contentDocument || iframe.contentWindow.document;
+    doc.open();
+    doc.write(finalHTML);
+    doc.close();
+
+    // Payment button
+    var payBtn = document.getElementById('payBtn');
+    if(checkMandatory()) {
+      payBtn.disabled = false;
+      payBtn.classList.add('enabled');
+    } else {
+      payBtn.disabled = true;
+      payBtn.classList.remove('enabled');
     }
-    function renderAddedProductsList() {
-      const container = document.getElementById('addedProductsList');
-      container.innerHTML = '';
-      products.forEach((prod, idx) => {
-        const row = document.createElement('div');
-        row.classList.add('builder-item-row');
-        const textSpan = document.createElement('span');
-        textSpan.textContent = prod.title || 'Untitled';
-        row.appendChild(textSpan);
-        const delBtn = document.createElement('button');
-        delBtn.classList.add('delete-btn');
-        delBtn.textContent = '×';
-        delBtn.onclick = function() {
-          products.splice(idx, 1);
-          renderAddedProductsList();
-          updatePreview();
-        };
-        row.appendChild(delBtn);
-        container.appendChild(row);
-      });
+  }
+
+  function buildFinalHTML(){
+    var top = "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>My Product Site (Static)</title>";
+    top += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+    top += "<link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap' rel='stylesheet'>";
+    top += buildGlobalCSS();
+
+    // Fav icon
+    if(heroData.logo.trim() !== ""){
+      top += "<link rel='shortcut icon' href='" + escapeHTML(heroData.logo.trim()) + "'>";
     }
-    function addReview(){
-      if(reviews.length >= 3){
-        alert("You can only add up to 3 reviews!");
-        return;
-      }
-      var name = document.getElementById('reviewerName').value.trim();
-      var s    = document.getElementById('reviewStars').value;
-      var txt  = document.getElementById('reviewText').value.trim();
-      if(!name || !txt){
-        alert("Please fill out reviewer's name and text!");
-        return;
-      }
-      reviews.push({ name, stars:s, text:txt });
-      document.getElementById('reviewerName').value='';
-      document.getElementById('reviewText').value='';
-      document.getElementById('reviewStars').value='3';
-      updatePreview();
-      renderAddedReviewsList();
+    if(contactData.googleAnalytics){
+      top += "\n<!-- Google Analytics -->\n" + contactData.googleAnalytics + "\n";
     }
-    function renderAddedReviewsList() {
-      const container = document.getElementById('addedReviewsList');
-      container.innerHTML = '';
-      reviews.forEach((rev, idx) => {
-        const row = document.createElement('div');
-        row.classList.add('builder-item-row');
-        const nameSpan = document.createElement('span');
-        nameSpan.textContent = rev.name || "Unnamed";
-        row.appendChild(nameSpan);
-        const delBtn = document.createElement('button');
-        delBtn.classList.add('delete-btn');
-        delBtn.textContent = '×';
-        delBtn.onclick = function () {
-          reviews.splice(idx, 1);
-          renderAddedReviewsList();
-          updatePreview();
-        };
-        row.appendChild(delBtn);
-        container.appendChild(row);
-      });
-    }
-    function updatePreview(){
-      heroData.logo     = document.getElementById('logo').value.trim();
-      heroData.banner   = document.getElementById('banner').value.trim();
-      heroData.heroText = document.getElementById('heroText').value.trim();
-      heroData.ctaText  = document.getElementById('ctaText').value.trim();
-      aboutData.title     = document.getElementById('aboutTitle').value.trim();
-      aboutData.paragraph = document.getElementById('aboutParagraph').value.trim();
-      aboutData.image     = document.getElementById('aboutImage').value.trim();
-      contactData.intro       = document.getElementById('contactIntro').value.trim();
-      contactData.instagram   = document.getElementById('contactInstagram').value.trim();
-      contactData.tiktok      = document.getElementById('contactTiktok').value.trim();
-      contactData.facebook    = document.getElementById('contactFacebook').value.trim();
-      contactData.xLink       = document.getElementById('contactX').value.trim();
-      contactData.youtube     = document.getElementById('contactYoutube').value.trim();
-      contactData.email       = document.getElementById('contactEmail').value.trim();
+    top += "</head><body>";
+
+    top += buildTopHeader();
+    top += buildHero();
+    top += buildProductsSection();
+    top += buildReviewsSection();
+    top += buildAboutSection();
+    top += buildContactSection();
+    top += buildProductModalScript(); // Insert the product modal script
+
+    top += "</body></html>";
+    return top;
+  }
+
+  function downloadSite(){
+    if(!finalHTML.trim()){
       finalHTML = buildFinalHTML();
-      var iframe = document.getElementById('previewFrame');
-      var doc    = iframe.contentDocument || iframe.contentWindow.document;
-      doc.open();
-      doc.write(finalHTML);
-      doc.close();
-      // Update pay button state and styling:
-      var payBtn = document.getElementById('payBtn');
-      if(checkMandatory()) {
-        payBtn.disabled = false;
-        payBtn.classList.add('enabled');
-      } else {
-        payBtn.disabled = true;
-        payBtn.classList.remove('enabled');
-      }
     }
-    function buildFinalHTML(){
-      var top = "";
-      top += "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>My Product Site (Static Version)</title>";
-      top += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
-      top += "<link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap' rel='stylesheet'>";
-      top += buildGlobalCSS();
-      // Set favicon directly if a logo URL was provided:
-      if(heroData.logo.trim() !== ""){
-        top += "<link rel='shortcut icon' href='" + escapeHTML(heroData.logo.trim()) + "'>";
-      }
-      if(contactData.googleAnalytics){
-        top += "\n<!-- Google Analytics -->\n" + contactData.googleAnalytics + "\n";
-      }
-      top += "</head><body>";
-      top += buildTopHeader();
-      top += buildHero();
-      top += buildProductsSection();
-      top += buildReviewsSection();
-      top += buildAboutSection();
-      top += buildContactSection();
-      top += buildProductModalScript();
-      top += "</body></html>";
-      return top;
+    var link    = document.createElement('a');
+    var dataUri = "data:text/html;charset=utf-8," + encodeURIComponent(finalHTML);
+    link.href   = dataUri;
+    link.download = "index.html";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  function buildGlobalCSS(){
+    var s = "<style>html{scroll-behavior:smooth;}*{box-sizing:border-box;transition:all 0.2s ease;}\
+    html,body{margin:0;padding:0;font-family:'Roboto',sans-serif;background:#ffffff;color:#333;line-height:1.6;}\
+    a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;height:auto;display:block}\
+    .top-header{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);padding:15px 10px;text-align:center}\
+    .logo-wrapper{display:inline-block}.logo-wrapper img{max-height:50px;width:auto;}\
+    .nav-links{margin-top:10px}.nav-links a{display:inline-block;margin:0 10px;padding:8px 12px;color:#555;font-weight:500;border-radius:4px;transition:background 0.2s,color 0.2s}\
+    .hero-banner{position:relative;min-height:70vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}\
+    .hero-overlay{position:relative;z-index:1;text-align:center;color:#fff;padding:15px}\
+    .hero-title{font-size:2.5rem;margin:0 0 15px;text-shadow:1px 1px 3px rgba(0,0,0,0.3)}\
+    .hero-cta{display:inline-block;padding:12px 25px;background:#fff;color:#333;font-weight:600;border-radius:4px;transition:background 0.3s}\
+    .hero-cta:hover{background:#2196f3;color:#fff}\
+    .products-grid{display:grid;grid-gap:20px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));padding:30px 10px;max-width:1300px;margin:0 auto}\
+    .product-item{background:#fff;border-radius:8px;overflow:hidden;border:1px solid #eee;cursor:pointer;text-align:left;transition:transform 0.2s,box-shadow 0.2s}\
+    .product-item:hover{transform:translateY(-3px);box-shadow:0 3px 6px rgba(0,0,0,0.1)}\
+    .product-img{width:100%;padding-bottom:100%;background-size:cover;background-position:center}\
+    .product-content{padding:15px}\
+    .product-content h3{margin:0 0 8px;font-size:1.2rem;font-weight:600;color:#222}\
+    .product-content h2{margin:0 0 10px;font-size:1rem;font-weight:500;color:#28a745}\
+    .buy-now{display:block;width:100%;padding:10px 0;background:#007bff;color:#fff;text-align:center;border-radius:4px;font-weight:600;transition:background 0.3s}\
+    .buy-now:hover{background:#0056b3}\
+    .reviews-section{background:#fff;padding:40px 20px;text-align:center}\
+    .reviews-section h2{margin-bottom:30px;font-size:1.8rem;color:#555}\
+    .review-container{display:flex;justify-content:center;flex-wrap:wrap;gap:20px}\
+    .review-item{background:#f9f9f9;border-radius:8px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.05);max-width:300px;transition:transform 0.3s ease,box-shadow 0.3s ease;text-align:left}\
+    .review-item:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(0,0,0,0.1)}\
+    .review-item h4{margin:0 0 10px;font-weight:600;font-size:1.1rem}\
+    .review-stars{color:#ffc107;font-size:1.2rem;margin-bottom:10px}\
+    .review-item p{margin:5px 0 0;color:#666}\
+    .about-section{background:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;padding:40px 20px;max-width:100%px;margin:0 auto}\
+    .about-left,.about-right{margin-left:20px;flex:1 1 300px;padding:15px}\
+    .about-left h2{margin-top:0;color:#444;font-size:2rem}\
+    .about-left p{color:#555;line-height:1.8;font-size:1rem}\
+    .about-right img{border-radius:8px;max-width:70%;height:auto;box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:transform 0.3s}\
+    .about-right img:hover{transform:scale(1.02)}\
+    .contact-section{border:0px solid #ddd;background:#ffffff;color:#333;padding:40px 20px;max-width:1200px;margin:40px auto;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center}\
+    .contact-left{flex:1 1 300px;text-align:left}\
+    .contact-logo-left img{max-height:50px;width:auto;margin-bottom:15px}\
+    .contact-left p{font-size:0.95rem;color:#555;margin-bottom:15px;}\
+    .contact-social-icons{display:flex;flex-wrap:wrap;gap:15px;margin-bottom:15px}\
+    .contact-social-icons img{width:35px;height:35px;cursor:pointer;transition:transform 0.3s;border-radius:4px}\
+    .contact-social-icons img:hover{transform:scale(1.05)}\
+    .contact-email-line{margin-top:10px;color:#333;font-size:0.95rem;margin-bottom:8px}\
+    .email-btn{display:inline-block;padding:10px 20px;background:#2196f3;color:#fff;font-weight:600;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px;transition:background 0.3s;text-align:center}\
+    .email-btn:hover{background:#1976d2}\
+    .contact-right{flex:1 1 300px;}\
+    .modal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.6);justify-content:center;align-items:center;padding:20px}\
+    .modal-content{background:#fff;margin:auto;width:90%;max-width:1100px;border-radius:8px;position:relative;padding:20px}\
+    .modal-close{position:absolute;top:15px;right:20px;font-size:1.5rem;font-weight:bold;cursor:pointer;line-height:1}\
+    .modal-body{display:flex;flex-wrap:wrap;gap:20px}\
+    .modal-left{flex:1 1 50%;display:flex;flex-direction:column}\
+    .modal-main-image{width:85%;aspect-ratio:4/5;position:relative;overflow:hidden;border-radius:8px}\
+    .modal-main-image img{width:100%;height:100%;object-fit:cover}\
+    .arrow{position:absolute;top:50%;transform:translateY(-50%);background-color:rgba(255,255,255,0.8);color:#333;padding:0.3rem 0.6rem;border-radius:50%;cursor:pointer;user-select:none;font-weight:bold;box-shadow:0 2px 4px rgba(0,0,0,0.2)}\
+    .arrow-left{left:5px}.arrow-right{right:5px}.arrow:hover{background-color:rgba(255,255,255,1)}\
+    .modal-thumbnails{display:flex;gap:10px;margin-top:10px}\
+    .modal-thumbnails img{width:80px;height:80px;object-fit:cover;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);border:2px solid transparent;cursor:pointer}\
+    .modal-right{flex:1 1 45%;display:flex;flex-direction:column}\
+    .modal-product-price{font-size:1.6rem;color:#109c15;font-weight:700;margin-bottom:15px}\
+    .modal-product-sold{text-align:left;font-size:1rem;color:#333;margin-bottom:15px}\
+    .modal-product-title{font-size:1.8rem;margin:0 0 10px;font-weight:700;line-height:1.2}\
+    .modal-description{margin-bottom:20px;color:#555}\
+    .color-options,.size-options{margin-bottom:15px}\
+    .color-options label,.size-options label{font-weight:600;margin-right:10px}\
+    .color-options span,.size-options span{display:inline-block;margin-right:5px;background:#f0f0f0;padding:5px 10px;border-radius:4px;font-size:0.9rem;border:1px solid transparent;cursor:pointer}\
+    .order-details-panel{border:1px solid #eee;padding:15px;border-radius:8px;background:#fafafa}\
+    .order-details-panel h3{margin-top:0;font-size:1.2rem;margin-bottom:15px}\
+    .order-item{display:flex;justify-content:space-between;margin-bottom:10px;font-size:0.95rem}\
+    .order-item label{color:#555;font-weight:500;margin-right:5px}\
+    .order-item .value{font-weight:600}\
+    .shipping-info{background:#fff7de;border-left:4px solid #ffc107;padding:10px;font-size:0.9rem;margin-top:10px}\
+    .subtotal{margin-top:10px;font-size:1rem;text-align:right;font-weight:bold}\
+    .modal-actions{display:flex;gap:10px;margin-top:20px}\
+    .modal-actions button{flex:1;background:#2196f3;color:#fff;border:none;padding:12px;border-radius:4px;cursor:pointer;font-weight:600;font-size:1rem;height:50px;transition:background 0.3s}\
+    .modal-actions button:hover{background:#1976d2}\
+    .paypal-embed-option{margin-bottom:15px;}\
+    .paypal-embed-option label{font-weight:600;margin-right:10px;}\
+    .paypal-embed-option span{cursor:pointer;margin-right:5px;background:#f0f0f0;padding:5px 10px;border-radius:4px;font-size:0.9rem;border:1px solid transparent;}\
+    .paypal-embed-option span.selected{border:2px solid #2196f3;background:#eef6ff;}\
+    @media(max-width:768px){.modal-content{width:100%;max-width:100%;padding:15px;}.modal-body{flex-direction:column;}.modal-left{width:100%;}.modal-right{width:100%;}}\
+    </style>";
+    return s;
+  }
+
+  function buildTopHeader(){
+    var h = "";
+    h += "<header class='top-header'><div class='logo-wrapper'>";
+    if(heroData.logo){
+      h += "<img src='"+escapeHTML(heroData.logo)+"' alt='Logo'>";
     }
-    function downloadSite(){
-      if(!finalHTML.trim()){
-        finalHTML = buildFinalHTML();
-      }
-      var link = document.createElement('a');
-      var dataUri = "data:text/html;charset=utf-8," + encodeURIComponent(finalHTML);
-      link.href = dataUri;
-      link.download = "index.html";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
-    function buildGlobalCSS(){
-      var s="<style>html{scroll-behavior:smooth;} *{box-sizing:border-box;transition:all 0.2s ease;} html,body{margin:0;padding:0;font-family:'Roboto',sans-serif;background:#ffffff;color:#333;line-height:1.6;} a{text-decoration:none;color:#2196f3} a:hover{opacity:0.8} img{max-width:100%;height:auto;display:block}";
-      s+=".top-header{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);padding:15px 10px;text-align:center}";
-      s+=".logo-wrapper{display:inline-block} .logo-wrapper img{max-height:50px;width:auto;}";
-      s+=".nav-links{margin-top:10px} .nav-links a{display:inline-block;margin:0 10px;padding:8px 12px;color:#555;font-weight:500;border-radius:4px;transition:background 0.2s,color 0.2s}";
-      s+=".hero-banner{position:relative;min-height:70vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}";
-      s+=".hero-overlay{position:relative;z-index:1;text-align:center;color:#fff;padding:15px}";
-      s+=".hero-title{font-size:2.5rem;margin:0 0 15px;text-shadow:1px 1px 3px rgba(0,0,0,0.3)}";
-      s+=".hero-cta{display:inline-block;padding:12px 25px;background:#fff;color:#333;font-weight:600;border-radius:4px;transition:background 0.3s}";
-      s+=".hero-cta:hover{background:#2196f3;color:#fff}";
-      s+=".products-grid{display:grid;grid-gap:20px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));padding:30px 10px;max-width:1300px;margin:0 auto}";
-      s+=".product-item{background:#fff;border-radius:8px;overflow:hidden;border:1px solid #eee;cursor:pointer;text-align:left;transition:transform 0.2s,box-shadow 0.2s}";
-      s+=".product-item:hover{transform:translateY(-3px);box-shadow:0 3px 6px rgba(0,0,0,0.1)}";
-      s+=".product-img{width:100%;padding-bottom:100%;background-size:cover;background-position:center}";
-      s+=".product-content{padding:15px}";
-      s+=".product-content h3{margin:0 0 8px;font-size:1.2rem;font-weight:600;color:#222}";
-      s+=".product-content h2{margin:0 0 10px;font-size:1rem;font-weight:500;color:#28a745}";
-      s+=".buy-now{display:block;width:100%;padding:10px 0;background:#007bff;color:#fff;text-align:center;border-radius:4px;font-weight:600;transition:background 0.3s}";
-      s+=".buy-now:hover{background:#0056b3}";
-      s+=".reviews-section{background:#fff;padding:40px 20px;text-align:center}";
-      s+=".reviews-section h2{margin-bottom:30px;font-size:1.8rem;color:#555}";
-      s+=".review-container{display:flex;justify-content:center;flex-wrap:wrap;gap:20px}";
-      s+=".review-item{background:#f9f9f9;border-radius:8px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.05);max-width:300px;transition:transform 0.3s ease,box-shadow 0.3s ease;text-align:left}";
-      s+=".review-item:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(0,0,0,0.1)}";
-      s+=".review-item h4{margin:0 0 10px;font-weight:600;font-size:1.1rem}";
-      s+=".review-stars{color:#ffc107;font-size:1.2rem;margin-bottom:10px}";
-      s+=".review-item p{margin:5px 0 0;color:#666}";
-      s+=".about-section{background:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;padding:40px 20px;max-width:100%px;margin:0 auto}";
-      s+=".about-left,.about-right{margin-left:20px;flex:1 1 300px;padding:15px}";
-      s+=".about-left h2{margin-top:0;color:#444;font-size:2rem}";
-      s+=".about-left p{color:#555;line-height:1.8;font-size:1rem}";
-      s+=".about-right img{border-radius:8px;max-width:70%;height:auto;box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:transform 0.3s}";
-      s+=".about-right img:hover{transform:scale(1.02)}";
-      s+=".contact-section{border:0px solid #ddd; background:#ffffff;color:#333;padding:40px 20px;max-width:1200px;margin:40px auto;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center}";
-      s+=".contact-left{flex:1 1 300px; text-align:left}";
-      s+=".contact-logo-left img{max-height:50px;width:auto;margin-bottom:15px}";
-      s+=".contact-left p{font-size:0.95rem;color:#555; margin-bottom:15px;}";
-      s+=".contact-social-icons{display:flex;flex-wrap:wrap;gap:15px;margin-bottom:15px}";
-      s+=".contact-social-icons img{width:35px;height:35px;cursor:pointer;transition:transform 0.3s;border-radius:4px}";
-      s+=".contact-social-icons img:hover{transform:scale(1.05)}";
-      s+=".contact-email-line{margin-top:10px; color:#333; font-size:0.95rem; margin-bottom:8px}";
-      s+=".email-btn{display:inline-block;padding:10px 20px;background:#2196f3;color:#fff;font-weight:600;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px;transition:background 0.3s;text-align:center}";
-      s+=".email-btn:hover{background:#1976d2}";
-      s+=".contact-right{flex:1 1 300px;}";
-      s += ".modal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.6);justify-content:center;align-items:center;padding:20px}";
-      s += ".modal-content{background:#fff;margin:auto;width:90%;max-width:1100px;border-radius:8px;position:relative;padding:20px}";
-      s += ".modal-close{position:absolute;top:15px;right:20px;font-size:1.5rem;font-weight:bold;cursor:pointer;line-height:1}";
-      s += ".modal-body{display:flex;flex-wrap:wrap;gap:20px}";
-      s += ".modal-left{flex:1 1 50%;display:flex;flex-direction:column}";
-      s += ".modal-main-image{width:85%;aspect-ratio:4/5;position:relative;overflow:hidden;border-radius:8px}";
-      s += ".modal-main-image img{width:100%;height:100%;object-fit:cover}";
-      s += ".arrow{position:absolute;top:50%;transform:translateY(-50%);background-color:rgba(255,255,255,0.8);color:#333;padding:0.3rem 0.6rem;border-radius:50%;cursor:pointer;user-select:none;font-weight:bold;box-shadow:0 2px 4px rgba(0,0,0,0.2)}";
-      s += ".arrow-left{left:5px}";
-      s += ".arrow-right{right:5px}";
-      s += ".arrow:hover{background-color:rgba(255,255,255,1)}";
-      s += ".modal-thumbnails{display:flex;gap:10px;margin-top:10px}";
-      s += ".modal-thumbnails img{width:80px;height:80px;object-fit:cover;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);border:2px solid transparent;cursor:pointer}";
-      s += ".modal-right{flex:1 1 45%;display:flex;flex-direction:column}";
-      s += ".modal-product-price{font-size:1.6rem;color:#109c15;font-weight:700;margin-bottom:15px}";
-      s += ".modal-product-sold{text-align: left;font-size:1rem;color:#333;margin-bottom:15px}";
-      s += ".modal-product-title{font-size:1.8rem;margin:0 0 10px;font-weight:700;line-height:1.2}";
-      s += ".modal-description{margin-bottom:20px;color:#555}";
-      s += ".color-options,.size-options{margin-bottom:15px}";
-      s += ".color-options label,.size-options label{font-weight:600;margin-right:10px}";
-      s += ".color-options span,.size-options span{display:inline-block;margin-right:5px;background:#f0f0f0;padding:5px 10px;border-radius:4px;font-size:0.9rem;border:1px solid transparent;cursor:pointer}";
-      s += ".order-details-panel{border:1px solid #eee;padding:15px;border-radius:8px;background:#fafafa}";
-      s += ".order-details-panel h3{margin-top:0;font-size:1.2rem;margin-bottom:15px}";
-      s += ".order-item{display:flex;justify-content:space-between;margin-bottom:10px;font-size:0.95rem}";
-      s += ".order-item label{color:#555;font-weight:500;margin-right:5px}";
-      s += ".order-item .value{font-weight:600}";
-      s += ".shipping-info{background:#fff7de;border-left:4px solid #ffc107;padding:10px;font-size:0.9rem;margin-top:10px}";
-      s += ".subtotal{margin-top:10px;font-size:1rem;text-align:right;font-weight:bold}";
-      s += ".modal-actions{display:flex;gap:10px;margin-top:20px}";
-      s += ".modal-actions button{flex:1;background:#2196f3;color:#fff;border:none;padding:12px;border-radius:4px;cursor:pointer;font-weight:600;font-size:1rem;height:50px;transition:background 0.3s}";
-      s += ".modal-actions button:hover{background:#1976d2}";
-      /* Media Query for Small Screens */
-      s+=`
-@media (max-width: 768px) {
-  .top-header {
-    padding: 15px 10px;
-    text-align: center;
-  }
-  .logo-wrapper img {
-    margin-top: 15px;
-    max-width: 150px;
-  }
-  .nav-links {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: nowrap;
-    gap: 0px;
-    margin-top: 10px;
-  }
-  .nav-links a {
-    padding: 8px 10px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  
-  .products-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    padding: 15px;
+    h += "</div><div class='nav-links'>";
+    h += "<a href='#products'>Shop</a>";
+    h += "<a href='#reviews'>Reviews</a>";
+    h += "<a href='#about'>About Us</a>";
+    h += "<a href='#contact'>Contact Us</a>";
+    h += "</div></header>";
+    return h;
   }
 
-  .product-item {
-    width: 100%;
-    max-width: 300px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-
-  .product-img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    background-size: cover;
-    background-position: center;
-  }
-
-  .product-content {
-    padding: 15px;
-  }
-
-  .product-content h3 {
-    font-size: 1rem;
-    margin-bottom: 10px;
-  }
-
-  .product-content h2 {
-    font-size: 1rem;
-    color: #109c15;
-    margin-bottom: 10px;
-  }
-
-  .buy-now {
-    padding: 10px;
-    font-size: 0.9rem;
-    border-radius: 5px;
-  }
-  
-  .modal-content {
-    width: 100%;
-    max-width: 100%;
-    padding: 15px;
-    position: relative;
-  }
-
-  .modal-close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 2rem;
-    font-weight: bold;
-    z-index: 10;
-    line-height: 1;
-    cursor: pointer;
-    color: #333;
-  }
-
-  .modal-body {
-    flex-direction: column;
-    gap: 15px;
-  }
-
-  .modal-left {
-    flex: none;
-    align-items: center;
-    width: 100%;
-  }
-
-  .modal-main-image {
-    width: 100%;
-    aspect-ratio: 4/5;
-    object-fit: cover;
-  }
-
-  .modal-thumbs {
-    justify-content: center;
-    gap: 5px;
-  }
-
-  .modal-thumbs img {
-    width: 60px;
-    height: 60px;
-  }
-
-  .modal-right {
-    flex: none;
-    width: 100%;
-    text-align: left;
-  }
-
-  .modal-product-title {
-    font-size: 1.5rem;
-  }
-
-  .modal-product-price {
-    font-size: 1.4rem;
-  }
-
-  .modal-description {
-    font-size: 0.9rem;
-  }
-  
-  .color-options, .size-options {
-    gap: 5px;
-    justify-content: center;
-  }
-
-  .color-options span, .size-options span {
-    padding: 6px 10px;
-    font-size: 0.8rem;
-  }
-
-  .qty-controls {
-    justify-content: center;
-    gap: 5px;
-  }
-
-  .order-details-panel {
-    padding: 10px;
-    font-size: 0.9rem;
-  }
-
-  .modal-actions {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .modal-actions button {
-    width: 100%;
-    height: 45px;
-  }
-  
-  .reviews-section {
-    padding: 40px 15px;
-  }
-
-  .review-container {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  }
-
-  .review-item {
-    max-width: 90%;
-    padding: 20px;
-    text-align: center;
-  }
-
-  .review-item h4 {
-    font-size: 1rem;
-  }
-
-  .review-stars {
-    font-size: 1.3rem;
-    margin-bottom: 8px;
-  }
-
-  .review-item p {
-    font-size: 0.9rem;
-    line-height: 1.4;
-  }
-  
-  .about-section {
-    flex-direction: column;
-    padding: 40px 15px;
-  }
-
-  .about-left, .about-right {
-    flex: none;
-    width: 100%;
-    text-align: center;
-    padding: 20px;
-  }
-
-  .about-left h2 {
-    font-size: 1.8rem;
-  }
-
-  .about-left p {
-    font-size: 1rem;
-    line-height: 1.6;
-  }
-
-  .about-right img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .contact-section {
-    padding: 40px 15px;
-    text-align: center;
-  }
-
-  .contact-logo {
-    max-width: 150px;
-    margin-bottom: 15px;
-  }
-
-  .contact-section p {
-    font-size: 0.95rem;
-    line-height: 1.5;
-    margin-bottom: 20px;
-  }
-
-  .contact-links {
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-  }
-
-  .contact-links img {
-    width: 35px;
-    height: 35px;
-    margin-bottom: 10px;
-  }
-
-  .contact-email span {
-    font-size: 0.9rem;
-    margin-bottom: 10px;
-  }
-
-  .email-btn {
-    font-size: 0.9rem;
-    padding: 10px 20px;
-    border-radius: 4px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-}
-      `;
-      s+="</style>";
-      return s;
-    }
-    function buildTopHeader(){
-      var h="";
-      h+="<header class='top-header'><div class='logo-wrapper'>";
-      if(heroData.logo){
-        h+="<img src='"+escapeHTML(heroData.logo)+"' alt='Logo'>";
-      }
-      h+="</div><div class='nav-links'>";
-      h+="<a href='#products'>Shop</a>";
-      h+="<a href='#reviews'>Reviews</a>";
-      h+="<a href='#about'>About Us</a>";
-      h+="<a href='#contact'>Contact Us</a>";
-      h+="</div></header>";
-      return h;
-    }
-    function buildHero(){
-      if(!heroData.banner){
-        var minimal="";
-        minimal+="<section class='hero-banner' style='background:none; min-height:200px;'>";
-        minimal+="<div class='hero-overlay'>";
-        if(heroData.heroText){
-          minimal+="<h1 class='hero-title'>"+escapeHTML(heroData.heroText)+"</h1>";
-        }
-        if(heroData.ctaText){
-          minimal+="<a class='hero-cta' href='#products'>"+escapeHTML(heroData.ctaText)+"</a>";
-        }
-        minimal+="</div></section>";
-        return minimal;
-      }
-      var bkg=escapeHTML(heroData.banner);
-      var s="";
-      s+="<section class='hero-banner' style=\"background-image:url('"+bkg+"');\">";
-      s+="<div class='hero-overlay'>";
+  function buildHero(){
+    if(!heroData.banner){
+      // minimal hero
+      var minimal = "";
+      minimal += "<section class='hero-banner' style='background:none; min-height:200px;'>";
+      minimal += "<div class='hero-overlay'>";
       if(heroData.heroText){
-        s+="<h1 class='hero-title'>"+escapeHTML(heroData.heroText)+"</h1>";
+        minimal += "<h1 class='hero-title'>"+escapeHTML(heroData.heroText)+"</h1>";
       }
       if(heroData.ctaText){
-        s+="<a class='hero-cta' href='#products'>"+escapeHTML(heroData.ctaText)+"</a>";
+        minimal += "<a class='hero-cta' href='#products'>"+escapeHTML(heroData.ctaText)+"</a>";
       }
-      s+="</div></section>";
-      return s;
+      minimal += "</div></section>";
+      return minimal;
     }
-    function buildProductsSection(){
-      if(products.length===0) return "<section id='products'><div class='products-grid'></div></section>";
-      var html="";
-      for(var i=0;i<products.length;i++){
-        var p=products[i];
-        var mainImg=(p.images.length>0)?escapeHTML(p.images[0]):"";
-        var symbol=getCurrencySymbol(p.currency);
-        html+="<div class='product-item'"+
-             " data-title='"+escapeHTML(p.title||"")+"'"+
-             " data-sold='"+escapeHTML(p.sold||"")+"'"+
-             " data-price='"+escapeHTML(p.price||"0")+"'"+
-             " data-currency='"+escapeHTML(p.currency||"$")+"'"+
-             " data-description='"+escapeHTML(p.description||"")+"'"+
-             " data-shipping='"+escapeHTML(p.shipping||"FREE")+"'"+
-             " data-returns='"+escapeHTML(p.returns||"Accepted")+"'"+
-             " data-coloroptions='"+escapeHTML(p.coloroptions||"")+"'"+
-             " data-sizeoptions='"+escapeHTML(p.sizeoptions||"")+"'"+
-             " data-images1='"+(p.images[0]||"")+"'"+
-             " data-images2='"+(p.images[1]||"")+"'"+
-             " data-images3='"+(p.images[2]||"")+"'"+
-             " data-paymentmethod='"+escapeHTML(p.paymentMethod||"")+"'"+
-             " data-paypallink='"+escapeHTML(p.paypalLink||"")+"'"+
-             " data-paypalembed='"+escapeHTML(p.paypalEmbed||"")+"'"+
-             " data-otherpaymentlink='"+escapeHTML(p.otherPaymentLink||"")+"'"+
-             ">";
-        html+="<div class='product-img' style=\"background-image:url('"+mainImg+"');\"></div>";
-        html+="<div class='product-content'>";
-        html+=(p.title? "<h3>"+escapeHTML(p.title)+"</h3>":"<h3>Untitled Product</h3>");
-        html+="<h2>"+symbol+escapeHTML(p.price||"0")+"</h2>";
-        html+="<a class='buy-now' href='#'>Buy Now</a>";
-        html+="</div></div>";
-      }
-      return "<section id='products'><div class='products-grid'>"+html+"</div></section>";
+    // big hero
+    var bkg = escapeHTML(heroData.banner);
+    var s   = "<section class='hero-banner' style=\"background-image:url('"+bkg+"');\">";
+    s += "<div class='hero-overlay'>";
+    if(heroData.heroText){
+      s += "<h1 class='hero-title'>"+escapeHTML(heroData.heroText)+"</h1>";
     }
-    function buildReviewsSection(){
-      if(reviews.length===0)return "";
-      var r="<section class='reviews-section' id='reviews'><h2>Reviews</h2><div class='review-container'>";
-      for(var i=0;i<reviews.length;i++){
-        var rv=reviews[i];
-        var starCount=parseInt(rv.stars,10)||3;
-        var starSymbols="";
-        for(var s=0;s<starCount;s++){ starSymbols+="★"; }
-        for(var s2=starCount;s2<5;s2++){ starSymbols+="☆"; }
-        r+="<div class='review-item'><h4>"+escapeHTML(rv.name)+"</h4><div class='review-stars'>"+starSymbols+"</div><p>"+escapeHTML(rv.text)+"</p></div>";
-      }
-      r+="</div></section>";
-      return r;
+    if(heroData.ctaText){
+      s += "<a class='hero-cta' href='#products'>"+escapeHTML(heroData.ctaText)+"</a>";
     }
-    function buildAboutSection(){
-      if(!aboutData.title && !aboutData.paragraph && !aboutData.image) return "";
-      var a="";
-      a+="<section class='about-section' id='about'><div class='about-left'>";
-      a+="<h2>"+escapeHTML(aboutData.title||"Who We Are")+"</h2>";
-      a+="<p>"+escapeHTML(aboutData.paragraph||"We are a small business...")+"</p>";
-      a+="</div><div class='about-right'>";
-      if(aboutData.image){
-        a+="<img src='"+escapeHTML(aboutData.image)+"' alt='About Image'>";
-      }
-      a+="</div></section>";
-      return a;
+    s += "</div></section>";
+    return s;
+  }
+
+  function buildProductsSection(){
+    if(products.length === 0){
+      return "<section id='products'><div class='products-grid'></div></section>";
     }
-    function buildContactSection(){
-      var anyFilled = contactData.intro || contactData.instagram || contactData.tiktok || contactData.facebook || contactData.xLink || contactData.youtube || contactData.email || contactData.formEmbed;
-      if(!anyFilled) return "";
-      var c="<section class='contact-section' id='contact'>";
-      c+="<div class='contact-left'>";
-      c+="<div class='contact-logo-left'>";
-      if(heroData.logo){
-        c+="<img src='"+escapeHTML(heroData.logo)+"' alt='Logo'>";
-      }
-      c+="</div>";
-      if(contactData.intro){
-        c+="<p>"+escapeHTML(contactData.intro)+"</p>";
-      }
-      let iconsHTML="";
-      if(contactData.instagram) iconsHTML+="<a href='"+escapeHTML(contactData.instagram)+"' target='_blank'><img src='https://i.ibb.co/L6zwnKk/Bella-50.png' alt='Instagram'></a>";
-      if(contactData.tiktok)    iconsHTML+="<a href='"+escapeHTML(contactData.tiktok)+"' target='_blank'><img src='https://i.ibb.co/2vSmtt0/Bella-49.png' alt='TikTok'></a>";
-      if(contactData.facebook)  iconsHTML+="<a href='"+escapeHTML(contactData.facebook)+"' target='_blank'><img src='https://i.ibb.co/gmDjkH3/Bella-48.png' alt='Facebook'></a>";
-      if(contactData.xLink)     iconsHTML+="<a href='"+escapeHTML(contactData.xLink)+"' target='_blank'><img src='https://i.ibb.co/fqp0KrB/Bella-63.png' alt='X'></a>";
-      if(contactData.youtube)   iconsHTML+="<a href='"+escapeHTML(contactData.youtube)+"' target='_blank'><img src='https://i.ibb.co/hC6CQzs/Bella-62.png' alt='Youtube'></a>";
-      if(iconsHTML){
-        c+="<div class='contact-social-icons'>"+iconsHTML+"</div>";
-      }
-      if(contactData.email){
-        c+="<div class='contact-email-line'>"+escapeHTML(contactData.email)+"</div>";
-        if(!contactData.formEmbed){
-          c+="<a class='email-btn' href='mailto:"+escapeHTML(contactData.email)+"'>Send Us an Email</a>";
-        }
-      }
-      c+="</div>";
-      c+="<div class='contact-right'>";
-      if(contactData.formEmbed){
-        c+="<div class='contact-embed'>"+contactData.formEmbed+"</div>";
-      }
-      c+="</div>";
-      c+="</section>";
-      return c;
+    var html = "";
+    for(var i=0; i<products.length; i++){
+      var p       = products[i];
+      var mainImg = (p.images.length > 0) ? escapeHTML(p.images[0]) : "";
+      var symbol  = getCurrencySymbol(p.currency);
+
+      html += "<div class='product-item'"+
+              " data-title='"+escapeHTML(p.title||"")+"'"+
+              " data-sold='"+escapeHTML(p.sold||"")+"'"+
+              " data-price='"+escapeHTML(p.price||"0")+"'"+
+              " data-currency='"+escapeHTML(p.currency||"$")+"'"+
+              " data-description='"+escapeHTML(p.description||"")+"'"+
+              " data-shipping='"+escapeHTML(p.shipping||"FREE")+"'"+
+              " data-returns='"+escapeHTML(p.returns||"Accepted")+"'"+
+              " data-coloroptions='"+escapeHTML(p.coloroptions||"")+"'"+
+              " data-sizeoptions='"+escapeHTML(p.sizeoptions||"")+"'"+
+              " data-images1='"+(p.images[0]||"")+"'"+
+              " data-images2='"+(p.images[1]||"")+"'"+
+              " data-images3='"+(p.images[2]||"")+"'"+
+              " data-paymentmethod='"+escapeHTML(p.paymentMethod||"")+"'"+
+              " data-paypallink='"+escapeHTML(p.paypalLink||"")+"'"+
+              " data-paypalembed='"+escapeHTML(p.paypalEmbed||"")+"'"+
+              " data-otherpaymentlink='"+escapeHTML(p.otherPaymentLink||"")+"'"+
+              " data-paypalemail='"+escapeHTML(p.paypalEmail||"")+"'"+
+              ">";
+      html += "<div class='product-img' style=\"background-image:url('"+mainImg+"');\"></div>";
+      html += "<div class='product-content'>";
+      html += (p.title ? "<h3>"+escapeHTML(p.title)+"</h3>" : "<h3>Untitled Product</h3>");
+      html += "<h2>"+ symbol + escapeHTML(p.price||"0") +"</h2>";
+      html += "<a class='buy-now' href='#'>Buy Now</a>";
+      html += "</div></div>";
     }
-    // ============== PRODUCT MODAL SCRIPT (internal) ==============
-    function buildProductModalScript(){
-      var m="";
-      m+="<script>(function(){";
-      m+="function getSymbol(cc){";
-      m+="  const known={USD:'$',EUR:'€',GBP:'£',JPY:'¥',AUD:'A$',CAD:'C$',CHF:'CHF',CNY:'¥',HKD:'HK$',NZD:'NZ$'};";
-      m+="  return known[cc.toUpperCase()]||cc+' ';}";
-      m+="var modal=document.createElement('div');";
-      m+="modal.id='productModal'; modal.className='modal';";
-      m+="modal.innerHTML=`";
-      m+="<div class='modal-content'>\
-         <span class='modal-close'>&times;</span>\
-         <div class='modal-body'>\
-           <div class='modal-left'>\
-             <div class='modal-main-image'>\
-               <div class='arrow arrow-left' id='arrowLeft'>❮</div>\
-               <img id='modalMainImg' src='' alt='Main Product Image'>\
-               <div class='arrow arrow-right' id='arrowRight'>❯</div>\
-             </div>\
-             <div class='modal-thumbnails' id='modalThumbnails'></div>\
-           </div>\
-           <div class='modal-right'>\
-             <h1 id='modalTitle' class='modal-product-title'></h1>\
-             <div style='display:flex;flex-direction:row;justify-content:flex-start;align-items:center;'>\
-               <div id='modalPrice' class='modal-product-price'>$0.00</div>\
-               <div id='modalSold' class='modal-product-sold' style='margin-left:10px;'></div>\
-             </div>\
-             <div id='modalDescription' class='modal-description'></div>\
-             <div class='color-options'><label>Color:</label><span id='colorPlaceholders'></span></div>\
-             <div class='size-options'><label>Size:</label><span id='sizePlaceholders'></span></div>\
-             <div class='order-details-panel'>\
-               <h3>Order Details</h3>\
-               <div class='order-item'><label>Price:</label><span class='value' id='itemPrice'>--</span></div>\
-               <div class='order-item'><label>Shipping:</label><span class='value' id='shippingCost'>$0.00</span></div>\
-               <div class='order-item'><label>Returns:</label><span class='value' id='returnPolicy'></span></div>\
-               <div class='shipping-info' id='shippingInfo'><strong>Shipping Information:</strong> If your PayPal shipping address or contact details have changed, please update them at checkout so we send your goodies to the right place!</div>\
-               <div class='subtotal'>Total: <span id='subtotalValue'>$0.00</span></div>\
-             </div>\
-             <div class='modal-actions'>\
-               <button class='buy-now-btn'>Buy Now</button>\
-             </div>\
-           </div>\
-         </div>\
-       </div>`;";
-      m+="document.body.appendChild(modal);";
-      m+="var productModal=document.getElementById('productModal');";
-      m+="var closeBtn=productModal.querySelector('.modal-close');";
-      m+="var mainImg=productModal.querySelector('#modalMainImg');";
-      m+="var modalTitle=productModal.querySelector('#modalTitle');";
-      m+="var modalPrice=productModal.querySelector('#modalPrice');";
-      m+="var modalSold=productModal.querySelector('#modalSold');";
-      m+="var modalDescription=productModal.querySelector('#modalDescription');";
-      m+="var colorPH=productModal.querySelector('#colorPlaceholders');";
-      m+="var sizePH=productModal.querySelector('#sizePlaceholders');";
-      m+="var itemPrice=productModal.querySelector('#itemPrice');";
-      m+="var shippingCost=productModal.querySelector('#shippingCost');";
-      m+="var returnPolicy=productModal.querySelector('#returnPolicy');";
-      m+="var subtotalValue=productModal.querySelector('#subtotalValue');";
-      m+="var arrowLeft=productModal.querySelector('#arrowLeft');";
-      m+="var arrowRight=productModal.querySelector('#arrowRight');";
-      m+="var thumbsContainer=productModal.querySelector('#modalThumbnails');";
-      m+="var buyNowBtn=productModal.querySelector('.buy-now-btn');";
-      m+="var currentProduct=null;";
-      m+="var allImages=[];";
-      m+="var currentIndex=0;";
-      m+="var basePrice=0; var shippingFee=0; var returnsText='Accepted';";
-      m+="function updateOrderDetails(){";
-      m+="  var total=basePrice + shippingFee;";
-      m+="  itemPrice.textContent=getSymbol(currentProduct.currency||'$')+basePrice.toFixed(2);";
-      m+="  if(shippingFee===0){ shippingCost.textContent='FREE'; } else { shippingCost.textContent=getSymbol(currentProduct.currency||'$')+shippingFee.toFixed(2);}";
-      m+="  returnPolicy.textContent=returnsText;";
-      m+="  subtotalValue.textContent=getSymbol(currentProduct.currency||'$')+total.toFixed(2);";
-      m+="}";
-      m+="function showImageAt(idx){ if(idx<0||idx>=allImages.length)return; currentIndex=idx; mainImg.src=allImages[idx];";
-      m+="  Array.from(thumbsContainer.children).forEach((imgEl,i)=>{ imgEl.style.borderColor=(i===idx)?'#2196f3':'transparent';});";
-      m+="}";
-      m+="function openModal(prod){ currentProduct=prod; productModal.style.display='flex'; allImages=[];";
-      m+="  if(prod.images1)allImages.push(prod.images1); if(prod.images2)allImages.push(prod.images2); if(prod.images3)allImages.push(prod.images3);";
-      m+="  modalTitle.textContent=prod.title||'';";
-      m+="  if(prod.sold) modalSold.textContent=prod.sold+' Sold'; else modalSold.textContent='';";
-      m+="  modalPrice.textContent=getSymbol(prod.currency||'$')+(prod.price||'0');";
-      m+="  modalDescription.textContent=prod.description||'';";
-      m+="  basePrice=parseFloat(prod.price)||0;";
-      m+="  if(prod.shipping==='FREE') shippingFee=0; else shippingFee=parseFloat(prod.shipping)||0;";
-      m+="  returnsText=prod.returns||'Accepted';";
-      m+="  thumbsContainer.innerHTML='';";
-      m+="  if(allImages.length>0){ showImageAt(0);} else { mainImg.src='https://via.placeholder.com/400?text=No+Image';}";
-      m+="  for(var i=0;i<allImages.length;i++){";
-      m+="    var t=document.createElement('img'); t.src=allImages[i]; t.dataset.index=i; t.onclick=function(){ showImageAt(parseInt(this.dataset.index));};";
-      m+="    if(i===0){t.style.borderColor='#2196f3';}";
-      m+="    thumbsContainer.appendChild(t);";
-      m+="  }";
-      m+="  colorPH.innerHTML='';";
-      m+="  if(prod.coloroptions){ var cArr=prod.coloroptions.split(','); cArr.forEach(function(c){ c=c.trim(); if(c){ var sp=document.createElement('span'); sp.textContent=c; colorPH.appendChild(sp);}});}";
-      m+="  sizePH.innerHTML='';";
-      m+="  if(prod.sizeoptions){ var sArr=prod.sizeoptions.split(','); sArr.forEach(function(sz){ sz=sz.trim(); if(sz){ var sp=document.createElement('span'); sp.textContent=sz; sizePH.appendChild(sp);}});}";
-      m+="  updateOrderDetails();";
-      m+="}";
-      m+="document.querySelectorAll('.product-item').forEach(function(pi){";
-      m+="  var pd={};";
-      m+="  pd.title=pi.getAttribute('data-title')||'';";
-      m+="  pd.sold=pi.getAttribute('data-sold')||'';";
-      m+="  pd.price=pi.getAttribute('data-price')||'0';";
-      m+="  pd.currency=pi.getAttribute('data-currency')||'$';";
-      m+="  pd.description=pi.getAttribute('data-description')||'';";
-      m+="  pd.shipping=pi.getAttribute('data-shipping')||'FREE';";
-      m+="  pd.returns=pi.getAttribute('data-returns')||'Accepted';";
-      m+="  pd.coloroptions=pi.getAttribute('data-coloroptions')||'';";
-      m+="  pd.sizeoptions=pi.getAttribute('data-sizeoptions')||'';";
-      m+="  pd.images1=pi.getAttribute('data-images1')||'';";
-      m+="  pd.images2=pi.getAttribute('data-images2')||'';";
-      m+="  pd.images3=pi.getAttribute('data-images3')||'';";
-      m+="  pd.paymentMethod=pi.getAttribute('data-paymentmethod')||'';";
-      m+="  pd.paypalLink=pi.getAttribute('data-paypallink')||'';";
-      m+="  pd.paypalEmbed=pi.getAttribute('data-paypalembed')||'';";
-      m+="  pd.otherPaymentLink=pi.getAttribute('data-otherpaymentlink')||'';";
-      m+="  pi.addEventListener('click',function(){ openModal(pd);});";
-      m+="  var buy=pi.querySelector('.buy-now');";
-      m+="  if(buy){";
-      m+="    buy.addEventListener('click',function(e){ e.preventDefault(); e.stopPropagation(); openModal(pd);});";
-      m+="  }";
-      m+="});";
-      m+="closeBtn.onclick=function(){ productModal.style.display='none';};";
-      m+="modal.addEventListener('click', function(e){ if(e.target==modal){ modal.style.display='none'; } });";
-      m+="arrowLeft.onclick=function(){ if(currentIndex>0){showImageAt(currentIndex-1);} };";
-      m+="arrowRight.onclick=function(){ if(currentIndex<allImages.length-1){showImageAt(currentIndex+1);} };";
-      m+="buyNowBtn.onclick=function(){";
-      m+="  if(!currentProduct)return;";
-      m+="  if(currentProduct.paymentMethod==='paypalLink'){ window.open(currentProduct.paypalLink,'_blank');}";
-      m+="  else if(currentProduct.paymentMethod==='paypalEmbed'){ var newWin=window.open('','_blank'); newWin.document.write(currentProduct.paypalEmbed);}";
-      m+="  else if(currentProduct.paymentMethod==='other'){ if(currentProduct.otherPaymentLink){window.open(currentProduct.otherPaymentLink,'_blank');} else{alert('No other payment link provided.');}}";
-      m+="  else{ alert('Payment method not configured.'); }";
-      m+="};";
-      m+="})();<\/script>";
-      return m;
+    return "<section id='products'><div class='products-grid'>"+html+"</div></section>";
+  }
+
+  function buildReviewsSection(){
+    if(reviews.length === 0) return "";
+    var r = "<section class='reviews-section' id='reviews'><h2>Reviews</h2><div class='review-container'>";
+    for(var i=0; i<reviews.length; i++){
+      var rv         = reviews[i];
+      var starCount  = parseInt(rv.stars,10) || 3;
+      var starSymbols= "";
+      for(var s=0; s<starCount; s++){ starSymbols += "★"; }
+      for(var s2=starCount; s2<5; s2++){ starSymbols += "☆"; }
+
+      r += "<div class='review-item'><h4>"+escapeHTML(rv.name)+"</h4>"+
+           "<div class='review-stars'>"+starSymbols+"</div>"+
+           "<p>"+escapeHTML(rv.text)+"</p></div>";
     }
-    function getCurrencySymbol(code){
-      const sym={
-        AED:"د.إ",AFN:"؋",ALL:"L",AMD:"֏",ANG:"ƒ",AOA:"Kz",ARS:"$",AUD:"A$",AWG:"ƒ",
-        AZN:"₼",BAM:"KM",BBD:"Bds$",BDT:"৳",BGN:"лв",BHD:"د.ب",BIF:"FBu",BMD:"$",
-        BND:"B$",BOB:"$b",BRL:"R$",BSD:"$",BTN:"Nu.",BWP:"P",BYN:"Br",BZD:"BZ$",
-        CAD:"C$",CDF:"FC",CHF:"CHF",CLP:"$",CNY:"¥",COP:"$",CRC:"₡",CUC:"$",CUP:"$",
-        CVE:"$",CZK:"Kč",DJF:"Fdj",DKK:"kr",DOP:"RD$",DZD:"د.ج",EGP:"£",ERN:"Nfk",
-        ETB:"Br",EUR:"€",FJD:"FJ$",FKP:"£",FOK:"kr",GBP:"£",GEL:"₾",GGP:"£",GHS:"₵",
-        GIP:"£",GMD:"D",GNF:"FG",GTQ:"Q",GYD:"G$",HKD:"HK$",HNL:"L",HRK:"kn",
-        HTG:"G",HUF:"Ft",IDR:"Rp",ILS:"₪",IMP:"£",INR:"₹",IQD:"ع.د",IRR:"﷼",
-        ISK:"kr",JEP:"£",JMD:"J$",JOD:"د.ا",JPY:"¥",KES:"KSh",KGS:"сом",KHR:"៛",
-        KMF:"CF",KPW:"₩",KRW:"₩",KWD:"د.ك",KYD:"KYD",KZT:"₸",LAK:"₭",LBP:"£",
-        LKR:"Rs",LRD:"L$",LSL:"L",LYD:"ل.د",MAD:"د.م.",MDL:"L",MGA:"Ar",MKD:"ден",
-        MMK:"K",MNT:"₮",MOP:"MOP$",MRU:"UM",MUR:"₨",MVR:"Rf",MWK:"MK",MXN:"$",
-        MYR:"RM",MZN:"MT",NAD:"N$",NGN:"₦",NIO:"C$",NOK:"kr",NPR:"₨",NZD:"NZ$",
-        OMR:"ر.ع.",PAB:"B/.",PEN:"S/.",PGK:"K",PHP:"₱",PKR:"₨",PLN:"zł",PYG:"₲",
-        QAR:"ر.ق",RON:"lei",RSD:"din",RUB:"₽",RWF:"FRw",SAR:"ر.س",SBD:"SI$",SCR:"₨",
-        SDG:"£",SEK:"kr",SGD:"S$",SHP:"£",SLL:"Le",SOS:"S",SRD:"$",SSP:"£",
-        STD:"Db",STN:"Db",SVC:"$",SYP:"£",SZL:"E",THB:"฿",TJS:"ЅМ",TMT:"m",
-        TND:"د.ت",TOP:"T$",TRY:"₺",TTD:"TT$",TWD:"NT$",TZS:"TSh",UAH:"₴",UGX:"USh",
-        USD:"$",UYU:"$U",UZS:"UZS",VES:"Bs.S",VND:"₫",VUV:"VT",WST:"WS$",XAF:"FCFA",
-        XCD:"EC$",XDR:"XDR",XOF:"CFA",XPF:"CFPF",YER:"﷼",ZAR:"R",ZMW:"ZK",ZWL:"Z$"
-      };
-      return sym[code.toUpperCase()]||code+" ";
+    r += "</div></section>";
+    return r;
+  }
+
+  function buildAboutSection(){
+    if(!aboutData.title && !aboutData.paragraph && !aboutData.image) return "";
+    var a = "<section class='about-section' id='about'><div class='about-left'>";
+    a += "<h2>"+escapeHTML(aboutData.title||"Who We Are")+"</h2>";
+    a += "<p>"+escapeHTML(aboutData.paragraph||"We are a small business...")+"</p>";
+    a += "</div><div class='about-right'>";
+    if(aboutData.image){
+      a += "<img src='"+escapeHTML(aboutData.image)+"' alt='About Image'>";
     }
-    function escapeHTML(str){
-      if(!str)return "";
-      return str.replace(/[<>"'&]/g,function(c){
-        switch(c){
-          case '<':return '&lt;';
-          case '>':return '&gt;';
-          case '"':return '&quot;';
-          case "'":return '&#39;';
-          case '&':return '&amp;';
-        }
-      });
+    a += "</div></section>";
+    return a;
+  }
+
+  function buildContactSection(){
+    var anyFilled = contactData.intro || contactData.instagram || contactData.tiktok ||
+                    contactData.facebook || contactData.xLink || contactData.youtube ||
+                    contactData.email || contactData.formEmbed;
+    if(!anyFilled) return "";
+
+    var c = "<section class='contact-section' id='contact'><div class='contact-left'><div class='contact-logo-left'>";
+    if(heroData.logo){
+      c += "<img src='"+escapeHTML(heroData.logo)+"' alt='Logo'>";
     }
-    function redirectToUpload(){
-      window.open("https://imgbb.com","_blank");
+    c += "</div>";
+    if(contactData.intro){
+      c += "<p>"+escapeHTML(contactData.intro)+"</p>";
     }
-    function updateManagementLists(){
-      const cont = document.getElementById('managementContainer');
-      cont.innerHTML = "";
-      if(products.length>0){
-        const pDiv = document.createElement('div');
-        pDiv.innerHTML = "<h3>Products in Website</h3>";
-        products.forEach((prod, idx)=>{
-          const row = document.createElement('div');
-          row.classList.add('builder-item-row');
-          row.innerHTML = `<span>${escapeHTML(prod.title||"Untitled")}</span>`;
-          const delBtn = document.createElement('button');
-          delBtn.classList.add('delete-btn');
-          delBtn.textContent="×";
-          delBtn.onclick=function(){
-            products.splice(idx,1);
-            updatePreview();
-            updateManagementLists();
-          };
-          row.appendChild(delBtn);
-          pDiv.appendChild(row);
-        });
-        cont.appendChild(pDiv);
+    let iconsHTML = "";
+    if(contactData.instagram) iconsHTML+="<a href='"+escapeHTML(contactData.instagram)+"' target='_blank'><img src='https://i.ibb.co/L6zwnKk/Bella-50.png' alt='Instagram'></a>";
+    if(contactData.tiktok)    iconsHTML+="<a href='"+escapeHTML(contactData.tiktok)+"' target='_blank'><img src='https://i.ibb.co/2vSmtt0/Bella-49.png' alt='TikTok'></a>";
+    if(contactData.facebook)  iconsHTML+="<a href='"+escapeHTML(contactData.facebook)+"' target='_blank'><img src='https://i.ibb.co/gmDjkH3/Bella-48.png' alt='Facebook'></a>";
+    if(contactData.xLink)     iconsHTML+="<a href='"+escapeHTML(contactData.xLink)+"' target='_blank'><img src='https://i.ibb.co/fqp0KrB/Bella-63.png' alt='X'></a>";
+    if(contactData.youtube)   iconsHTML+="<a href='"+escapeHTML(contactData.youtube)+"' target='_blank'><img src='https://i.ibb.co/hC6CQzs/Bella-62.png' alt='Youtube'></a>";
+
+    if(iconsHTML){
+      c += "<div class='contact-social-icons'>"+iconsHTML+"</div>";
+    }
+    if(contactData.email){
+      c += "<div class='contact-email-line'>"+escapeHTML(contactData.email)+"</div>";
+      if(!contactData.formEmbed){
+        c += "<a class='email-btn' href='mailto:"+escapeHTML(contactData.email)+"'>Send Us an Email</a>";
       }
-      if(reviews.length>0){
-        const rDiv = document.createElement('div');
-        rDiv.innerHTML="<h3>Reviews in Website</h3>";
-        reviews.forEach((rev, idx)=>{
-          const row=document.createElement('div');
-          row.classList.add('builder-item-row');
-          row.innerHTML=`<span>${escapeHTML(rev.name||"Unnamed")}</span>`;
-          const delBtn=document.createElement('button');
-          delBtn.classList.add('delete-btn');
-          delBtn.textContent="×";
-          delBtn.onclick=function(){
-            reviews.splice(idx,1);
-            updatePreview();
-            updateManagementLists();
-          };
-          row.appendChild(delBtn);
-          rDiv.appendChild(row);
-        });
-        cont.appendChild(rDiv);
+    }
+    c += "</div><div class='contact-right'>";
+    if(contactData.formEmbed){
+      c += "<div class='contact-embed'>"+ contactData.formEmbed +"</div>";
+    }
+    c += "</div></section>";
+    return c;
+  }
+
+  // ============== PRODUCT MODAL SCRIPT ==============
+function buildProductModalScript(){
+  // We'll build a string for an inline <script> in the final HTML.
+  let m = "";
+  m += "<script>(function(){\n";
+  m += "  function getSymbol(cc){\n";
+  m += "    const known = {USD:'$', EUR:'€', GBP:'£', JPY:'¥', AUD:'A$', CAD:'C$', CHF:'CHF', CNY:'¥', HKD:'HK$', NZD:'NZ$'};\n";
+  m += "    return known[cc.toUpperCase()] || cc + ' ';}\n\n";
+  
+  // Function to check selections (for embed code only) if needed
+  m += "  function checkEmbedSelections() {\n";
+  m += "    var embedBlocks = paypalEmbedDiv.getElementsByClassName('paypal-embed-option');\n";
+  m += "    for(var i = 0; i < embedBlocks.length; i++){\n";
+  m += "      if(!embedBlocks[i].querySelector('span.selected')){\n";
+  m += "         alert('Please select an option for ' + embedBlocks[i].querySelector('label').textContent);\n";
+  m += "         return false;\n";
+  m += "      }\n";
+  m += "    }\n";
+  m += "    return true;\n";
+  m += "  }\n\n";
+  
+  // Create the modal container
+  m += "  var modal = document.createElement('div');\n";
+  m += "  modal.id = 'productModal';\n";
+  m += "  modal.className = 'modal';\n";
+  
+  // The modal's inner HTML (using 'Color:' and 'Size:' labels)
+  // Updated quantity wrapper uses buttons and a span for display
+  m += "  modal.innerHTML = `\\\n\
+<div class='modal-content'>\\\n\
+  <span class='modal-close'>&times;</span>\\\n\
+  <div class='modal-body'>\\\n\
+    <div class='modal-left'>\\\n\
+      <div class='modal-main-image'>\\\n\
+        <div class='arrow arrow-left' id='arrowLeft'>❮</div>\\\n\
+        <img id='modalMainImg' src='' alt='Main Product Image'>\\\n\
+        <div class='arrow arrow-right' id='arrowRight'>❯</div>\\\n\
+      </div>\\\n\
+      <div class='modal-thumbnails' id='modalThumbnails'></div>\\\n\
+    </div>\\\n\
+    <div class='modal-right'>\\\n\
+      <h1 id='modalTitle' class='modal-product-title'></h1>\\\n\
+      <div style='display:flex;flex-direction:row;justify-content:flex-start;align-items:center;'>\\\n\
+        <div id='modalPrice' class='modal-product-price'>$0.00</div>\\\n\
+        <div id='modalSold' class='modal-product-sold' style='margin-left:10px;'></div>\\\n\
+      </div>\\\n\
+      <div id='modalDescription' class='modal-description'></div>\\\n\
+      <div id='modalAttributes' style='margin: 10px 0;'>\\\n\
+         <div class='attribute-group'>\\\n\
+           <span class='attribute-label' style='font-weight:bold;margin-right:5px;'>Color:</span>\\\n\
+           <div id='modalColorOptions' class='color-options'></div>\\\n\
+         </div>\\\n\
+         <div class='attribute-group' style='margin-top:5px;'>\\\n\
+           <span class='attribute-label' style='font-weight:bold;margin-right:5px;'>Size:</span>\\\n\
+           <div id='modalSizeOptions' class='size-options'></div>\\\n\
+         </div>\\\n\
+      </div>\\\n\
+      <div id='paypalEmbedFields'></div>\\\n\
+      <div id='quantityWrapper' style='display:none; margin:15px 0;'>\\\n\
+        <label style='font-weight:600;'>Quantity:</label>\\\n\
+        <button id='decreaseQty' type='button' style='margin-left:10px;'>-</button>\\\n\
+        <span id='modalQuantityDisplay' style='display:inline-block; width:40px; text-align:center;'>1</span>\\\n\
+        <button id='increaseQty' type='button'>+</button>\\\n\
+      </div>\\\n\
+      <div class='order-details-panel'>\\\n\
+        <h3>Order Details</h3>\\\n\
+        <div class='order-item'><label>Price:</label><span class='value' id='itemPrice'>--</span></div>\\\n\
+        <div class='order-item'><label>Shipping:</label><span class='value' id='shippingCost'>$0.00</span></div>\\\n\
+        <div class='order-item'><label>Returns:</label><span class='value' id='returnPolicy'></span></div>\\\n\
+        <div class='shipping-info' id='shippingInfo'><strong>Shipping Information:</strong> If your PayPal shipping address or contact details have changed, please update them at checkout so we send your goodies to the right place!</div>\\\n\
+        <div class='subtotal'>Total: <span id='subtotalValue'>$0.00</span></div>\\\n\
+      </div>\\\n\
+      <div class='modal-actions'>\\\n\
+        <button class='buy-now-btn'>Buy Now</button>\\\n\
+      </div>\\\n\
+    </div>\\\n\
+  </div>\\\n\
+</div>`;\n";
+  
+  m += "  document.body.appendChild(modal);\n\n";
+  // Append CSS style element for selected options
+  m += "  var styleEl = document.createElement('style');\n";
+  m += "  styleEl.innerHTML = '.color-options span.selected, .size-options span.selected, .paypal-embed-option span.selected { border: 2px solid #2196f3; background: #eef6ff; }';\n";
+  m += "  document.head.appendChild(styleEl);\n\n";
+  
+  m += "  var productModal = document.getElementById('productModal');\n";
+  m += "  var closeBtn = productModal.querySelector('.modal-close');\n";
+  m += "  var mainImg = productModal.querySelector('#modalMainImg');\n";
+  m += "  var modalTitle = productModal.querySelector('#modalTitle');\n";
+  m += "  var modalPrice = productModal.querySelector('#modalPrice');\n";
+  m += "  var modalSold = productModal.querySelector('#modalSold');\n";
+  m += "  var modalDesc = productModal.querySelector('#modalDescription');\n";
+  m += "  var paypalEmbedDiv = productModal.querySelector('#paypalEmbedFields');\n";
+  m += "  var itemPrice = productModal.querySelector('#itemPrice');\n";
+  m += "  var shippingCost = productModal.querySelector('#shippingCost');\n";
+  m += "  var returnPolicy = productModal.querySelector('#returnPolicy');\n";
+  m += "  var subtotalValue = productModal.querySelector('#subtotalValue');\n";
+  m += "  var arrowLeft = productModal.querySelector('#arrowLeft');\n";
+  m += "  var arrowRight = productModal.querySelector('#arrowRight');\n";
+  m += "  var thumbsContainer = productModal.querySelector('#modalThumbnails');\n";
+  m += "  var buyNowBtn = productModal.querySelector('.buy-now-btn');\n";
+  m += "  var quantityWrapper = productModal.querySelector('#quantityWrapper');\n";
+  m += "  var decreaseQty = productModal.querySelector('#decreaseQty');\n";
+  m += "  var increaseQty = productModal.querySelector('#increaseQty');\n";
+  m += "  var modalQuantityDisplay = productModal.querySelector('#modalQuantityDisplay');\n\n";
+  
+  m += "  var currentProduct = null;\n";
+  m += "  var allImages = [];\n";
+  m += "  var currentIndex = 0;\n";
+  m += "  var basePrice = 0; var shippingFee = 0; var returnsText = 'Accepted';\n";
+  m += "  var currentQty = 1;\n\n";
+  
+  // Order detail update function with quantity handling for PayPal Email
+  m += "  function updateOrderDetails(){\n";
+  m += "    var qty = (currentProduct && currentProduct.paymentMethod === 'paypalEmail') ? currentQty : 1;\n";
+  m += "    var totalPrice = (basePrice * qty) + shippingFee;\n";
+  m += "    itemPrice.textContent = getSymbol(currentProduct.currency || '$') + (basePrice * qty).toFixed(2);\n";
+  m += "    shippingCost.textContent = (shippingFee === 0) ? 'FREE' : getSymbol(currentProduct.currency || '$') + shippingFee.toFixed(2);\n";
+  m += "    returnPolicy.textContent = returnsText;\n";
+  m += "    subtotalValue.textContent = getSymbol(currentProduct.currency || '$') + totalPrice.toFixed(2);\n";
+  m += "  }\n\n";
+  
+  // Attach event listeners for quantity control buttons
+  m += "  decreaseQty.addEventListener('click', function(){\n";
+  m += "    if(currentQty > 1){\n";
+  m += "      currentQty--;\n";
+  m += "      modalQuantityDisplay.textContent = currentQty;\n";
+  m += "      updateOrderDetails();\n";
+  m += "    }\n";
+  m += "  });\n";
+  m += "  increaseQty.addEventListener('click', function(){\n";
+  m += "    if(currentQty < 99){\n";
+  m += "      currentQty++;\n";
+  m += "      modalQuantityDisplay.textContent = currentQty;\n";
+  m += "      updateOrderDetails();\n";
+  m += "    }\n";
+  m += "  });\n\n";
+  
+  // Function to show image in modal
+  m += "  function showImageAt(idx){\n";
+  m += "    if(idx < 0 || idx >= allImages.length) return;\n";
+  m += "    currentIndex = idx;\n";
+  m += "    mainImg.src = allImages[idx];\n";
+  m += "    Array.from(thumbsContainer.children).forEach((imgEl, i) => {\n";
+  m += "      imgEl.style.borderColor = (i === idx) ? '#2196f3' : 'transparent';\n";
+  m += "    });\n";
+  m += "  }\n\n";
+  
+  // Function to open the modal and populate its data
+  m += "  function openModal(prod){\n";
+  m += "    currentProduct = prod;\n";
+  m += "    productModal.style.display = 'flex';\n";
+  m += "    // Reset quantity to 1\n";
+  m += "    currentQty = 1;\n";
+  m += "    modalQuantityDisplay.textContent = currentQty;\n";
+  m += "    // Always keep the Buy Now button enabled (notification will occur on click if selections are missing)\n";
+  m += "    buyNowBtn.disabled = false;\n";
+  m += "    allImages = [];\n";
+  m += "    if(prod.images1) allImages.push(prod.images1);\n";
+  m += "    if(prod.images2) allImages.push(prod.images2);\n";
+  m += "    if(prod.images3) allImages.push(prod.images3);\n";
+  m += "    modalTitle.textContent = prod.title || '';\n";
+  m += "    modalSold.textContent = prod.sold ? (prod.sold + ' Sold') : '';\n";
+  m += "    modalPrice.textContent = getSymbol(prod.currency || '$') + (prod.price || '0');\n";
+  m += "    modalDesc.textContent = prod.description || '';\n";
+  m += "    basePrice = parseFloat(prod.price) || 0;\n";
+  m += "    shippingFee = (prod.shipping === 'FREE') ? 0 : (parseFloat(prod.shipping) || 0);\n";
+  m += "    returnsText = prod.returns || 'Accepted';\n";
+  m += "    thumbsContainer.innerHTML = '';\n";
+  m += "    if(allImages.length > 0){\n";
+  m += "      showImageAt(0);\n";
+  m += "    } else {\n";
+  m += "      mainImg.src = 'https://via.placeholder.com/400?text=No+Image';\n";
+  m += "    }\n";
+  m += "    for(var i = 0; i < allImages.length; i++){\n";
+  m += "      var t = document.createElement('img');\n";
+  m += "      t.src = allImages[i];\n";
+  m += "      t.dataset.index = i;\n";
+  m += "      t.addEventListener('click', function(){ showImageAt(parseInt(this.dataset.index)); });\n";
+  m += "      if(i === 0){ t.style.borderColor = '#2196f3'; }\n";
+  m += "      thumbsContainer.appendChild(t);\n";
+  m += "    }\n\n";
+  // Populate color and size options only for PayPal Email payment method
+  m += "    var attributesContainer = productModal.querySelector('#modalAttributes');\n";
+  m += "    if(prod.paymentMethod === 'paypalEmail'){\n";
+  m += "      attributesContainer.style.display = 'block';\n";
+  m += "      var colorOptionsContainer = productModal.querySelector('#modalColorOptions');\n";
+  m += "      var sizeOptionsContainer = productModal.querySelector('#modalSizeOptions');\n";
+  m += "      colorOptionsContainer.innerHTML = '';\n";
+  m += "      sizeOptionsContainer.innerHTML = '';\n";
+  m += "      if(prod.coloroptions){\n";
+  m += "        var colors = prod.coloroptions.split(',').map(s => s.trim()).filter(s => s);\n";
+  m += "        colors.forEach(function(color){\n";
+  m += "          var span = document.createElement('span');\n";
+  m += "          span.textContent = color;\n";
+  m += "          span.style.cursor = 'pointer';\n";
+  m += "          span.addEventListener('click', function(e){\n";
+  m += "            e.stopPropagation();\n";
+  m += "            Array.from(colorOptionsContainer.getElementsByTagName('span')).forEach(s => s.classList.remove('selected'));\n";
+  m += "            this.classList.add('selected');\n";
+  m += "          });\n";
+  m += "          colorOptionsContainer.appendChild(span);\n";
+  m += "        });\n";
+  m += "      }\n";
+  m += "      if(prod.sizeoptions){\n";
+  m += "        var sizes = prod.sizeoptions.split(',').map(s => s.trim()).filter(s => s);\n";
+  m += "        sizes.forEach(function(size){\n";
+  m += "          var span = document.createElement('span');\n";
+  m += "          span.textContent = size;\n";
+  m += "          span.style.cursor = 'pointer';\n";
+  m += "          span.addEventListener('click', function(e){\n";
+  m += "            e.stopPropagation();\n";
+  m += "            Array.from(sizeOptionsContainer.getElementsByTagName('span')).forEach(s => s.classList.remove('selected'));\n";
+  m += "            this.classList.add('selected');\n";
+  m += "          });\n";
+  m += "          sizeOptionsContainer.appendChild(span);\n";
+  m += "        });\n";
+  m += "      }\n";
+  m += "      // Do not disable the Buy Now button; let the click handler alert if needed\n";
+  m += "    } else {\n";
+  m += "      attributesContainer.style.display = 'none';\n";
+  m += "    }\n\n";
+  
+  m += "    paypalEmbedDiv.innerHTML = '';\n";
+  m += "    if(prod.paymentMethod === 'paypalEmbed' && prod.paypalEmbed){\n";
+  m += "      var tempDiv = document.createElement('div');\n";
+  m += "      tempDiv.innerHTML = prod.paypalEmbed;\n";
+  m += "      for(var i = 0; i < 5; i++){\n";
+  m += "        var onName = 'on' + i;\n";
+  m += "        var osName = 'os' + i;\n";
+  m += "        var labelInput = tempDiv.querySelector('input[name=\"' + onName + '\"]');\n";
+  m += "        var selectEl = tempDiv.querySelector('select[name=\"' + osName + '\"]');\n";
+  m += "        if(labelInput && selectEl){\n";
+  m += "          var labelVal = labelInput.value || 'Option';\n";
+  m += "          var embedBlock = document.createElement('div');\n";
+  m += "          embedBlock.classList.add('paypal-embed-option');\n";
+  m += "          var labelElem = document.createElement('label');\n";
+  m += "          labelElem.textContent = labelVal + ': ';\n";
+  m += "          embedBlock.appendChild(labelElem);\n";
+  m += "          var optionContainer = document.createElement('div');\n";
+  m += "          optionContainer.style.marginTop = '5px';\n";
+  m += "          var opts = selectEl.querySelectorAll('option');\n";
+  m += "          opts.forEach(function(opt){\n";
+  m += "            var sp = document.createElement('span');\n";
+  m += "            sp.textContent = opt.value;\n";
+  m += "            sp.addEventListener('click', function(e){\n";
+  m += "              e.stopPropagation();\n";
+  m += "              Array.from(optionContainer.querySelectorAll('span')).forEach(s => s.classList.remove('selected'));\n";
+  m += "              this.classList.add('selected');\n";
+  m += "            });\n";
+  m += "            optionContainer.appendChild(sp);\n";
+  m += "          });\n";
+  m += "          embedBlock.appendChild(optionContainer);\n";
+  m += "          paypalEmbedDiv.appendChild(embedBlock);\n";
+  m += "        }\n";
+  m += "      }\n";
+  m += "    }\n\n";
+  
+  // For PayPal Email, create hidden select elements for color and size to mimic embed code structure
+  m += "    if(prod.paymentMethod === 'paypalEmail'){\n";
+  m += "      var hiddenFormSelects = {};\n";
+  m += "      if(prod.coloroptions){\n";
+  m += "        var colorSelect = document.createElement('select');\n";
+  m += "        colorSelect.name = 'os0';\n";
+  m += "        var colors = prod.coloroptions.split(',').map(s => s.trim()).filter(s => s);\n";
+  m += "        colors.forEach(function(color){\n";
+  m += "          var opt = document.createElement('option');\n";
+  m += "          opt.value = color;\n";
+  m += "          opt.textContent = color;\n";
+  m += "          colorSelect.appendChild(opt);\n";
+  m += "        });\n";
+  m += "        var selectedColor = productModal.querySelector('#modalColorOptions span.selected');\n";
+  m += "        if(selectedColor){ colorSelect.value = selectedColor.textContent; }\n";
+  m += "        hiddenFormSelects.colorSelect = colorSelect;\n";
+  m += "      }\n";
+  m += "      if(prod.sizeoptions){\n";
+  m += "        var sizeSelect = document.createElement('select');\n";
+  m += "        sizeSelect.name = 'os1';\n";
+  m += "        var sizes = prod.sizeoptions.split(',').map(s => s.trim()).filter(s => s);\n";
+  m += "        sizes.forEach(function(size){\n";
+  m += "          var opt = document.createElement('option');\n";
+  m += "          opt.value = size;\n";
+  m += "          opt.textContent = size;\n";
+  m += "          sizeSelect.appendChild(opt);\n";
+  m += "        });\n";
+  m += "        var selectedSize = productModal.querySelector('#modalSizeOptions span.selected');\n";
+  m += "        if(selectedSize){ sizeSelect.value = selectedSize.textContent; }\n";
+  m += "        hiddenFormSelects.sizeSelect = sizeSelect;\n";
+  m += "      }\n";
+  m += "    } else { /* If not paypalEmail, no hidden selects needed */ }\n\n";
+  
+  m += "    if(prod.paymentMethod === 'paypalEmail'){\n";
+  m += "      quantityWrapper.style.display = 'block';\n";
+  m += "    } else {\n";
+  m += "      quantityWrapper.style.display = 'none';\n";
+  m += "    }\n\n";
+  
+  m += "    updateOrderDetails();\n";
+  m += "  }\n\n";
+  
+  m += "  document.querySelectorAll('.product-item').forEach(function(pi){\n";
+  m += "    var pd = {};\n";
+  m += "    pd.title = pi.getAttribute('data-title') || '';\n";
+  m += "    pd.sold = pi.getAttribute('data-sold') || '';\n";
+  m += "    pd.price = pi.getAttribute('data-price') || '0';\n";
+  m += "    pd.currency = pi.getAttribute('data-currency') || '$';\n";
+  m += "    pd.description = pi.getAttribute('data-description') || '';\n";
+  m += "    pd.shipping = pi.getAttribute('data-shipping') || 'FREE';\n";
+  m += "    pd.returns = pi.getAttribute('data-returns') || 'Accepted';\n";
+  m += "    pd.coloroptions = pi.getAttribute('data-coloroptions') || '';\n";
+  m += "    pd.sizeoptions = pi.getAttribute('data-sizeoptions') || '';\n";
+  m += "    pd.images1 = pi.getAttribute('data-images1') || '';\n";
+  m += "    pd.images2 = pi.getAttribute('data-images2') || '';\n";
+  m += "    pd.images3 = pi.getAttribute('data-images3') || '';\n";
+  m += "    pd.paymentMethod = pi.getAttribute('data-paymentmethod') || '';\n";
+  m += "    pd.paypalLink = pi.getAttribute('data-paypallink') || '';\n";
+  m += "    pd.paypalEmbed = pi.getAttribute('data-paypalembed') || '';\n";
+  m += "    pd.otherPaymentLink = pi.getAttribute('data-otherpaymentlink') || '';\n";
+  m += "    pd.paypalEmail = pi.getAttribute('data-paypalemail') || '';\n\n";
+  
+  m += "    pi.addEventListener('click', function(){ openModal(pd); });\n";
+  m += "    var buy = pi.querySelector('.buy-now');\n";
+  m += "    if(buy){\n";
+  m += "      buy.addEventListener('click', function(e){\n";
+  m += "        e.preventDefault(); e.stopPropagation();\n";
+  m += "        openModal(pd);\n";
+  m += "      });\n";
+  m += "    }\n";
+  m += "  });\n\n";
+  
+  m += "  closeBtn.onclick = function(){ productModal.style.display = 'none'; };\n";
+  m += "  modal.addEventListener('click', function(e){ if(e.target === modal){ modal.style.display = 'none'; } });\n";
+  m += "  arrowLeft.onclick = function(){ if(currentIndex > 0){ showImageAt(currentIndex - 1); } };\n";
+  m += "  arrowRight.onclick = function(){ if(currentIndex < allImages.length - 1){ showImageAt(currentIndex + 1); } };\n\n";
+  
+  m += "  buyNowBtn.onclick = function(){\n";
+  m += "    if(!currentProduct)return;\n";
+  m += "    if(currentProduct.paymentMethod === 'paypalLink'){\n";
+  m += "      window.open(currentProduct.paypalLink, '_blank');\n";
+  m += "    } else if(currentProduct.paymentMethod === 'paypalEmbed'){\n";
+  m += "      // Check that each embed option has a selected field\n";
+  m += "      if(!checkEmbedSelections()) return;\n";
+  m += "      var hiddenForm = document.createElement('form');\n";
+  m += "      hiddenForm.method = 'POST';\n";
+  m += "      hiddenForm.action = 'https://www.paypal.com/cgi-bin/webscr';\n";
+  m += "      hiddenForm.style.display = 'none';\n";
+  m += "      var tempDiv = document.createElement('div');\n";
+  m += "      tempDiv.innerHTML = currentProduct.paypalEmbed;\n";
+  m += "      var formInputs = tempDiv.querySelectorAll('input, select');\n";
+  m += "      formInputs.forEach(function(fi){ hiddenForm.appendChild(fi.cloneNode(true)); });\n";
+  m += "      var embedFields = document.querySelector('#paypalEmbedFields');\n";
+  m += "      for(var i = 0; i < 5; i++){\n";
+  m += "        var onName = 'on' + i;\n";
+  m += "        var osName = 'os' + i;\n";
+  m += "        var labelInput = hiddenForm.querySelector('input[name=\"' + onName + '\"]');\n";
+  m += "        var selectEl = hiddenForm.querySelector('select[name=\"' + osName + '\"]');\n";
+  m += "        if(labelInput && selectEl){\n";
+  m += "          var blocks = embedFields.getElementsByClassName('paypal-embed-option');\n";
+  m += "          if(blocks[i]){\n";
+  m += "            var sel = blocks[i].querySelector('span.selected');\n";
+  m += "            if(sel){ selectEl.value = sel.textContent; }\n";
+  m += "          }\n";
+  m += "        }\n";
+  m += "      }\n";
+  m += "      document.body.appendChild(hiddenForm);\n";
+  m += "      hiddenForm.submit();\n";
+  m += "    } else if(currentProduct.paymentMethod === 'other'){\n";
+  m += "      if(currentProduct.otherPaymentLink){ window.open(currentProduct.otherPaymentLink, '_blank'); }\n";
+  m += "      else { alert('No other payment link provided.'); }\n";
+  m += "    } else if(currentProduct.paymentMethod === 'paypalEmail'){\n";
+  // NEW PAYPAL EMAIL HANDLING BLOCK using _xclick for direct purchase
+  m += "      // Check that color and size are selected\n";
+  m += "      var selectedColorEl = productModal.querySelector('#modalColorOptions span.selected');\n";
+  m += "      var selectedSizeEl = productModal.querySelector('#modalSizeOptions span.selected');\n";
+  m += "      if(!selectedColorEl || !selectedSizeEl){\n";
+  m += "         alert('Please select a color and size before proceeding.');\n";
+  m += "         return;\n";
+  m += "      }\n";
+  m += "      var quantity = parseInt(currentQty, 10);\n";
+  m += "      if(isNaN(quantity) || quantity < 1){ quantity = 1; }\n";
+  m += "      var total = (basePrice * quantity) + shippingFee;\n";
+  m += "      var hiddenForm = document.createElement('form');\n";
+  m += "      hiddenForm.method = 'POST';\n";
+  m += "      hiddenForm.action = 'https://www.paypal.com/cgi-bin/webscr';\n";
+  m += "      hiddenForm.style.display = 'none';\n";
+  m += "      var fields = [\n";
+  m += "        { name: 'cmd', value: '_xclick' },\n";
+  m += "        { name: 'business', value: currentProduct.paypalEmail },\n";
+  m += "        { name: 'currency_code', value: (currentProduct.currency && currentProduct.currency.length <= 3) ? currentProduct.currency : 'USD' },\n";
+  m += "        { name: 'amount', value: total.toFixed(2) }\n";
+  m += "      ];\n";
+  m += "      fields.forEach(function(f){\n";
+  m += "        var inp = document.createElement('input');\n";
+  m += "        inp.type = 'hidden';\n";
+  m += "        inp.name = f.name;\n";
+  m += "        inp.value = f.value;\n";
+  m += "        hiddenForm.appendChild(inp);\n";
+  m += "      });\n";
+  m += "      // Build the item_name: product title + selected color + selected size + 'Quantity' + quantity\n";
+  m += "      var itemName = currentProduct.title || 'Product';\n";
+  m += "      itemName += ' ' + selectedColorEl.textContent;\n";
+  m += "      itemName += ' ' + selectedSizeEl.textContent;\n";
+  m += "      itemName += ' Quantity ' + quantity;\n";
+  m += "      var itemNameInp = document.createElement('input');\n";
+  m += "      itemNameInp.type = 'hidden';\n";
+  m += "      itemNameInp.name = 'item_name';\n";
+  m += "      itemNameInp.value = itemName;\n";
+  m += "      hiddenForm.appendChild(itemNameInp);\n";
+  m += "      var qtyInp = document.createElement('input');\n";
+  m += "      qtyInp.type = 'hidden';\n";
+  m += "      qtyInp.name = 'quantity';\n";
+  m += "      qtyInp.value = quantity;\n";
+  m += "      hiddenForm.appendChild(qtyInp);\n";
+  m += "      document.body.appendChild(hiddenForm);\n";
+  m += "      hiddenForm.submit();\n";
+  m += "    } else {\n";
+  m += "      alert('Payment method not configured.');\n";
+  m += "    }\n";
+  m += "  };\n";
+  m += "})();";
+  m += "</scr" + "ipt>";
+  return m;
+}
+
+
+
+
+  function getCurrencySymbol(code){
+    const sym={
+      USD:"$", EUR:"€", GBP:"£", JPY:"¥", AUD:"A$", CAD:"C$", CHF:"CHF",
+      CNY:"¥", HKD:"HK$", NZD:"NZ$"
+    };
+    if(sym[code.toUpperCase()]) return sym[code.toUpperCase()];
+    return code+" ";
+  }
+
+  function escapeHTML(str){
+    if(!str) return "";
+    return str.replace(/[<>"'&]/g, function(c){
+      switch(c){
+        case '<': return '&lt;';
+        case '>': return '&gt;';
+        case '"': return '&quot;';
+        case "'": return '&#39;';
+        case '&': return '&amp;';
       }
-      if(contactData.formEmbed){
-        const cfDiv=document.createElement('div');
-        cfDiv.innerHTML="<h3>Contact Form</h3><span>Contact Form</span>";
+    });
+  }
+
+  function redirectToUpload(){
+    window.open("https://imgbb.com","_blank");
+  }
+
+  function updateManagementLists(){
+    const cont = document.getElementById('managementContainer');
+    if(!cont) return;
+    cont.innerHTML = "";
+
+    if(products.length>0){
+      const pDiv = document.createElement('div');
+      pDiv.innerHTML="<h3>Products in Website</h3>";
+      products.forEach((prod, idx)=>{
+        const row=document.createElement('div');
+        row.classList.add('builder-item-row');
+        row.innerHTML=`<span>${escapeHTML(prod.title||"Untitled")}</span>`;
         const delBtn=document.createElement('button');
         delBtn.classList.add('delete-btn');
         delBtn.textContent="×";
         delBtn.onclick=function(){
-          contactData.formEmbed="";
-          const addBtn = document.getElementById('addContactFormButton');
-          addBtn.classList.remove('success');
-          addBtn.textContent="Add Form";
+          products.splice(idx,1);
           updatePreview();
           updateManagementLists();
         };
-        cfDiv.appendChild(delBtn);
-        cont.appendChild(cfDiv);
-      }
+        row.appendChild(delBtn);
+        pDiv.appendChild(row);
+      });
+      cont.appendChild(pDiv);
     }
-    // ---- Payment Button Logic ----
-    document.getElementById('payBtn').onclick = function () {
-      if (!checkMandatory()) {
-        alert("Please fill in all mandatory fields before proceeding with payment.");
-        return;
-      }
-      var paypalPopup = window.open(
-        "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=workpoost%40gmail.com&item_name=Website+Builder+Download&amount=12&currency_code=EUR",
-        "_blank",
-        "width=500,height=700"
-      );
-      var startTime = Date.now();
-      var thresholdTime = 10 * 1000; // 10 seconds
-      var popupTimer = setInterval(function () {
-        if (paypalPopup && paypalPopup.closed) {
-          clearInterval(popupTimer);
-          var elapsedTime = Date.now() - startTime;
-          if (elapsedTime >= thresholdTime) {
-            document.getElementById('emailVerificationRow').style.display = 'flex';
-          } else {
-            alert("Payment was not completed. Please try again.");
-          }
-        }
-      }, 500);
-    };
-    document.getElementById('verifyEmailBtn').onclick = function() {
-      var email = document.getElementById('verificationEmail').value.trim();
-      if(email === "") {
-        alert("Please enter your email for verification.");
-        return;
-      }
-      var payBtn = document.getElementById('payBtn');
-      payBtn.innerHTML = "Payment Successful";
-      payBtn.style.background = "green";
-      payBtn.disabled = true;
-      document.getElementById('downloadRow').style.display = 'flex';
-      document.getElementById('emailVerificationRow').style.display = 'none';
-    };
-    // Code Modal Functions
-    function openCodeModal(){
-      if(!finalHTML.trim()){
-        finalHTML = buildFinalHTML();
-      }
-      var codeOutput = document.getElementById('codeOutput');
-      codeOutput.value = finalHTML;
-      document.getElementById('codeModal').style.display = 'flex';
-    }
-    document.getElementById('copyCodeButton').onclick = function(){
-      var codeOutput = document.getElementById('codeOutput');
-      codeOutput.select();
-      document.execCommand('copy');
-      this.textContent = "Copied!";
-      setTimeout(() => {
-        this.textContent = "Copy Code";
-      }, 2000);
-    };
-    document.getElementById('closeCodeModal').onclick = function(){
-      document.getElementById('codeModal').style.display = 'none';
-    };
-    // ---- Exit Confirmation Modal Logic ----
-    document.addEventListener('DOMContentLoaded', function () {
-      const exitModalOverlay = document.getElementById('exitConfirm-modalOverlay');
-      const exitModal = document.getElementById('exitConfirm-modal');
-      const stayButton = document.getElementById('exitConfirm-stayButton');
-      const leaveButton = document.getElementById('exitConfirm-leaveButton');
-      let intendedAction = null;
-      function showExitModal(action) {
-        intendedAction = action;
-        exitModalOverlay.style.display = 'flex';
-      }
-      function hideExitModal() {
-        exitModalOverlay.style.display = 'none';
-        intendedAction = null;
-      }
-      stayButton.addEventListener('click', function () {
-        hideExitModal();
-      });
-      leaveButton.addEventListener('click', function () {
-        hideExitModal();
-        if (typeof intendedAction === 'function') {
-          intendedAction();
-        } else if (typeof intendedAction === 'string') {
-          window.location.href = intendedAction;
-        }
-      });
-      const links = document.querySelectorAll('a');
-      links.forEach(function (link) {
-        link.addEventListener('click', function (e) {
-          if (this.hasAttribute('data-ignore-exit-confirm')) return;
-          e.preventDefault();
-          const href = this.getAttribute('href');
-          showExitModal(function () {
-            window.location.href = href;
-          });
-        });
-      });
-      const forms = document.querySelectorAll('form');
-      forms.forEach(function (form) {
-        form.addEventListener('submit', function (e) {
-          if (this.hasAttribute('data-ignore-exit-confirm')) return;
-          e.preventDefault();
-          showExitModal(function () {
-            form.submit();
-          });
-        });
-      });
-      window.addEventListener('beforeunload', function (e) {
-        if (exitModalOverlay.style.display === 'flex') {
-          return;
-        }
-        e.preventDefault();
-        e.returnValue = '';
-      });
-    });
-    function setupContactFormModal(){
-      var modal = document.getElementById('contactFormModal');
-      var openBtn = document.getElementById('addContactFormButton');
-      var closeBtn = document.getElementById('closeContactFormModal');
-      var confirmBtn = document.getElementById('confirmAddContactFormButton');
-      var textarea = document.getElementById('contactFormIframe');
-      openBtn.onclick = function(){
-        if(contactData.formEmbed){
-          alert("A contact form is already added. You can delete it before adding a new one.");
-          return;
-        }
-        modal.style.display = 'flex';
-      };
-      closeBtn.onclick = function(){
-        modal.style.display = 'none';
-      };
-      confirmBtn.onclick = function() {
-        const embedCode = textarea.value.trim();
-        if (embedCode) {
-          contactData.formEmbed = embedCode;
-          modal.style.display = 'none';
-          textarea.value = '';
-          const addBtn = document.getElementById('addContactFormButton');
-          addBtn.classList.add('success');
-          addBtn.textContent = 'Form Added';
-          const statusDiv = document.getElementById('contactFormStatus');
-          statusDiv.innerHTML = '';
-          const delFormBtn = document.createElement('button');
-          delFormBtn.textContent = 'Delete Form';
-          delFormBtn.style.background = 'red';
-          delFormBtn.style.color = '#fff';
-          delFormBtn.style.border = 'none';
-          delFormBtn.style.cursor = 'pointer';
-          delFormBtn.style.borderRadius = '4px';
-          delFormBtn.style.padding = '5px 10px';
-          delFormBtn.onclick = function() {
-            contactData.formEmbed = '';
-            addBtn.classList.remove('success');
-            addBtn.textContent = 'Add Form';
-            statusDiv.innerHTML = '';
-            updatePreview();
-          };
-          statusDiv.appendChild(delFormBtn);
+
+    if(reviews.length>0){
+      const rDiv=document.createElement('div');
+      rDiv.innerHTML="<h3>Reviews in Website</h3>";
+      reviews.forEach((rev, idx)=>{
+        const row=document.createElement('div');
+        row.classList.add('builder-item-row');
+        row.innerHTML=`<span>${escapeHTML(rev.name||"Unnamed")}</span>`;
+        const delBtn=document.createElement('button');
+        delBtn.classList.add('delete-btn');
+        delBtn.textContent="×";
+        delBtn.onclick=function(){
+          reviews.splice(idx,1);
           updatePreview();
           updateManagementLists();
+        };
+        row.appendChild(delBtn);
+        rDiv.appendChild(row);
+      });
+      cont.appendChild(rDiv);
+    }
+
+    if(contactData.formEmbed){
+      const cfDiv=document.createElement('div');
+      cfDiv.innerHTML="<h3>Contact Form</h3><span>Contact Form</span>";
+      const delBtn=document.createElement('button');
+      delBtn.classList.add('delete-btn');
+      delBtn.textContent="×";
+      delBtn.onclick=function(){
+        contactData.formEmbed="";
+        const addBtn = document.getElementById('addContactFormButton');
+        if(addBtn){
+          addBtn.classList.remove('success');
+          addBtn.textContent="Add Form";
+        }
+        updatePreview();
+        updateManagementLists();
+      };
+      cfDiv.appendChild(delBtn);
+      cont.appendChild(cfDiv);
+    }
+  }
+
+  // ---- Payment Button Logic ----
+  document.getElementById('payBtn').onclick = function(){
+    if(!checkMandatory()){
+      alert("Please fill in all mandatory fields before proceeding with payment.");
+      return;
+    }
+    var paypalPopup = window.open(
+      "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=workpoost%40gmail.com&item_name=Website+Builder+Download&amount=12&currency_code=EUR",
+      "_blank",
+      "width=500,height=700"
+    );
+    var startTime=Date.now();
+    var thresholdTime=10000; // 10 seconds
+    var popupTimer=setInterval(function(){
+      if(paypalPopup && paypalPopup.closed){
+        clearInterval(popupTimer);
+        var elapsedTime=Date.now()-startTime;
+        if(elapsedTime>=thresholdTime){
+          document.getElementById('emailVerificationRow').style.display='flex';
         } else {
-          alert("Please paste your contact form embed code.");
+          alert("Payment was not completed. Please try again.");
         }
-      };
-      window.onclick = function(event){
-        if(event.target == modal){
-          modal.style.display = 'none';
-        }
-      };
-    }
-  </script>
-  <script>
-    // Function to close the popup
-    function closePopup() {
-      var popup = document.getElementById('popupMessage');
-      if (popup) {
-        popup.style.display = 'none';
       }
+    },500);
+  };
+
+  document.getElementById('verifyEmailBtn').onclick = function(){
+    var email = document.getElementById('verificationEmail').value.trim();
+    if(email===""){
+      alert("Please enter your email for verification.");
+      return;
     }
-    
-    // Show the popup on page load
-    window.addEventListener('load', function() {
-      var popup = document.getElementById('popupMessage');
-      // Display the popup
-      popup.style.display = 'block';
-    
-      // Auto-close after 15 seconds (15000 milliseconds)
-      setTimeout(closePopup, 15000);
+    var payBtn=document.getElementById('payBtn');
+    payBtn.innerHTML="Payment Successful";
+    payBtn.style.background="green";
+    payBtn.disabled=true;
+    document.getElementById('downloadRow').style.display='flex';
+    document.getElementById('emailVerificationRow').style.display='none';
+  };
+
+  // Code Modal
+  function openCodeModal(){
+    if(!finalHTML.trim()){
+      finalHTML = buildFinalHTML();
+    }
+    var codeOutput=document.getElementById('codeOutput');
+    codeOutput.value=finalHTML;
+    document.getElementById('codeModal').style.display='flex';
+  }
+  window.openCodeModal=openCodeModal;
+
+  document.getElementById('copyCodeButton').onclick=function(){
+    var codeOutput=document.getElementById('codeOutput');
+    codeOutput.select();
+    document.execCommand('copy');
+    this.textContent="Copied!";
+    setTimeout(()=>{
+      this.textContent="Copy Code";
+    },2000);
+  };
+  document.getElementById('closeCodeModal').onclick=function(){
+    document.getElementById('codeModal').style.display='none';
+  };
+
+  // Exit Confirmation
+  document.addEventListener('DOMContentLoaded',function(){
+    const exitModalOverlay=document.getElementById('exitConfirm-modalOverlay');
+    const exitModal=document.getElementById('exitConfirm-modal');
+    if(!exitModalOverlay||!exitModal)return;
+
+    const stayButton   = document.getElementById('exitConfirm-stayButton');
+    const leaveButton  = document.getElementById('exitConfirm-leaveButton');
+    let intendedAction = null;
+
+    function showExitModal(action){
+      intendedAction=action;
+      exitModalOverlay.style.display='flex';
+    }
+    function hideExitModal(){
+      exitModalOverlay.style.display='none';
+      intendedAction=null;
+    }
+    stayButton.addEventListener('click',function(){
+      hideExitModal();
     });
-    
-    // Add click event to the close button
-    document.querySelector('#popupMessage .close').addEventListener('click', closePopup);
-  </script>
+    leaveButton.addEventListener('click',function(){
+      hideExitModal();
+      if(typeof intendedAction==='function'){
+        intendedAction();
+      } else if(typeof intendedAction==='string'){
+        window.location.href=intendedAction;
+      }
+    });
+
+    const links=document.querySelectorAll('a');
+    links.forEach(function(link){
+      link.addEventListener('click',function(e){
+        if(this.hasAttribute('data-ignore-exit-confirm'))return;
+        e.preventDefault();
+        const href=this.getAttribute('href');
+        showExitModal(function(){ window.location.href=href; });
+      });
+    });
+    const forms=document.querySelectorAll('form');
+    forms.forEach(function(form){
+      form.addEventListener('submit',function(e){
+        if(this.hasAttribute('data-ignore-exit-confirm'))return;
+        e.preventDefault();
+        showExitModal(function(){ form.submit(); });
+      });
+    });
+    window.addEventListener('beforeunload',function(e){
+      if(exitModalOverlay.style.display==='flex'){
+        return;
+      }
+      e.preventDefault();
+      e.returnValue='';
+    });
+  });
+
+  // Contact Form Modal
+  function setupContactFormModal(){
+    var modal     = document.getElementById('contactFormModal');
+    var openBtn   = document.getElementById('addContactFormButton');
+    var closeBtn  = document.getElementById('closeContactFormModal');
+    var confirmBtn= document.getElementById('confirmAddContactFormButton');
+    var textarea  = document.getElementById('contactFormIframe');
+
+    if(!modal || !openBtn) return;
+
+    openBtn.onclick=function(){
+      if(contactData.formEmbed){
+        alert("A contact form is already added. You can delete it before adding a new one.");
+        return;
+      }
+      modal.style.display='flex';
+    };
+    closeBtn.onclick=function(){
+      modal.style.display='none';
+    };
+    confirmBtn.onclick=function(){
+      const embedCode=textarea.value.trim();
+      if(embedCode){
+        contactData.formEmbed=embedCode;
+        modal.style.display='none';
+        textarea.value='';
+        openBtn.classList.add('success');
+        openBtn.textContent='Form Added';
+        const statusDiv=document.getElementById('contactFormStatus');
+        statusDiv.innerHTML='';
+        const delFormBtn=document.createElement('button');
+        delFormBtn.textContent='Delete Form';
+        delFormBtn.style.background='red';
+        delFormBtn.style.color='#fff';
+        delFormBtn.style.border='none';
+        delFormBtn.style.cursor='pointer';
+        delFormBtn.style.borderRadius='4px';
+        delFormBtn.style.padding='5px 10px';
+        delFormBtn.onclick=function(){
+          contactData.formEmbed='';
+          openBtn.classList.remove('success');
+          openBtn.textContent='Add Form';
+          statusDiv.innerHTML='';
+          updatePreview();
+        };
+        statusDiv.appendChild(delFormBtn);
+        updatePreview();
+        updateManagementLists();
+      } else {
+        alert("Please paste your contact form embed code.");
+      }
+    };
+    window.onclick=function(event){
+      if(event.target===modal){
+        modal.style.display='none';
+      }
+    };
+  }
+</script>
+
+
+<script>
+// Close popup message
+function closePopup(){
+  var popup=document.getElementById('popupMessage');
+  if(popup) popup.style.display='none';
+}
+window.addEventListener('load',function(){
+  var popup=document.getElementById('popupMessage');
+  if(popup){
+    popup.style.display='block';
+    setTimeout(closePopup,15000);
+  }
+});
+document.querySelector('#popupMessage .close').addEventListener('click',closePopup);
+</script>
+
+
   
 </body>
 </html>
