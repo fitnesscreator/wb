@@ -971,6 +971,7 @@
   var defaultCurrency = '';
   var defaultCurrencyCode = '';  // to store the currency’s data-code
   var defaultPaymentMethod = '';
+  var defaultPaypalEmail = "";
 
   // ============== CURRENCY DATA ==============
   const currencyData = [
@@ -1059,6 +1060,10 @@
     document.getElementById('productLink').oninput      = updatePreview;
     document.getElementById('productEmbed').oninput     = updatePreview;
     document.getElementById('otherPaymentLink').oninput = updatePreview;
+    
+    document.getElementById('paypalEmailInput').addEventListener('input', function() {
+    defaultPaypalEmail = this.value;
+  });
 
     updateAddProductFormFields();
     setupContactFormModal();
@@ -1164,146 +1169,146 @@
   }
 
   function addProduct(){
-    // Gather inputs
-    var title         = document.getElementById('productTitle').value.trim();
-    var img1          = document.getElementById('image1').value.trim();
-    var img2          = document.getElementById('image2').value.trim();
-    var img3          = document.getElementById('image3').value.trim();
-    var currencyInput = document.getElementById('productCurrency');
-    var currencyCode  = currencyInput.getAttribute('data-code') || 'EUR';
-    var sold          = document.getElementById('sold').value.trim();
-    var price         = document.getElementById('price').value.trim();
-    var shipping      = document.getElementById('shipping').value.trim();
-    var returns       = document.getElementById('returns').value;
-    var coloroptions  = document.getElementById('colorOptions').value.trim();
-    var sizeoptions   = document.getElementById('sizeOptions').value.trim();
-    var desc          = document.getElementById('description').value.trim();
-    var paymentMethod = document.getElementById('productPaymentMethod').value;
-    var paypalEmail   = document.getElementById('paypalEmailInput').value.trim();
+  // Gather inputs
+  var title         = document.getElementById('productTitle').value.trim();
+  var img1          = document.getElementById('image1').value.trim();
+  var img2          = document.getElementById('image2').value.trim();
+  var img3          = document.getElementById('image3').value.trim();
+  var currencyInput = document.getElementById('productCurrency');
+  var currencyCode  = currencyInput.getAttribute('data-code') || 'EUR';
+  var sold          = document.getElementById('sold').value.trim();
+  var price         = document.getElementById('price').value.trim();
+  var shipping      = document.getElementById('shipping').value.trim();
+  var returns       = document.getElementById('returns').value;
+  var coloroptions  = document.getElementById('colorOptions').value.trim();
+  var sizeoptions   = document.getElementById('sizeOptions').value.trim();
+  var desc          = document.getElementById('description').value.trim();
+  var paymentMethod = document.getElementById('productPaymentMethod').value;
+  var paypalEmail   = document.getElementById('paypalEmailInput').value.trim();
 
-    var productLink      = "";
-    var productEmbed     = "";
-    var otherPaymentLink = "";
+  var productLink      = "";
+  var productEmbed     = "";
+  var otherPaymentLink = "";
 
-    if(paymentMethod === 'paypalLink'){
-      productLink  = document.getElementById('productLink').value.trim();
-    }
-    if(paymentMethod === 'paypalEmbed'){
-      productEmbed = document.getElementById('productEmbed').value.trim();
-    }
-    if(paymentMethod === 'other'){
-      otherPaymentLink = document.getElementById('otherPaymentLink').value.trim();
-    }
+  if(paymentMethod === 'paypalLink'){
+    productLink  = document.getElementById('productLink').value.trim();
+  }
+  if(paymentMethod === 'paypalEmbed'){
+    productEmbed = document.getElementById('productEmbed').value.trim();
+  }
+  if(paymentMethod === 'other'){
+    otherPaymentLink = document.getElementById('otherPaymentLink').value.trim();
+  }
 
-    // If not embed, coloroptions is required
-    if(!title || !img1 || !price || !desc ||
-       (paymentMethod !== 'paypalEmbed' && !coloroptions)) {
-      alert("Please fill out all mandatory fields before adding.");
-      return;
-    }
+  // If not embed, coloroptions is required
+  if(!title || !img1 || !price || !desc ||
+     (paymentMethod !== 'paypalEmbed' && !coloroptions)) {
+    alert("Please fill out all mandatory fields before adding.");
+    return;
+  }
 
-    // Gather images
-    var imgs = [img1];
-    if(img2) imgs.push(img2);
-    if(img3) imgs.push(img3);
+  // Gather images
+  var imgs = [img1];
+  if(img2) imgs.push(img2);
+  if(img3) imgs.push(img3);
 
-    // shipping
-    var shippingVal = "FREE";
-    if(shipping && shipping !== "0"){
-      shippingVal = shipping;
-    }
+  // shipping
+  var shippingVal = "FREE";
+  if(shipping && shipping !== "0"){
+    shippingVal = shipping;
+  }
 
-    // sold
-    var soldVal = "";
-    if(sold && sold !== "0"){
-      soldVal = sold;
-    }
+  // sold
+  var soldVal = "";
+  if(sold && sold !== "0"){
+    soldVal = sold;
+  }
 
-    // Build product object
-    var product = {
-      title        : title,
-      images       : imgs,
-      sold         : soldVal,
-      price        : price,
-      currency     : currencyCode,
-      shipping     : shippingVal,
-      returns      : returns,
-      coloroptions : coloroptions,
-      sizeoptions  : sizeoptions,
-      description  : desc,
-      paymentMethod: paymentMethod,
-      paypalLink   : productLink,
-      paypalEmbed  : productEmbed,
-      otherPaymentLink : otherPaymentLink,
-      paypalEmail  : paypalEmail
+  // Build product object
+  var product = {
+    title        : title,
+    images       : imgs,
+    sold         : soldVal,
+    price        : price,
+    currency     : currencyCode,
+    shipping     : shippingVal,
+    returns      : returns,
+    coloroptions : coloroptions,
+    sizeoptions  : sizeoptions,
+    description  : desc,
+    paymentMethod: paymentMethod,
+    paypalLink   : productLink,
+    paypalEmbed  : productEmbed,
+    otherPaymentLink : otherPaymentLink,
+    paypalEmail  : paypalEmail
+  };
+
+  products.push(product);
+
+  // Clear form fields
+  document.getElementById('productTitle').value = '';
+  document.getElementById('image1').value = '';
+  document.getElementById('image2').value = '';
+  document.getElementById('image3').value = '';
+  // Instead of clearing the currency field, reapply the remembered selection:
+  if (defaultCurrency) {
+    currencyInput.value = defaultCurrency;
+    currencyInput.setAttribute('data-code', defaultCurrencyCode);
+  } else {
+    currencyInput.value = '';
+    currencyInput.removeAttribute('data-code');
+  }
+  document.getElementById('sold').value = '';
+  document.getElementById('price').value = '';
+  document.getElementById('shipping').value = '';
+  document.getElementById('description').value = '';
+  document.getElementById('colorOptions').value = '';
+  document.getElementById('sizeOptions').value = '';
+  document.getElementById('productLink').value = '';
+  document.getElementById('productEmbed').value = '';
+  document.getElementById('otherPaymentLink').value = '';
+  // Instead of simply clearing the PayPal Email field, retain it if paypalEmail is the selected payment method:
+  if (paymentMethod !== 'paypalEmail') {
+  document.getElementById('paypalEmailInput').value = '';
+} else {
+  document.getElementById('paypalEmailInput').value = defaultPaypalEmail;
+}
+  updateAddProductFormFields();
+
+  imageCount = 1;
+  document.getElementById('additionalImage2').style.display = 'none';
+  document.getElementById('additionalImage3').style.display = 'none';
+  document.getElementById('addImagesBtn').style.display = 'block';
+
+  // Force the preview to refresh—even if it’s showing the PayPal page
+  forceRefreshPreview();
+  renderAddedProductsList();
+}
+
+function renderAddedProductsList() {
+  const container = document.getElementById('addedProductsList');
+  container.innerHTML = '';
+  products.forEach((prod, idx) => {
+    const row = document.createElement('div');
+    row.classList.add('builder-item-row');
+
+    const textSpan = document.createElement('span');
+    textSpan.textContent = prod.title || 'Untitled';
+    row.appendChild(textSpan);
+
+    const delBtn = document.createElement('button');
+    delBtn.classList.add('delete-btn');
+    delBtn.textContent = '×';
+    delBtn.onclick = function() {
+      products.splice(idx, 1);
+      renderAddedProductsList();
+      updatePreview();
     };
+    row.appendChild(delBtn);
+    container.appendChild(row);
+  });
+}
 
-    products.push(product);
-
-    // Clear form fields
-    document.getElementById('productTitle').value='';
-    document.getElementById('image1').value='';
-    document.getElementById('image2').value='';
-    document.getElementById('image3').value='';
-    // Instead of clearing the currency field, reapply the remembered selection:
-    if (defaultCurrency) {
-      currencyInput.value = defaultCurrency;
-      currencyInput.setAttribute('data-code', defaultCurrencyCode);
-    } else {
-      currencyInput.value = '';
-      currencyInput.removeAttribute('data-code');
-    }
-    document.getElementById('sold').value='';
-    document.getElementById('price').value='';
-    document.getElementById('shipping').value='';
-    document.getElementById('description').value='';
-    document.getElementById('colorOptions').value='';
-    document.getElementById('sizeOptions').value='';
-    // Instead of resetting the payment method to 'paypalLink', use the remembered selection:
-    if (defaultPaymentMethod) {
-      document.getElementById('productPaymentMethod').value = defaultPaymentMethod;
-    } else {
-      document.getElementById('productPaymentMethod').value = 'paypalLink';
-    }
-    document.getElementById('productLink').value='';
-    document.getElementById('productEmbed').value='';
-    document.getElementById('otherPaymentLink').value='';
-    document.getElementById('paypalEmailInput').value='';
-    updateAddProductFormFields();
-
-    imageCount = 1;
-    document.getElementById('additionalImage2').style.display='none';
-    document.getElementById('additionalImage3').style.display='none';
-    document.getElementById('addImagesBtn').style.display='block';
-
-    // Force the preview to refresh—even if it’s showing the PayPal page
-    forceRefreshPreview();
-    renderAddedProductsList();
-  }
-
-  function renderAddedProductsList() {
-    const container = document.getElementById('addedProductsList');
-    container.innerHTML = '';
-    products.forEach((prod, idx) => {
-      const row = document.createElement('div');
-      row.classList.add('builder-item-row');
-
-      const textSpan = document.createElement('span');
-      textSpan.textContent = prod.title || 'Untitled';
-      row.appendChild(textSpan);
-
-      const delBtn = document.createElement('button');
-      delBtn.classList.add('delete-btn');
-      delBtn.textContent = '×';
-      delBtn.onclick = function() {
-        products.splice(idx, 1);
-        renderAddedProductsList();
-        updatePreview();
-      };
-      row.appendChild(delBtn);
-      container.appendChild(row);
-    });
-  }
 
   function addReview(){
     if(reviews.length >= 3){
