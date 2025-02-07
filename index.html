@@ -377,7 +377,7 @@
   padding: 12px 16px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 17px;
   color: #333;
   background-color: #fff;
   background-image: none;
@@ -400,6 +400,12 @@
   font-size: 12px;
   color: #777;
 }
+    
+    #productPaymentMethod optgroup {
+  font-size: 12px;
+  color: #888;
+}
+
 
     #howtocreatepaypalbutton {
       padding: 10px 20px;
@@ -774,11 +780,19 @@
           </div>
           <div class="payment-method-select">
             <select id="productPaymentMethod" required>
-  <option value="paypalEmail">PayPal Email ( Note: With this option, you lose inventory control, sales will keep coming even if you’re sold out.)</option>
-  <option value="paypalEmbed">PayPal Button Embed Code ( Note: You control your inventory by setting stock limits as you create your button )</option>
-  <option value="paypalLink">PayPal Button Link ( Note: You control your inventory by setting stock limits as you create your button )</option>
-  <option value="other">Other Payment Button link or Checkout Page link ( Example: Stripe, Sumup, Square... )</option>
+  <option value="paypalEmail">PayPal Email</option>
+  <optgroup label="With this option, you lose inventory control, sales will keep coming even if you’re sold out"></optgroup>
+  
+  <option value="paypalEmbed">PayPal Button Embed Code</option>
+  <optgroup label="You control your inventory by setting stock limits as you create your button"></optgroup>
+  
+  <option value="paypalLink">PayPal Button Link</option>
+  <optgroup label="You control your inventory by setting stock limits as you create your button"></optgroup>
+  
+  <option value="other">Other Payment Button link or Checkout Page link</option>
+  <optgroup label="Example: Stripe, Sumup, Square..."></optgroup>
 </select>
+
           </div>
         </label>
         <div id="productLinkField">
