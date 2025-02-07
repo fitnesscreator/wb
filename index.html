@@ -364,26 +364,51 @@
       margin-left: 4px;
     }
     .payment-method-select {
-      width: 100%;
-    }
-    .payment-method-select select {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      font-size: 14px;
-      background: #fff;
-      color: #333;
-      cursor: pointer;
-    }
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.payment-method-select select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #333;
+  background-color: #fff;
+  background-image: none;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.payment-method-select select:focus {
+  outline: none;
+  border-color: #2196f3;
+  box-shadow: 0 0 8px rgba(33, 150, 243, 0.2);
+}
+
+/* Custom arrow */
+.payment-method-select::after {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 12px;
+  color: #777;
+}
+
     #howtocreatepaypalbutton {
       padding: 10px 20px;
-      background: linear-gradient(to right, #6561e0, #a862ea);
-      color: #fff;
+      background: linear-gradient(to right, #a6a6a6, #c2d7db);
+      color: #ffffff;
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      font-weight: bold;
+      font-weight: normal;
       transition: background 0.3s;
     }
     #howtocreatepaypalbutton:hover {
@@ -620,7 +645,40 @@
   border: 2px solid #2196f3;
   background: #eef6ff;
 }
+    
+    #refreshBtn {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    outline: none;
+    position: relative;
+    overflow: hidden;
+    width: 100px;
+    height: 40px;
+    margin-left: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+      top: -9px;
+}
 
+/* Add a refresh icon inside */
+#refreshBtn::after {
+    content: "↻"; /* Unicode refresh symbol */
+    font-size: 18px;
+    margin-left: 5px;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Rotate the refresh icon when clicked */
+#refreshBtn:active::after {
+    transform: rotate(360deg);
 
     
   </style>
@@ -716,11 +774,11 @@
           </div>
           <div class="payment-method-select">
             <select id="productPaymentMethod" required>
-              <option value="paypalLink">PayPal Button Link</option>
-              <option value="paypalEmbed">PayPal Button Embed Code</option>
-              <option value="other">Other Payment Button or Checkout Page</option>
-              <option value="paypalEmail">PayPal Email (Add to Cart)</option>
-            </select>
+  <option value="paypalEmail">PayPal Email ( Note: With this option, you lose inventory control, sales will keep coming even if you’re sold out.)</option>
+  <option value="paypalEmbed">PayPal Button Embed Code ( Note: You control your inventory by setting stock limits as you create your button )</option>
+  <option value="paypalLink">PayPal Button Link ( Note: You control your inventory by setting stock limits as you create your button )</option>
+  <option value="other">Other Payment Button link or Checkout Page link ( Example: Stripe, Sumup, Square... )</option>
+</select>
           </div>
         </label>
         <div id="productLinkField">
@@ -740,12 +798,12 @@
         </div>
         <div id="paypalEmailField" style="display: none;">
   <label>PayPal Email
-    <input id="paypalEmailInput" type="email" placeholder="your@email.com" 
+    <input id="paypalEmailInput" type="email" placeholder="yourpaypal@email.com" 
            spellcheck="false" maxlength="200">
   </label>
 </div>
         <button type="button" id="howtocreatepaypalbutton" onclick="window.open('https://www.youtube.com/watch?v=YOUR_VIDEO_ID', '_blank');">
-          How to create Paypal button
+          How to create Paypal button ?
         </button>
         <button type="button" onclick="addProduct()">Add Product</button>
         <div id="addedProductsList"></div>
@@ -790,7 +848,7 @@
         <label>Custom Contact Intro
           <textarea id="contactIntro" rows="3" placeholder="We’d love to hear from you! Reach out..." required spellcheck="false" maxlength="250"></textarea>
         </label>
-        <label><img src="https://i.ibb.co/L6zwnKk/Bella-50.png" alt="Instagram">Instagram Link
+        <label><img src="https://i.ibb.co/N2yTY0Cj/Bella-73.png" alt="Instagram">Instagram Link
           <input id="contactInstagram" type="text" placeholder="https://instagram.com/..." required spellcheck="false" maxlength="300">
         </label>
         <label><img src="https://i.ibb.co/2vSmtt0/Bella-49.png" alt="TikTok">TikTok Link
@@ -841,11 +899,13 @@
       </section>
     </div>
     <!-- Preview section on the right -->
-    <div class="preview-section">
-      <h2>Live Preview</h2>
-      <iframe id="previewFrame"></iframe>
-    </div>
-  </div>
+<div class="preview-section">
+  <h2 id="livePreviewTitle">Live Preview 
+    <button id="refreshBtn">Refresh</button>
+  </h2>
+  <iframe id="previewFrame"></iframe>
+</div>
+</div>
   
   <!-- Contact Form Modal -->
   <div id="contactFormModal" class="modal">
@@ -893,6 +953,11 @@
   </div>
   
   <script>
+  // Global variables to remember selections
+  var defaultCurrency = '';
+  var defaultCurrencyCode = '';  // to store the currency’s data-code
+  var defaultPaymentMethod = '';
+
   // ============== CURRENCY DATA ==============
   const currencyData = [
     { code: "AED", name: "United Arab Emirates Dirham", symbol: "د.إ", flag: "🇦🇪" },
@@ -958,7 +1023,6 @@
     // Payment method event
     document.getElementById('productPaymentMethod').onchange = function(){
       var method = this.value;
-
       document.getElementById('productLinkField').style.display   = (method === 'paypalLink')  ? 'block' : 'none';
       document.getElementById('productEmbedField').style.display  = (method === 'paypalEmbed') ? 'block' : 'none';
       document.getElementById('otherPaymentField').style.display  = (method === 'other')       ? 'block' : 'none';
@@ -974,7 +1038,6 @@
         colorInput.style.display = 'block';
         sizeInput.style.display  = 'block';
       }
-
       updatePreview();
     };
 
@@ -986,6 +1049,21 @@
     updateAddProductFormFields();
     setupContactFormModal();
     updateManagementLists();
+
+    // Remember selections when they change
+    document.getElementById('productCurrency').addEventListener('change', function() {
+      defaultCurrency = this.value;
+      defaultCurrencyCode = this.getAttribute('data-code') || '';
+    });
+    document.getElementById('productPaymentMethod').addEventListener('change', function() {
+      defaultPaymentMethod = this.value;
+    });
+
+    // Attach event listener to the existing refresh button
+    var refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', forceRefreshPreview);
+    }
   };
 
   // ============== CURRENCY DROPDOWN INIT ==============
@@ -1013,10 +1091,10 @@
     });
 
     // Default to EUR
-    const defaultCurrency = currencyData.find(c => c.code === "EUR");
-    if (defaultCurrency) {
-      currencyInput.value = `${defaultCurrency.code} - ${defaultCurrency.name}`;
-      currencyInput.setAttribute('data-code', defaultCurrency.code);
+    const defaultCurr = currencyData.find(c => c.code === "EUR");
+    if (defaultCurr) {
+      currencyInput.value = `${defaultCurr.code} - ${defaultCurr.name}`;
+      currencyInput.setAttribute('data-code', defaultCurr.code);
     }
 
     currencyInput.addEventListener('click', () => {
@@ -1062,6 +1140,13 @@
       document.getElementById('additionalImage3').style.display = 'block';
       document.getElementById('addImagesBtn').style.display = 'none';
     }
+  }
+
+  // NEW: Function to force refresh the preview iframe
+  function forceRefreshPreview() {
+    var iframe = document.getElementById('previewFrame');
+    iframe.src = 'about:blank';
+    setTimeout(updatePreview, 100);
   }
 
   function addProduct(){
@@ -1141,39 +1226,44 @@
 
     products.push(product);
 
-    // Clear form
+    // Clear form fields
     document.getElementById('productTitle').value='';
     document.getElementById('image1').value='';
     document.getElementById('image2').value='';
     document.getElementById('image3').value='';
-    currencyInput.value='';
-    currencyInput.removeAttribute('data-code');
+    // Instead of clearing the currency field, reapply the remembered selection:
+    if (defaultCurrency) {
+      currencyInput.value = defaultCurrency;
+      currencyInput.setAttribute('data-code', defaultCurrencyCode);
+    } else {
+      currencyInput.value = '';
+      currencyInput.removeAttribute('data-code');
+    }
     document.getElementById('sold').value='';
     document.getElementById('price').value='';
     document.getElementById('shipping').value='';
     document.getElementById('description').value='';
     document.getElementById('colorOptions').value='';
     document.getElementById('sizeOptions').value='';
-    document.getElementById('productPaymentMethod').value='paypalLink';
+    // Instead of resetting the payment method to 'paypalLink', use the remembered selection:
+    if (defaultPaymentMethod) {
+      document.getElementById('productPaymentMethod').value = defaultPaymentMethod;
+    } else {
+      document.getElementById('productPaymentMethod').value = 'paypalLink';
+    }
     document.getElementById('productLink').value='';
     document.getElementById('productEmbed').value='';
     document.getElementById('otherPaymentLink').value='';
     document.getElementById('paypalEmailInput').value='';
     updateAddProductFormFields();
 
-    imageCount=1;
+    imageCount = 1;
     document.getElementById('additionalImage2').style.display='none';
     document.getElementById('additionalImage3').style.display='none';
     document.getElementById('addImagesBtn').style.display='block';
 
-    // revert currency to default (EUR)
-    const defaultCurrency = currencyData.find(c => c.code === "EUR");
-    if(defaultCurrency){
-      currencyInput.value = `${defaultCurrency.code} - ${defaultCurrency.name}`;
-      currencyInput.setAttribute('data-code', defaultCurrency.code);
-    }
-
-    updatePreview();
+    // Force the preview to refresh—even if it’s showing the PayPal page
+    forceRefreshPreview();
     renderAddedProductsList();
   }
 
@@ -1217,7 +1307,8 @@
     document.getElementById('reviewerName').value='';
     document.getElementById('reviewText').value='';
     document.getElementById('reviewStars').value='3';
-    updatePreview();
+    // Force the preview to refresh even if the PayPal page is active
+    forceRefreshPreview();
     renderAddedReviewsList();
   }
 
@@ -1315,98 +1406,104 @@
   }
 
   function downloadSite(){
-    if(!finalHTML.trim()){
-      finalHTML = buildFinalHTML();
-    }
-    var link    = document.createElement('a');
-    var dataUri = "data:text/html;charset=utf-8," + encodeURIComponent(finalHTML);
-    link.href   = dataUri;
-    link.download = "index.html";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  if(!finalHTML.trim()){
+    finalHTML = buildFinalHTML();
   }
+  
+  // Create a new instance of JSZip
+  var zip = new JSZip();
+  
+  // Add index.html directly to the root of the zip
+  zip.file("index.html", finalHTML);
+  
+  // Generate the zip file as a blob and trigger the download
+  zip.generateAsync({type: "blob"}).then(function(content) {
+    // Use FileSaver.js to prompt the user to save the file
+    saveAs(content, "My Website.zip");
+  });
+}
+
 
   function buildGlobalCSS(){
-    var s = "<style>html{scroll-behavior:smooth;}*{box-sizing:border-box;transition:all 0.2s ease;}\
-    html,body{margin:0;padding:0;font-family:'Roboto',sans-serif;background:#ffffff;color:#333;line-height:1.6;}\
-    a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;height:auto;display:block}\
-    .top-header{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);padding:15px 10px;text-align:center}\
-    .logo-wrapper{display:inline-block}.logo-wrapper img{max-height:50px;width:auto;}\
-    .nav-links{margin-top:10px}.nav-links a{display:inline-block;margin:0 10px;padding:8px 12px;color:#555;font-weight:500;border-radius:4px;transition:background 0.2s,color 0.2s}\
-    .hero-banner{position:relative;min-height:70vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}\
-    .hero-overlay{position:relative;z-index:1;text-align:center;color:#fff;padding:15px}\
-    .hero-title{font-size:2.5rem;margin:0 0 15px;text-shadow:1px 1px 3px rgba(0,0,0,0.3)}\
-    .hero-cta{display:inline-block;padding:12px 25px;background:#fff;color:#333;font-weight:600;border-radius:4px;transition:background 0.3s}\
-    .hero-cta:hover{background:#2196f3;color:#fff}\
-    .products-grid{display:grid;grid-gap:20px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));padding:30px 10px;max-width:1300px;margin:0 auto}\
-    .product-item{background:#fff;border-radius:8px;overflow:hidden;border:1px solid #eee;cursor:pointer;text-align:left;transition:transform 0.2s,box-shadow 0.2s}\
-    .product-item:hover{transform:translateY(-3px);box-shadow:0 3px 6px rgba(0,0,0,0.1)}\
-    .product-img{width:100%;padding-bottom:100%;background-size:cover;background-position:center}\
-    .product-content{padding:15px}\
-    .product-content h3{margin:0 0 8px;font-size:1.2rem;font-weight:600;color:#222}\
-    .product-content h2{margin:0 0 10px;font-size:1rem;font-weight:500;color:#28a745}\
-    .buy-now{display:block;width:100%;padding:10px 0;background:#007bff;color:#fff;text-align:center;border-radius:4px;font-weight:600;transition:background 0.3s}\
-    .buy-now:hover{background:#0056b3}\
-    .reviews-section{background:#fff;padding:40px 20px;text-align:center}\
-    .reviews-section h2{margin-bottom:30px;font-size:1.8rem;color:#555}\
-    .review-container{display:flex;justify-content:center;flex-wrap:wrap;gap:20px}\
-    .review-item{background:#f9f9f9;border-radius:8px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.05);max-width:300px;transition:transform 0.3s ease,box-shadow 0.3s ease;text-align:left}\
-    .review-item:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(0,0,0,0.1)}\
-    .review-item h4{margin:0 0 10px;font-weight:600;font-size:1.1rem}\
-    .review-stars{color:#ffc107;font-size:1.2rem;margin-bottom:10px}\
-    .review-item p{margin:5px 0 0;color:#666}\
-    .about-section{background:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;padding:40px 20px;max-width:100%px;margin:0 auto}\
-    .about-left,.about-right{margin-left:20px;flex:1 1 300px;padding:15px}\
-    .about-left h2{margin-top:0;color:#444;font-size:2rem}\
-    .about-left p{color:#555;line-height:1.8;font-size:1rem}\
-    .about-right img{border-radius:8px;max-width:70%;height:auto;box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:transform 0.3s}\
-    .about-right img:hover{transform:scale(1.02)}\
-    .contact-section{border:0px solid #ddd;background:#ffffff;color:#333;padding:40px 20px;max-width:1200px;margin:40px auto;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center}\
-    .contact-left{flex:1 1 300px;text-align:left}\
-    .contact-logo-left img{max-height:50px;width:auto;margin-bottom:15px}\
-    .contact-left p{font-size:0.95rem;color:#555;margin-bottom:15px;}\
-    .contact-social-icons{display:flex;flex-wrap:wrap;gap:15px;margin-bottom:15px}\
-    .contact-social-icons img{width:35px;height:35px;cursor:pointer;transition:transform 0.3s;border-radius:4px}\
-    .contact-social-icons img:hover{transform:scale(1.05)}\
-    .contact-email-line{margin-top:10px;color:#333;font-size:0.95rem;margin-bottom:8px}\
-    .email-btn{display:inline-block;padding:10px 20px;background:#2196f3;color:#fff;font-weight:600;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px;transition:background 0.3s;text-align:center}\
-    .email-btn:hover{background:#1976d2}\
-    .contact-right{flex:1 1 300px;}\
-    .modal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.6);justify-content:center;align-items:center;padding:20px}\
-    .modal-content{background:#fff;margin:auto;width:90%;max-width:1100px;border-radius:8px;position:relative;padding:20px}\
-    .modal-close{position:absolute;top:15px;right:20px;font-size:1.5rem;font-weight:bold;cursor:pointer;line-height:1}\
-    .modal-body{display:flex;flex-wrap:wrap;gap:20px}\
-    .modal-left{flex:1 1 50%;display:flex;flex-direction:column}\
-    .modal-main-image{width:85%;aspect-ratio:4/5;position:relative;overflow:hidden;border-radius:8px}\
-    .modal-main-image img{width:100%;height:100%;object-fit:cover}\
-    .arrow{position:absolute;top:50%;transform:translateY(-50%);background-color:rgba(255,255,255,0.8);color:#333;padding:0.3rem 0.6rem;border-radius:50%;cursor:pointer;user-select:none;font-weight:bold;box-shadow:0 2px 4px rgba(0,0,0,0.2)}\
-    .arrow-left{left:5px}.arrow-right{right:5px}.arrow:hover{background-color:rgba(255,255,255,1)}\
-    .modal-thumbnails{display:flex;gap:10px;margin-top:10px}\
-    .modal-thumbnails img{width:80px;height:80px;object-fit:cover;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);border:2px solid transparent;cursor:pointer}\
-    .modal-right{flex:1 1 45%;display:flex;flex-direction:column}\
-    .modal-product-price{font-size:1.6rem;color:#109c15;font-weight:700;margin-bottom:15px}\
-    .modal-product-sold{text-align:left;font-size:1rem;color:#333;margin-bottom:15px}\
-    .modal-product-title{font-size:1.8rem;margin:0 0 10px;font-weight:700;line-height:1.2}\
-    .modal-description{margin-bottom:20px;color:#555}\
-    .color-options,.size-options{margin-bottom:15px}\
-    .color-options label,.size-options label{font-weight:600;margin-right:10px}\
-    .color-options span,.size-options span{display:inline-block;margin-right:5px;background:#f0f0f0;padding:5px 10px;border-radius:4px;font-size:0.9rem;border:1px solid transparent;cursor:pointer}\
-    .order-details-panel{border:1px solid #eee;padding:15px;border-radius:8px;background:#fafafa}\
-    .order-details-panel h3{margin-top:0;font-size:1.2rem;margin-bottom:15px}\
-    .order-item{display:flex;justify-content:space-between;margin-bottom:10px;font-size:0.95rem}\
-    .order-item label{color:#555;font-weight:500;margin-right:5px}\
-    .order-item .value{font-weight:600}\
-    .shipping-info{background:#fff7de;border-left:4px solid #ffc107;padding:10px;font-size:0.9rem;margin-top:10px}\
-    .subtotal{margin-top:10px;font-size:1rem;text-align:right;font-weight:bold}\
-    .modal-actions{display:flex;gap:10px;margin-top:20px}\
-    .modal-actions button{flex:1;background:#2196f3;color:#fff;border:none;padding:12px;border-radius:4px;cursor:pointer;font-weight:600;font-size:1rem;height:50px;transition:background 0.3s}\
-    .modal-actions button:hover{background:#1976d2}\
-    .paypal-embed-option{margin-bottom:15px;}\
-    .paypal-embed-option label{font-weight:600;margin-right:10px;}\
-    .paypal-embed-option span{cursor:pointer;margin-right:5px;background:#f0f0f0;padding:5px 10px;border-radius:4px;font-size:0.9rem;border:1px solid transparent;}\
-    .paypal-embed-option span.selected{border:2px solid #2196f3;background:#eef6ff;}\
-    @media(max-width:768px){.modal-content{width:100%;max-width:100%;padding:15px;}.modal-body{flex-direction:column;}.modal-left{width:100%;}.modal-right{width:100%;}}\
+    var s = "<style>html{scroll-behavior:smooth;}*{box-sizing:border-box;transition:all 0.2s ease;}\n\
+    html,body{margin:0;padding:0;font-family:'Roboto',sans-serif;background:#ffffff;color:#333;line-height:1.6;}\n\
+    a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;height:auto;display:block}\n\
+    .top-header{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);padding:15px 10px;text-align:center}\n\
+    .logo-wrapper{display:inline-block}.logo-wrapper img{max-height:50px;width:auto;}\n\
+    .nav-links{margin-top:10px}.nav-links a{display:inline-block;margin:0 10px;padding:8px 12px;color:#555;font-weight:500;border-radius:4px;transition:background 0.2s,color 0.2s}\n\
+    .hero-banner{position:relative;min-height:70vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}\n\
+    .hero-overlay{position:relative;z-index:1;text-align:center;color:#fff;padding:15px}\n\
+    .hero-title{font-size:2.5rem;margin:0 0 15px;text-shadow:1px 1px 3px rgba(0,0,0,0.3)}\n\
+    .hero-cta{display:inline-block;padding:12px 25px;background:#fff;color:#333;font-weight:600;border-radius:4px;transition:background 0.3s}\n\
+    .hero-cta:hover{background:#2196f3;color:#fff}\n\
+    .products-grid{display:grid;grid-gap:20px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));padding:30px 10px;max-width:1300px;margin:0 auto}\n\
+    .product-item{background:#fff;border-radius:8px;overflow:hidden;border:1px solid #eee;cursor:pointer;text-align:left;transition:transform 0.2s,box-shadow 0.2s}\n\
+    .product-item:hover{transform:translateY(-3px);box-shadow:0 3px 6px rgba(0,0,0,0.1)}\n\
+    .product-img{width:100%;padding-bottom:100%;background-size:cover;background-position:center}\n\
+    .product-content{padding:15px}\n\
+    .product-content h3{margin:0 0 8px;font-size:1.2rem;font-weight:600;color:#222}\n\
+    .product-content h2{margin:0 0 10px;font-size:1rem;font-weight:500;color:#28a745}\n\
+    .buy-now{display:block;width:100%;padding:10px 0;background:#007bff;color:#fff;text-align:center;border-radius:4px;font-weight:600;transition:background 0.3s}\n\
+    .buy-now:hover{background:#0056b3}\n\
+    .reviews-section{background:#fff;padding:40px 20px;text-align:center}\n\
+    .reviews-section h2{margin-bottom:30px;font-size:1.8rem;color:#555}\n\
+    .review-container{display:flex;justify-content:center;flex-wrap:wrap;gap:20px}\n\
+    .review-item{background:#f9f9f9;border-radius:8px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.05);max-width:300px;transition:transform 0.3s ease,box-shadow 0.3s ease;text-align:left}\n\
+    .review-item:hover{transform:translateY(-3px);box-shadow:0 4px 8px rgba(0,0,0,0.1)}\n\
+    .review-item h4{margin:0 0 10px;font-weight:600;font-size:1.1rem}\n\
+    .review-stars{color:#ffc107;font-size:1.2rem;margin-bottom:10px}\n\
+    .review-item p{margin:5px 0 0;color:#666}\n\
+    .about-section{background:#fff;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;padding:40px 20px;max-width:100%px;margin:0 auto}\n\
+    .about-left,.about-right{margin-left:20px;flex:1 1 300px;padding:15px}\n\
+    .about-left h2{margin-top:0;color:#444;font-size:2rem}\n\
+    .about-left p{color:#555;line-height:1.8;font-size:1rem}\n\
+    .about-right img{border-radius:8px;max-width:70%;height:auto;box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:transform 0.3s}\n\
+    .about-right img:hover{transform:scale(1.02)}\n\
+    .contact-section{border:0px solid #ddd;background:#ffffff;color:#333;padding:40px 20px;max-width:1200px;margin:40px auto;display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center}\n\
+    .contact-left{flex:1 1 300px;text-align:left}\n\
+    .contact-logo-left img{max-height:50px;width:auto;margin-bottom:15px}\n\
+    .contact-left p{font-size:0.95rem;color:#555;margin-bottom:15px;}\n\
+    .contact-social-icons{display:flex;flex-wrap:wrap;gap:15px;margin-bottom:15px}\n\
+    .contact-social-icons img{width:35px;height:35px;cursor:pointer;transition:transform 0.3s;border-radius:4px}\n\
+    .contact-social-icons img:hover{transform:scale(1.05)}\n\
+    .contact-email-line{margin-top:10px;color:#333;font-size:0.95rem;margin-bottom:8px}\n\
+    .email-btn{display:inline-block;padding:10px 20px;background:#2196f3;color:#fff;font-weight:600;border-radius:4px;text-transform:uppercase;letter-spacing:0.5px;transition:background 0.3s;text-align:center}\n\
+    .email-btn:hover{background:#1976d2}\n\
+    .contact-right{flex:1 1 300px;}\n\
+    .modal{display:none;position:fixed;z-index:9999;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,0.6);justify-content:center;align-items:center;padding:20px}\n\
+    .modal-content{background:#fff;margin:auto;width:90%;max-width:1100px;border-radius:8px;position:relative;padding:20px}\n\
+    .modal-close{position:absolute;top:15px;right:20px;font-size:1.5rem;font-weight:bold;cursor:pointer;line-height:1}\n\
+    .modal-body{display:flex;flex-wrap:wrap;gap:20px}\n\
+    .modal-left{flex:1 1 50%;display:flex;flex-direction:column}\n\
+    .modal-main-image{width:85%;aspect-ratio:4/5;position:relative;overflow:hidden;border-radius:8px}\n\
+    .modal-main-image img{width:100%;height:100%;object-fit:cover}\n\
+    .arrow{position:absolute;top:50%;transform:translateY(-50%);background-color:rgba(255,255,255,0.8);color:#333;padding:0.3rem 0.6rem;border-radius:50%;cursor:pointer;user-select:none;font-weight:bold;box-shadow:0 2px 4px rgba(0,0,0,0.2)}\n\
+    .arrow-left{left:5px}.arrow-right{right:5px}.arrow:hover{background-color:rgba(255,255,255,1)}\n\
+    .modal-thumbnails{display:flex;gap:10px;margin-top:10px}\n\
+    .modal-thumbnails img{width:80px;height:80px;object-fit:cover;border-radius:4px;box-shadow:0 2px 4px rgba(0,0,0,0.1);border:2px solid transparent;cursor:pointer}\n\
+    .modal-right{flex:1 1 45%;display:flex;flex-direction:column}\n\
+    .modal-product-price{font-size:1.6rem;color:#109c15;font-weight:700;margin-bottom:15px}\n\
+    .modal-product-sold{text-align:left;font-size:1rem;color:#333;margin-bottom:15px}\n\
+    .modal-product-title{font-size:1.8rem;margin:0 0 10px;font-weight:700;line-height:1.2}\n\
+    .modal-description{margin-bottom:20px;color:#555}\n\
+    .color-options,.size-options{margin-bottom:15px}\n\
+    .color-options label,.size-options label{font-weight:600;margin-right:10px}\n\
+    .color-options span,.size-options span{display:inline-block;margin-right:5px;background:#f0f0f0;padding:5px 10px;border-radius:4px;font-size:0.9rem;border:1px solid transparent;cursor:pointer}\n\
+    .order-details-panel{border:1px solid #eee;padding:15px;border-radius:8px;background:#fafafa}\n\
+    .order-details-panel h3{margin-top:0;font-size:1.2rem;margin-bottom:15px}\n\
+    .order-item{display:flex;justify-content:space-between;margin-bottom:10px;font-size:0.95rem}\n\
+    .order-item label{color:#555;font-weight:500;margin-right:5px}\n\
+    .order-item .value{font-weight:600}\n\
+    .shipping-info{background:#fff7de;border-left:4px solid #ffc107;padding:10px;font-size:0.9rem;margin-top:10px}\n\
+    .subtotal{margin-top:10px;font-size:1rem;text-align:right;font-weight:bold}\n\
+    .modal-actions{display:flex;gap:10px;margin-top:20px}\n\
+    .modal-actions button{flex:1;background:#2196f3;color:#fff;border:none;padding:12px;border-radius:4px;cursor:pointer;font-weight:600;font-size:1rem;height:50px;transition:background 0.3s}\n\
+    .modal-actions button:hover{background:#1976d2}\n\
+    .paypal-embed-option{margin-bottom:15px;}\n\
+    .paypal-embed-option label{font-weight:600;margin-right:10px;}\n\
+    .paypal-embed-option span{cursor:pointer;margin-right:5px;background:#f0f0f0;padding:5px 10px;border-radius:4px;font-size:0.9rem;border:1px solid transparent;}\n\
+    .paypal-embed-option span.selected{border:2px solid #2196f3;background:#eef6ff;}\n\
+    @media(max-width:768px){.modal-content{width:100%;max-width:100%;padding:15px;}.modal-body{flex-direction:column;}.modal-left{width:100%;}.modal-right{width:100%;}}\n\
     </style>";
     return s;
   }
@@ -1540,7 +1637,7 @@
       c += "<p>"+escapeHTML(contactData.intro)+"</p>";
     }
     let iconsHTML = "";
-    if(contactData.instagram) iconsHTML+="<a href='"+escapeHTML(contactData.instagram)+"' target='_blank'><img src='https://i.ibb.co/L6zwnKk/Bella-50.png' alt='Instagram'></a>";
+    if(contactData.instagram) iconsHTML+="<a href='"+escapeHTML(contactData.instagram)+"' target='_blank'><img src='https://i.ibb.co/N2yTY0Cj/Bella-73.png' alt='Instagram'></a>";
     if(contactData.tiktok)    iconsHTML+="<a href='"+escapeHTML(contactData.tiktok)+"' target='_blank'><img src='https://i.ibb.co/2vSmtt0/Bella-49.png' alt='TikTok'></a>";
     if(contactData.facebook)  iconsHTML+="<a href='"+escapeHTML(contactData.facebook)+"' target='_blank'><img src='https://i.ibb.co/gmDjkH3/Bella-48.png' alt='Facebook'></a>";
     if(contactData.xLink)     iconsHTML+="<a href='"+escapeHTML(contactData.xLink)+"' target='_blank'><img src='https://i.ibb.co/fqp0KrB/Bella-63.png' alt='X'></a>";
@@ -1564,34 +1661,34 @@
   }
 
   // ============== PRODUCT MODAL SCRIPT ==============
-function buildProductModalScript(){
-  // We'll build a string for an inline <script> in the final HTML.
-  let m = "";
-  m += "<script>(function(){\n";
-  m += "  function getSymbol(cc){\n";
-  m += "    const known = {USD:'$', EUR:'€', GBP:'£', JPY:'¥', AUD:'A$', CAD:'C$', CHF:'CHF', CNY:'¥', HKD:'HK$', NZD:'NZ$'};\n";
-  m += "    return known[cc.toUpperCase()] || cc + ' ';}\n\n";
-  
-  // Function to check selections (for embed code only) if needed
-  m += "  function checkEmbedSelections() {\n";
-  m += "    var embedBlocks = paypalEmbedDiv.getElementsByClassName('paypal-embed-option');\n";
-  m += "    for(var i = 0; i < embedBlocks.length; i++){\n";
-  m += "      if(!embedBlocks[i].querySelector('span.selected')){\n";
-  m += "         alert('Please select an option for ' + embedBlocks[i].querySelector('label').textContent);\n";
-  m += "         return false;\n";
-  m += "      }\n";
-  m += "    }\n";
-  m += "    return true;\n";
-  m += "  }\n\n";
-  
-  // Create the modal container
-  m += "  var modal = document.createElement('div');\n";
-  m += "  modal.id = 'productModal';\n";
-  m += "  modal.className = 'modal';\n";
-  
-  // The modal's inner HTML (using 'Color:' and 'Size:' labels)
-  // Updated quantity wrapper uses buttons and a span for display
-  m += "  modal.innerHTML = `\\\n\
+  function buildProductModalScript(){
+    // We'll build a string for an inline <script> in the final HTML.
+    let m = "";
+    m += "<script>(function(){\n";
+    m += "  function getSymbol(cc){\n";
+    m += "    const known = {USD:'$', EUR:'€', GBP:'£', JPY:'¥', AUD:'A$', CAD:'C$', CHF:'CHF', CNY:'¥', HKD:'HK$', NZD:'NZ$'};\n";
+    m += "    return known[cc.toUpperCase()] || cc + ' ';}\n\n";
+    
+    // Function to check selections (for embed code only) if needed
+    m += "  function checkEmbedSelections() {\n";
+    m += "    var embedBlocks = paypalEmbedDiv.getElementsByClassName('paypal-embed-option');\n";
+    m += "    for(var i = 0; i < embedBlocks.length; i++){\n";
+    m += "      if(!embedBlocks[i].querySelector('span.selected')){\n";
+    m += "         alert('Please select an option for ' + embedBlocks[i].querySelector('label').textContent);\n";
+    m += "         return false;\n";
+    m += "      }\n";
+    m += "    }\n";
+    m += "    return true;\n";
+    m += "  }\n\n";
+    
+    // Create the modal container
+    m += "  var modal = document.createElement('div');\n";
+    m += "  modal.id = 'productModal';\n";
+    m += "  modal.className = 'modal';\n";
+    
+    // The modal's inner HTML (using 'Color:' and 'Size:' labels)
+    // Updated quantity wrapper uses buttons and a span for display
+    m += "  modal.innerHTML = `\\\n\
 <div class='modal-content'>\\\n\
   <span class='modal-close'>&times;</span>\\\n\
   <div class='modal-body'>\\\n\
@@ -1641,362 +1738,352 @@ function buildProductModalScript(){
     </div>\\\n\
   </div>\\\n\
 </div>`;\n";
-  
-  m += "  document.body.appendChild(modal);\n\n";
-  // Append CSS style element for selected options
-  m += "  var styleEl = document.createElement('style');\n";
-  m += "  styleEl.innerHTML = '.color-options span.selected, .size-options span.selected, .paypal-embed-option span.selected { border: 2px solid #2196f3; background: #eef6ff; }';\n";
-  m += "  document.head.appendChild(styleEl);\n\n";
-  
-  m += "  var productModal = document.getElementById('productModal');\n";
-  m += "  var closeBtn = productModal.querySelector('.modal-close');\n";
-  m += "  var mainImg = productModal.querySelector('#modalMainImg');\n";
-  m += "  var modalTitle = productModal.querySelector('#modalTitle');\n";
-  m += "  var modalPrice = productModal.querySelector('#modalPrice');\n";
-  m += "  var modalSold = productModal.querySelector('#modalSold');\n";
-  m += "  var modalDesc = productModal.querySelector('#modalDescription');\n";
-  m += "  var paypalEmbedDiv = productModal.querySelector('#paypalEmbedFields');\n";
-  m += "  var itemPrice = productModal.querySelector('#itemPrice');\n";
-  m += "  var shippingCost = productModal.querySelector('#shippingCost');\n";
-  m += "  var returnPolicy = productModal.querySelector('#returnPolicy');\n";
-  m += "  var subtotalValue = productModal.querySelector('#subtotalValue');\n";
-  m += "  var arrowLeft = productModal.querySelector('#arrowLeft');\n";
-  m += "  var arrowRight = productModal.querySelector('#arrowRight');\n";
-  m += "  var thumbsContainer = productModal.querySelector('#modalThumbnails');\n";
-  m += "  var buyNowBtn = productModal.querySelector('.buy-now-btn');\n";
-  m += "  var quantityWrapper = productModal.querySelector('#quantityWrapper');\n";
-  m += "  var decreaseQty = productModal.querySelector('#decreaseQty');\n";
-  m += "  var increaseQty = productModal.querySelector('#increaseQty');\n";
-  m += "  var modalQuantityDisplay = productModal.querySelector('#modalQuantityDisplay');\n\n";
-  
-  m += "  var currentProduct = null;\n";
-  m += "  var allImages = [];\n";
-  m += "  var currentIndex = 0;\n";
-  m += "  var basePrice = 0; var shippingFee = 0; var returnsText = 'Accepted';\n";
-  m += "  var currentQty = 1;\n\n";
-  
-  // Order detail update function with quantity handling for PayPal Email
-  m += "  function updateOrderDetails(){\n";
-  m += "    var qty = (currentProduct && currentProduct.paymentMethod === 'paypalEmail') ? currentQty : 1;\n";
-  m += "    var totalPrice = (basePrice * qty) + shippingFee;\n";
-  m += "    itemPrice.textContent = getSymbol(currentProduct.currency || '$') + (basePrice * qty).toFixed(2);\n";
-  m += "    shippingCost.textContent = (shippingFee === 0) ? 'FREE' : getSymbol(currentProduct.currency || '$') + shippingFee.toFixed(2);\n";
-  m += "    returnPolicy.textContent = returnsText;\n";
-  m += "    subtotalValue.textContent = getSymbol(currentProduct.currency || '$') + totalPrice.toFixed(2);\n";
-  m += "  }\n\n";
-  
-  // Attach event listeners for quantity control buttons
-  m += "  decreaseQty.addEventListener('click', function(){\n";
-  m += "    if(currentQty > 1){\n";
-  m += "      currentQty--;\n";
-  m += "      modalQuantityDisplay.textContent = currentQty;\n";
-  m += "      updateOrderDetails();\n";
-  m += "    }\n";
-  m += "  });\n";
-  m += "  increaseQty.addEventListener('click', function(){\n";
-  m += "    if(currentQty < 99){\n";
-  m += "      currentQty++;\n";
-  m += "      modalQuantityDisplay.textContent = currentQty;\n";
-  m += "      updateOrderDetails();\n";
-  m += "    }\n";
-  m += "  });\n\n";
-  
-  // Function to show image in modal
-  m += "  function showImageAt(idx){\n";
-  m += "    if(idx < 0 || idx >= allImages.length) return;\n";
-  m += "    currentIndex = idx;\n";
-  m += "    mainImg.src = allImages[idx];\n";
-  m += "    Array.from(thumbsContainer.children).forEach((imgEl, i) => {\n";
-  m += "      imgEl.style.borderColor = (i === idx) ? '#2196f3' : 'transparent';\n";
-  m += "    });\n";
-  m += "  }\n\n";
-  
-  // Function to open the modal and populate its data
-  m += "  function openModal(prod){\n";
-  m += "    currentProduct = prod;\n";
-  m += "    productModal.style.display = 'flex';\n";
-  m += "    // Reset quantity to 1\n";
-  m += "    currentQty = 1;\n";
-  m += "    modalQuantityDisplay.textContent = currentQty;\n";
-  m += "    // Always keep the Buy Now button enabled (notification will occur on click if selections are missing)\n";
-  m += "    buyNowBtn.disabled = false;\n";
-  m += "    allImages = [];\n";
-  m += "    if(prod.images1) allImages.push(prod.images1);\n";
-  m += "    if(prod.images2) allImages.push(prod.images2);\n";
-  m += "    if(prod.images3) allImages.push(prod.images3);\n";
-  m += "    modalTitle.textContent = prod.title || '';\n";
-  m += "    modalSold.textContent = prod.sold ? (prod.sold + ' Sold') : '';\n";
-  m += "    modalPrice.textContent = getSymbol(prod.currency || '$') + (prod.price || '0');\n";
-  m += "    modalDesc.textContent = prod.description || '';\n";
-  m += "    basePrice = parseFloat(prod.price) || 0;\n";
-  m += "    shippingFee = (prod.shipping === 'FREE') ? 0 : (parseFloat(prod.shipping) || 0);\n";
-  m += "    returnsText = prod.returns || 'Accepted';\n";
-  m += "    thumbsContainer.innerHTML = '';\n";
-  m += "    if(allImages.length > 0){\n";
-  m += "      showImageAt(0);\n";
-  m += "    } else {\n";
-  m += "      mainImg.src = 'https://via.placeholder.com/400?text=No+Image';\n";
-  m += "    }\n";
-  m += "    for(var i = 0; i < allImages.length; i++){\n";
-  m += "      var t = document.createElement('img');\n";
-  m += "      t.src = allImages[i];\n";
-  m += "      t.dataset.index = i;\n";
-  m += "      t.addEventListener('click', function(){ showImageAt(parseInt(this.dataset.index)); });\n";
-  m += "      if(i === 0){ t.style.borderColor = '#2196f3'; }\n";
-  m += "      thumbsContainer.appendChild(t);\n";
-  m += "    }\n\n";
-  // Populate color and size options only for PayPal Email payment method
-  m += "    var attributesContainer = productModal.querySelector('#modalAttributes');\n";
-  m += "    if(prod.paymentMethod === 'paypalEmail'){\n";
-  m += "      attributesContainer.style.display = 'block';\n";
-  m += "      var colorOptionsContainer = productModal.querySelector('#modalColorOptions');\n";
-  m += "      var sizeOptionsContainer = productModal.querySelector('#modalSizeOptions');\n";
-  m += "      colorOptionsContainer.innerHTML = '';\n";
-  m += "      sizeOptionsContainer.innerHTML = '';\n";
-  m += "      if(prod.coloroptions){\n";
-  m += "        var colors = prod.coloroptions.split(',').map(s => s.trim()).filter(s => s);\n";
-  m += "        colors.forEach(function(color){\n";
-  m += "          var span = document.createElement('span');\n";
-  m += "          span.textContent = color;\n";
-  m += "          span.style.cursor = 'pointer';\n";
-  m += "          span.addEventListener('click', function(e){\n";
-  m += "            e.stopPropagation();\n";
-  m += "            Array.from(colorOptionsContainer.getElementsByTagName('span')).forEach(s => s.classList.remove('selected'));\n";
-  m += "            this.classList.add('selected');\n";
-  m += "          });\n";
-  m += "          colorOptionsContainer.appendChild(span);\n";
-  m += "        });\n";
-  m += "      }\n";
-  m += "      if(prod.sizeoptions){\n";
-  m += "        var sizes = prod.sizeoptions.split(',').map(s => s.trim()).filter(s => s);\n";
-  m += "        sizes.forEach(function(size){\n";
-  m += "          var span = document.createElement('span');\n";
-  m += "          span.textContent = size;\n";
-  m += "          span.style.cursor = 'pointer';\n";
-  m += "          span.addEventListener('click', function(e){\n";
-  m += "            e.stopPropagation();\n";
-  m += "            Array.from(sizeOptionsContainer.getElementsByTagName('span')).forEach(s => s.classList.remove('selected'));\n";
-  m += "            this.classList.add('selected');\n";
-  m += "          });\n";
-  m += "          sizeOptionsContainer.appendChild(span);\n";
-  m += "        });\n";
-  m += "      }\n";
-  m += "      // Do not disable the Buy Now button; let the click handler alert if needed\n";
-  m += "    } else {\n";
-  m += "      attributesContainer.style.display = 'none';\n";
-  m += "    }\n\n";
-  
-  m += "    paypalEmbedDiv.innerHTML = '';\n";
-  m += "    if(prod.paymentMethod === 'paypalEmbed' && prod.paypalEmbed){\n";
-  m += "      var tempDiv = document.createElement('div');\n";
-  m += "      tempDiv.innerHTML = prod.paypalEmbed;\n";
-  m += "      for(var i = 0; i < 5; i++){\n";
-  m += "        var onName = 'on' + i;\n";
-  m += "        var osName = 'os' + i;\n";
-  m += "        var labelInput = tempDiv.querySelector('input[name=\"' + onName + '\"]');\n";
-  m += "        var selectEl = tempDiv.querySelector('select[name=\"' + osName + '\"]');\n";
-  m += "        if(labelInput && selectEl){\n";
-  m += "          var labelVal = labelInput.value || 'Option';\n";
-  m += "          var embedBlock = document.createElement('div');\n";
-  m += "          embedBlock.classList.add('paypal-embed-option');\n";
-  m += "          var labelElem = document.createElement('label');\n";
-  m += "          labelElem.textContent = labelVal + ': ';\n";
-  m += "          embedBlock.appendChild(labelElem);\n";
-  m += "          var optionContainer = document.createElement('div');\n";
-  m += "          optionContainer.style.marginTop = '5px';\n";
-  m += "          var opts = selectEl.querySelectorAll('option');\n";
-  m += "          opts.forEach(function(opt){\n";
-  m += "            var sp = document.createElement('span');\n";
-  m += "            sp.textContent = opt.value;\n";
-  m += "            sp.addEventListener('click', function(e){\n";
-  m += "              e.stopPropagation();\n";
-  m += "              Array.from(optionContainer.querySelectorAll('span')).forEach(s => s.classList.remove('selected'));\n";
-  m += "              this.classList.add('selected');\n";
-  m += "            });\n";
-  m += "            optionContainer.appendChild(sp);\n";
-  m += "          });\n";
-  m += "          embedBlock.appendChild(optionContainer);\n";
-  m += "          paypalEmbedDiv.appendChild(embedBlock);\n";
-  m += "        }\n";
-  m += "      }\n";
-  m += "    }\n\n";
-  
-  // For PayPal Email, create hidden select elements for color and size to mimic embed code structure
-  m += "    if(prod.paymentMethod === 'paypalEmail'){\n";
-  m += "      var hiddenFormSelects = {};\n";
-  m += "      if(prod.coloroptions){\n";
-  m += "        var colorSelect = document.createElement('select');\n";
-  m += "        colorSelect.name = 'os0';\n";
-  m += "        var colors = prod.coloroptions.split(',').map(s => s.trim()).filter(s => s);\n";
-  m += "        colors.forEach(function(color){\n";
-  m += "          var opt = document.createElement('option');\n";
-  m += "          opt.value = color;\n";
-  m += "          opt.textContent = color;\n";
-  m += "          colorSelect.appendChild(opt);\n";
-  m += "        });\n";
-  m += "        var selectedColor = productModal.querySelector('#modalColorOptions span.selected');\n";
-  m += "        if(selectedColor){ colorSelect.value = selectedColor.textContent; }\n";
-  m += "        hiddenFormSelects.colorSelect = colorSelect;\n";
-  m += "      }\n";
-  m += "      if(prod.sizeoptions){\n";
-  m += "        var sizeSelect = document.createElement('select');\n";
-  m += "        sizeSelect.name = 'os1';\n";
-  m += "        var sizes = prod.sizeoptions.split(',').map(s => s.trim()).filter(s => s);\n";
-  m += "        sizes.forEach(function(size){\n";
-  m += "          var opt = document.createElement('option');\n";
-  m += "          opt.value = size;\n";
-  m += "          opt.textContent = size;\n";
-  m += "          sizeSelect.appendChild(opt);\n";
-  m += "        });\n";
-  m += "        var selectedSize = productModal.querySelector('#modalSizeOptions span.selected');\n";
-  m += "        if(selectedSize){ sizeSelect.value = selectedSize.textContent; }\n";
-  m += "        hiddenFormSelects.sizeSelect = sizeSelect;\n";
-  m += "      }\n";
-  m += "    } else { /* If not paypalEmail, no hidden selects needed */ }\n\n";
-  
-  m += "    if(prod.paymentMethod === 'paypalEmail'){\n";
-  m += "      quantityWrapper.style.display = 'block';\n";
-  m += "    } else {\n";
-  m += "      quantityWrapper.style.display = 'none';\n";
-  m += "    }\n\n";
-  
-  m += "    updateOrderDetails();\n";
-  m += "  }\n\n";
-  
-  m += "  document.querySelectorAll('.product-item').forEach(function(pi){\n";
-  m += "    var pd = {};\n";
-  m += "    pd.title = pi.getAttribute('data-title') || '';\n";
-  m += "    pd.sold = pi.getAttribute('data-sold') || '';\n";
-  m += "    pd.price = pi.getAttribute('data-price') || '0';\n";
-  m += "    pd.currency = pi.getAttribute('data-currency') || '$';\n";
-  m += "    pd.description = pi.getAttribute('data-description') || '';\n";
-  m += "    pd.shipping = pi.getAttribute('data-shipping') || 'FREE';\n";
-  m += "    pd.returns = pi.getAttribute('data-returns') || 'Accepted';\n";
-  m += "    pd.coloroptions = pi.getAttribute('data-coloroptions') || '';\n";
-  m += "    pd.sizeoptions = pi.getAttribute('data-sizeoptions') || '';\n";
-  m += "    pd.images1 = pi.getAttribute('data-images1') || '';\n";
-  m += "    pd.images2 = pi.getAttribute('data-images2') || '';\n";
-  m += "    pd.images3 = pi.getAttribute('data-images3') || '';\n";
-  m += "    pd.paymentMethod = pi.getAttribute('data-paymentmethod') || '';\n";
-  m += "    pd.paypalLink = pi.getAttribute('data-paypallink') || '';\n";
-  m += "    pd.paypalEmbed = pi.getAttribute('data-paypalembed') || '';\n";
-  m += "    pd.otherPaymentLink = pi.getAttribute('data-otherpaymentlink') || '';\n";
-  m += "    pd.paypalEmail = pi.getAttribute('data-paypalemail') || '';\n\n";
-  
-  m += "    pi.addEventListener('click', function(){ openModal(pd); });\n";
-  m += "    var buy = pi.querySelector('.buy-now');\n";
-  m += "    if(buy){\n";
-  m += "      buy.addEventListener('click', function(e){\n";
-  m += "        e.preventDefault(); e.stopPropagation();\n";
-  m += "        openModal(pd);\n";
-  m += "      });\n";
-  m += "    }\n";
-  m += "  });\n\n";
-  
-  m += "  closeBtn.onclick = function(){ productModal.style.display = 'none'; };\n";
-  m += "  modal.addEventListener('click', function(e){ if(e.target === modal){ modal.style.display = 'none'; } });\n";
-  m += "  arrowLeft.onclick = function(){ if(currentIndex > 0){ showImageAt(currentIndex - 1); } };\n";
-  m += "  arrowRight.onclick = function(){ if(currentIndex < allImages.length - 1){ showImageAt(currentIndex + 1); } };\n\n";
-  
-  m += "  buyNowBtn.onclick = function(){\n";
-  m += "    if(!currentProduct)return;\n";
-  m += "    if(currentProduct.paymentMethod === 'paypalLink'){\n";
-  m += "      window.open(currentProduct.paypalLink, '_blank');\n";
-  m += "    } else if(currentProduct.paymentMethod === 'paypalEmbed'){\n";
-  m += "      // Check that each embed option has a selected field\n";
-  m += "      if(!checkEmbedSelections()) return;\n";
-  m += "      var hiddenForm = document.createElement('form');\n";
-  m += "      hiddenForm.method = 'POST';\n";
-  m += "      hiddenForm.action = 'https://www.paypal.com/cgi-bin/webscr';\n";
-  m += "      hiddenForm.style.display = 'none';\n";
-  m += "      var tempDiv = document.createElement('div');\n";
-  m += "      tempDiv.innerHTML = currentProduct.paypalEmbed;\n";
-  m += "      var formInputs = tempDiv.querySelectorAll('input, select');\n";
-  m += "      formInputs.forEach(function(fi){ hiddenForm.appendChild(fi.cloneNode(true)); });\n";
-  m += "      var embedFields = document.querySelector('#paypalEmbedFields');\n";
-  m += "      for(var i = 0; i < 5; i++){\n";
-  m += "        var onName = 'on' + i;\n";
-  m += "        var osName = 'os' + i;\n";
-  m += "        var labelInput = hiddenForm.querySelector('input[name=\"' + onName + '\"]');\n";
-  m += "        var selectEl = hiddenForm.querySelector('select[name=\"' + osName + '\"]');\n";
-  m += "        if(labelInput && selectEl){\n";
-  m += "          var blocks = embedFields.getElementsByClassName('paypal-embed-option');\n";
-  m += "          if(blocks[i]){\n";
-  m += "            var sel = blocks[i].querySelector('span.selected');\n";
-  m += "            if(sel){ selectEl.value = sel.textContent; }\n";
-  m += "          }\n";
-  m += "        }\n";
-  m += "      }\n";
-  m += "      document.body.appendChild(hiddenForm);\n";
-  m += "      hiddenForm.submit();\n";
-  m += "    } else if(currentProduct.paymentMethod === 'other'){\n";
-  m += "      if(currentProduct.otherPaymentLink){ window.open(currentProduct.otherPaymentLink, '_blank'); }\n";
-  m += "      else { alert('No other payment link provided.'); }\n";
-  m += "    } else if(currentProduct.paymentMethod === 'paypalEmail'){\n";
-  // NEW PAYPAL EMAIL HANDLING BLOCK using _xclick for direct purchase
-  m += "      // Check that color and size are selected\n";
-  m += "      var selectedColorEl = productModal.querySelector('#modalColorOptions span.selected');\n";
-  m += "      var selectedSizeEl = productModal.querySelector('#modalSizeOptions span.selected');\n";
-  m += "      if(!selectedColorEl || !selectedSizeEl){\n";
-  m += "         alert('Please select a color and size before proceeding.');\n";
-  m += "         return;\n";
-  m += "      }\n";
-  m += "      var quantity = parseInt(currentQty, 10);\n";
-  m += "      if(isNaN(quantity) || quantity < 1){ quantity = 1; }\n";
-  m += "      var total = (basePrice * quantity) + shippingFee;\n";
-  m += "      var hiddenForm = document.createElement('form');\n";
-  m += "      hiddenForm.method = 'POST';\n";
-  m += "      hiddenForm.action = 'https://www.paypal.com/cgi-bin/webscr';\n";
-  m += "      hiddenForm.style.display = 'none';\n";
-  m += "      var fields = [\n";
-  m += "        { name: 'cmd', value: '_xclick' },\n";
-  m += "        { name: 'business', value: currentProduct.paypalEmail },\n";
-  m += "        { name: 'currency_code', value: (currentProduct.currency && currentProduct.currency.length <= 3) ? currentProduct.currency : 'USD' },\n";
-  m += "        { name: 'amount', value: total.toFixed(2) }\n";
-  m += "      ];\n";
-  m += "      fields.forEach(function(f){\n";
-  m += "        var inp = document.createElement('input');\n";
-  m += "        inp.type = 'hidden';\n";
-  m += "        inp.name = f.name;\n";
-  m += "        inp.value = f.value;\n";
-  m += "        hiddenForm.appendChild(inp);\n";
-  m += "      });\n";
-  m += "      // Build the item_name: product title + selected color + selected size + 'Quantity' + quantity\n";
-  m += "      var itemName = currentProduct.title || 'Product';\n";
-  m += "      itemName += ' ' + selectedColorEl.textContent;\n";
-  m += "      itemName += ' ' + selectedSizeEl.textContent;\n";
-  m += "      itemName += ' Quantity ' + quantity;\n";
-  m += "      var itemNameInp = document.createElement('input');\n";
-  m += "      itemNameInp.type = 'hidden';\n";
-  m += "      itemNameInp.name = 'item_name';\n";
-  m += "      itemNameInp.value = itemName;\n";
-  m += "      hiddenForm.appendChild(itemNameInp);\n";
-  m += "      var qtyInp = document.createElement('input');\n";
-  m += "      qtyInp.type = 'hidden';\n";
-  m += "      qtyInp.name = 'quantity';\n";
-  m += "      qtyInp.value = quantity;\n";
-  m += "      hiddenForm.appendChild(qtyInp);\n";
-  m += "      document.body.appendChild(hiddenForm);\n";
-  m += "      hiddenForm.submit();\n";
-  m += "    } else {\n";
-  m += "      alert('Payment method not configured.');\n";
-  m += "    }\n";
-  m += "  };\n";
-  m += "})();";
-  m += "</scr" + "ipt>";
-  return m;
-}
-
-
-
+    
+    m += "  document.body.appendChild(modal);\n\n";
+    // Append CSS style element for selected options
+    m += "  var styleEl = document.createElement('style');\n";
+    m += "  styleEl.innerHTML = '.color-options span.selected, .size-options span.selected, .paypal-embed-option span.selected { border: 2px solid #2196f3; background: #eef6ff; }';\n";
+    m += "  document.head.appendChild(styleEl);\n\n";
+    
+    m += "  var productModal = document.getElementById('productModal');\n";
+    m += "  var closeBtn = productModal.querySelector('.modal-close');\n";
+    m += "  var mainImg = productModal.querySelector('#modalMainImg');\n";
+    m += "  var modalTitle = productModal.querySelector('#modalTitle');\n";
+    m += "  var modalPrice = productModal.querySelector('#modalPrice');\n";
+    m += "  var modalSold = productModal.querySelector('#modalSold');\n";
+    m += "  var modalDesc = productModal.querySelector('#modalDescription');\n";
+    m += "  var paypalEmbedDiv = productModal.querySelector('#paypalEmbedFields');\n";
+    m += "  var itemPrice = productModal.querySelector('#itemPrice');\n";
+    m += "  var shippingCost = productModal.querySelector('#shippingCost');\n";
+    m += "  var returnPolicy = productModal.querySelector('#returnPolicy');\n";
+    m += "  var subtotalValue = productModal.querySelector('#subtotalValue');\n";
+    m += "  var arrowLeft = productModal.querySelector('#arrowLeft');\n";
+    m += "  var arrowRight = productModal.querySelector('#arrowRight');\n";
+    m += "  var thumbsContainer = productModal.querySelector('#modalThumbnails');\n";
+    m += "  var buyNowBtn = productModal.querySelector('.buy-now-btn');\n";
+    m += "  var quantityWrapper = productModal.querySelector('#quantityWrapper');\n";
+    m += "  var decreaseQty = productModal.querySelector('#decreaseQty');\n";
+    m += "  var increaseQty = productModal.querySelector('#increaseQty');\n";
+    m += "  var modalQuantityDisplay = productModal.querySelector('#modalQuantityDisplay');\n\n";
+    
+    m += "  var currentProduct = null;\n";
+    m += "  var allImages = [];\n";
+    m += "  var currentIndex = 0;\n";
+    m += "  var basePrice = 0; var shippingFee = 0; var returnsText = 'Accepted';\n";
+    m += "  var currentQty = 1;\n\n";
+    
+    // Order detail update function with quantity handling for PayPal Email
+    m += "  function updateOrderDetails(){\n";
+    m += "    var qty = (currentProduct && currentProduct.paymentMethod === 'paypalEmail') ? currentQty : 1;\n";
+    m += "    var totalPrice = (basePrice * qty) + shippingFee;\n";
+    m += "    itemPrice.textContent = getSymbol(currentProduct.currency || '$') + (basePrice * qty).toFixed(2);\n";
+    m += "    shippingCost.textContent = (shippingFee === 0) ? 'FREE' : getSymbol(currentProduct.currency || '$') + shippingFee.toFixed(2);\n";
+    m += "    returnPolicy.textContent = returnsText;\n";
+    m += "    subtotalValue.textContent = getSymbol(currentProduct.currency || '$') + totalPrice.toFixed(2);\n";
+    m += "  }\n\n";
+    
+    // Attach event listeners for quantity control buttons
+    m += "  decreaseQty.addEventListener('click', function(){\n";
+    m += "    if(currentQty > 1){\n";
+    m += "      currentQty--;\n";
+    m += "      modalQuantityDisplay.textContent = currentQty;\n";
+    m += "      updateOrderDetails();\n";
+    m += "    }\n";
+    m += "  });\n";
+    m += "  increaseQty.addEventListener('click', function(){\n";
+    m += "    if(currentQty < 99){\n";
+    m += "      currentQty++;\n";
+    m += "      modalQuantityDisplay.textContent = currentQty;\n";
+    m += "      updateOrderDetails();\n";
+    m += "    }\n";
+    m += "  });\n\n";
+    
+    // Function to show image in modal
+    m += "  function showImageAt(idx){\n";
+    m += "    if(idx < 0 || idx >= allImages.length) return;\n";
+    m += "    currentIndex = idx;\n";
+    m += "    mainImg.src = allImages[idx];\n";
+    m += "    Array.from(thumbsContainer.children).forEach((imgEl, i) => {\n";
+    m += "      imgEl.style.borderColor = (i === idx) ? '#2196f3' : 'transparent';\n";
+    m += "    });\n";
+    m += "  }\n\n";
+    
+    // Function to open the modal and populate its data
+    m += "  function openModal(prod){\n";
+    m += "    currentProduct = prod;\n";
+    m += "    productModal.style.display = 'flex';\n";
+    m += "    // Reset quantity to 1\n";
+    m += "    currentQty = 1;\n";
+    m += "    modalQuantityDisplay.textContent = currentQty;\n";
+    m += "    // Always keep the Buy Now button enabled (notification will occur on click if selections are missing)\n";
+    m += "    buyNowBtn.disabled = false;\n";
+    m += "    allImages = [];\n";
+    m += "    if(prod.images1) allImages.push(prod.images1);\n";
+    m += "    if(prod.images2) allImages.push(prod.images2);\n";
+    m += "    if(prod.images3) allImages.push(prod.images3);\n";
+    m += "    modalTitle.textContent = prod.title || '';\n";
+    m += "    modalSold.textContent = prod.sold ? (prod.sold + ' Sold') : '';\n";
+    m += "    modalPrice.textContent = getSymbol(prod.currency || '$') + (prod.price || '0');\n";
+    m += "    modalDesc.textContent = prod.description || '';\n";
+    m += "    basePrice = parseFloat(prod.price) || 0;\n";
+    m += "    shippingFee = (prod.shipping === 'FREE') ? 0 : (parseFloat(prod.shipping) || 0);\n";
+    m += "    returnsText = prod.returns || 'Accepted';\n";
+    m += "    thumbsContainer.innerHTML = '';\n";
+    m += "    if(allImages.length > 0){\n";
+    m += "      showImageAt(0);\n";
+    m += "    } else {\n";
+    m += "      mainImg.src = 'https://via.placeholder.com/400?text=No+Image';\n";
+    m += "    }\n";
+    m += "    for(var i = 0; i < allImages.length; i++){\n";
+    m += "      var t = document.createElement('img');\n";
+    m += "      t.src = allImages[i];\n";
+    m += "      t.dataset.index = i;\n";
+    m += "      t.addEventListener('click', function(){ showImageAt(parseInt(this.dataset.index)); });\n";
+    m += "      if(i === 0){ t.style.borderColor = '#2196f3'; }\n";
+    m += "      thumbsContainer.appendChild(t);\n";
+    m += "    }\n\n";
+    // Populate color and size options only for PayPal Email payment method
+    m += "    var attributesContainer = productModal.querySelector('#modalAttributes');\n";
+    m += "    if(prod.paymentMethod === 'paypalEmail'){\n";
+    m += "      attributesContainer.style.display = 'block';\n";
+    m += "      var colorOptionsContainer = productModal.querySelector('#modalColorOptions');\n";
+    m += "      var sizeOptionsContainer = productModal.querySelector('#modalSizeOptions');\n";
+    m += "      colorOptionsContainer.innerHTML = '';\n";
+    m += "      sizeOptionsContainer.innerHTML = '';\n";
+    m += "      if(prod.coloroptions){\n";
+    m += "        var colors = prod.coloroptions.split(',').map(s => s.trim()).filter(s => s);\n";
+    m += "        colors.forEach(function(color){\n";
+    m += "          var span = document.createElement('span');\n";
+    m += "          span.textContent = color;\n";
+    m += "          span.style.cursor = 'pointer';\n";
+    m += "          span.addEventListener('click', function(e){\n";
+    m += "            e.stopPropagation();\n";
+    m += "            Array.from(colorOptionsContainer.getElementsByTagName('span')).forEach(s => s.classList.remove('selected'));\n";
+    m += "            this.classList.add('selected');\n";
+    m += "          });\n";
+    m += "          colorOptionsContainer.appendChild(span);\n";
+    m += "        });\n";
+    m += "      }\n";
+    m += "      if(prod.sizeoptions){\n";
+    m += "        var sizes = prod.sizeoptions.split(',').map(s => s.trim()).filter(s => s);\n";
+    m += "        sizes.forEach(function(size){\n";
+    m += "          var span = document.createElement('span');\n";
+    m += "          span.textContent = size;\n";
+    m += "          span.style.cursor = 'pointer';\n";
+    m += "          span.addEventListener('click', function(e){\n";
+    m += "            e.stopPropagation();\n";
+    m += "            Array.from(sizeOptionsContainer.getElementsByTagName('span')).forEach(s => s.classList.remove('selected'));\n";
+    m += "            this.classList.add('selected');\n";
+    m += "          });\n";
+    m += "          sizeOptionsContainer.appendChild(span);\n";
+    m += "        });\n";
+    m += "      }\n";
+    m += "    } else {\n";
+    m += "      attributesContainer.style.display = 'none';\n";
+    m += "    }\n\n";
+    
+    m += "    paypalEmbedDiv.innerHTML = '';\n";
+    m += "    if(prod.paymentMethod === 'paypalEmbed' && prod.paypalEmbed){\n";
+    m += "      var tempDiv = document.createElement('div');\n";
+    m += "      tempDiv.innerHTML = prod.paypalEmbed;\n";
+    m += "      for(var i = 0; i < 5; i++){\n";
+    m += "        var onName = 'on' + i;\n";
+    m += "        var osName = 'os' + i;\n";
+    m += "        var labelInput = tempDiv.querySelector('input[name=\"' + onName + '\"]');\n";
+    m += "        var selectEl = tempDiv.querySelector('select[name=\"' + osName + '\"]');\n";
+    m += "        if(labelInput && selectEl){\n";
+    m += "          var labelVal = labelInput.value || 'Option';\n";
+    m += "          var embedBlock = document.createElement('div');\n";
+    m += "          embedBlock.classList.add('paypal-embed-option');\n";
+    m += "          var labelElem = document.createElement('label');\n";
+    m += "          labelElem.textContent = labelVal + ': ';\n";
+    m += "          embedBlock.appendChild(labelElem);\n";
+    m += "          var optionContainer = document.createElement('div');\n";
+    m += "          optionContainer.style.marginTop = '5px';\n";
+    m += "          var opts = selectEl.querySelectorAll('option');\n";
+    m += "          opts.forEach(function(opt){\n";
+    m += "            var sp = document.createElement('span');\n";
+    m += "            sp.textContent = opt.value;\n";
+    m += "            sp.addEventListener('click', function(e){\n";
+    m += "              e.stopPropagation();\n";
+    m += "              Array.from(optionContainer.querySelectorAll('span')).forEach(s => s.classList.remove('selected'));\n";
+    m += "              this.classList.add('selected');\n";
+    m += "            });\n";
+    m += "            optionContainer.appendChild(sp);\n";
+    m += "          });\n";
+    m += "          embedBlock.appendChild(optionContainer);\n";
+    m += "          paypalEmbedDiv.appendChild(embedBlock);\n";
+    m += "        }\n";
+    m += "      }\n";
+    m += "    }\n\n";
+    
+    // For PayPal Email, create hidden select elements for color and size to mimic embed code structure
+    m += "    if(prod.paymentMethod === 'paypalEmail'){\n";
+    m += "      var hiddenFormSelects = {};\n";
+    m += "      if(prod.coloroptions){\n";
+    m += "        var colorSelect = document.createElement('select');\n";
+    m += "        colorSelect.name = 'os0';\n";
+    m += "        var colors = prod.coloroptions.split(',').map(s => s.trim()).filter(s => s);\n";
+    m += "        colors.forEach(function(color){\n";
+    m += "          var opt = document.createElement('option');\n";
+    m += "          opt.value = color;\n";
+    m += "          opt.textContent = color;\n";
+    m += "          colorSelect.appendChild(opt);\n";
+    m += "        });\n";
+    m += "        var selectedColor = productModal.querySelector('#modalColorOptions span.selected');\n";
+    m += "        if(selectedColor){ colorSelect.value = selectedColor.textContent; }\n";
+    m += "        hiddenFormSelects.colorSelect = colorSelect;\n";
+    m += "      }\n";
+    m += "      if(prod.sizeoptions){\n";
+    m += "        var sizeSelect = document.createElement('select');\n";
+    m += "        sizeSelect.name = 'os1';\n";
+    m += "        var sizes = prod.sizeoptions.split(',').map(s => s.trim()).filter(s => s);\n";
+    m += "        sizes.forEach(function(size){\n";
+    m += "          var opt = document.createElement('option');\n";
+    m += "          opt.value = size;\n";
+    m += "          opt.textContent = size;\n";
+    m += "          sizeSelect.appendChild(opt);\n";
+    m += "        });\n";
+    m += "        var selectedSize = productModal.querySelector('#modalSizeOptions span.selected');\n";
+    m += "        if(selectedSize){ sizeSelect.value = selectedSize.textContent; }\n";
+    m += "        hiddenFormSelects.sizeSelect = sizeSelect;\n";
+    m += "      }\n";
+    m += "    } else { /* If not paypalEmail, no hidden selects needed */ }\n\n";
+    
+    m += "    if(prod.paymentMethod === 'paypalEmail'){\n";
+    m += "      quantityWrapper.style.display = 'block';\n";
+    m += "    } else {\n";
+    m += "      quantityWrapper.style.display = 'none';\n";
+    m += "    }\n\n";
+    
+    m += "    updateOrderDetails();\n";
+    m += "  }\n\n";
+    
+    m += "  document.querySelectorAll('.product-item').forEach(function(pi){\n";
+    m += "    var pd = {};\n";
+    m += "    pd.title = pi.getAttribute('data-title') || '';\n";
+    m += "    pd.sold = pi.getAttribute('data-sold') || '';\n";
+    m += "    pd.price = pi.getAttribute('data-price') || '0';\n";
+    m += "    pd.currency = pi.getAttribute('data-currency') || '$';\n";
+    m += "    pd.description = pi.getAttribute('data-description') || '';\n";
+    m += "    pd.shipping = pi.getAttribute('data-shipping') || 'FREE';\n";
+    m += "    pd.returns = pi.getAttribute('data-returns') || 'Accepted';\n";
+    m += "    pd.coloroptions = pi.getAttribute('data-coloroptions') || '';\n";
+    m += "    pd.sizeoptions = pi.getAttribute('data-sizeoptions') || '';\n";
+    m += "    pd.images1 = pi.getAttribute('data-images1') || '';\n";
+    m += "    pd.images2 = pi.getAttribute('data-images2') || '';\n";
+    m += "    pd.images3 = pi.getAttribute('data-images3') || '';\n";
+    m += "    pd.paymentMethod = pi.getAttribute('data-paymentmethod') || '';\n";
+    m += "    pd.paypalLink = pi.getAttribute('data-paypallink') || '';\n";
+    m += "    pd.paypalEmbed = pi.getAttribute('data-paypalembed') || '';\n";
+    m += "    pd.otherPaymentLink = pi.getAttribute('data-otherpaymentlink') || '';\n";
+    m += "    pd.paypalEmail = pi.getAttribute('data-paypalemail') || '';\n\n";
+    
+    m += "    pi.addEventListener('click', function(){ openModal(pd); });\n";
+    m += "    var buy = pi.querySelector('.buy-now');\n";
+    m += "    if(buy){\n";
+    m += "      buy.addEventListener('click', function(e){\n";
+    m += "        e.preventDefault(); e.stopPropagation();\n";
+    m += "        openModal(pd);\n";
+    m += "      });\n";
+    m += "    }\n";
+    m += "  });\n\n";
+    
+    m += "  closeBtn.onclick = function(){ productModal.style.display = 'none'; };\n";
+    m += "  modal.addEventListener('click', function(e){ if(e.target === modal){ modal.style.display = 'none'; } });\n";
+    m += "  arrowLeft.onclick = function(){ if(currentIndex > 0){ showImageAt(currentIndex - 1); } };\n";
+    m += "  arrowRight.onclick = function(){ if(currentIndex < allImages.length - 1){ showImageAt(currentIndex + 1); } };\n\n";
+    
+    m += "  buyNowBtn.onclick = function(){\n";
+    m += "    if(!currentProduct)return;\n";
+    m += "    if(currentProduct.paymentMethod === 'paypalLink'){\n";
+    m += "      window.open(currentProduct.paypalLink, '_blank');\n";
+    m += "    } else if(currentProduct.paymentMethod === 'paypalEmbed'){\n";
+    m += "      // Check that each embed option has a selected field\n";
+    m += "      if(!checkEmbedSelections()) return;\n";
+    m += "      var hiddenForm = document.createElement('form');\n";
+    m += "      hiddenForm.method = 'POST';\n";
+    m += "      hiddenForm.action = 'https://www.paypal.com/cgi-bin/webscr';\n";
+    m += "      hiddenForm.style.display = 'none';\n";
+    m += "      var tempDiv = document.createElement('div');\n";
+    m += "      tempDiv.innerHTML = currentProduct.paypalEmbed;\n";
+    m += "      var formInputs = tempDiv.querySelectorAll('input, select');\n";
+    m += "      formInputs.forEach(function(fi){ hiddenForm.appendChild(fi.cloneNode(true)); });\n";
+    m += "      var embedFields = document.querySelector('#paypalEmbedFields');\n";
+    m += "      for(var i = 0; i < 5; i++){\n";
+    m += "        var onName = 'on' + i;\n";
+    m += "        var osName = 'os' + i;\n";
+    m += "        var labelInput = hiddenForm.querySelector('input[name=\"' + onName + '\"]');\n";
+    m += "        var selectEl = hiddenForm.querySelector('select[name=\"' + osName + '\"]');\n";
+    m += "        if(labelInput && selectEl){\n";
+    m += "          var blocks = embedFields.getElementsByClassName('paypal-embed-option');\n";
+    m += "          if(blocks[i]){\n";
+    m += "            var sel = blocks[i].querySelector('span.selected');\n";
+    m += "            if(sel){ selectEl.value = sel.textContent; }\n";
+    m += "          }\n";
+    m += "        }\n";
+    m += "      }\n";
+    m += "      document.body.appendChild(hiddenForm);\n";
+    m += "      hiddenForm.submit();\n";
+    m += "    } else if(currentProduct.paymentMethod === 'other'){\n";
+    m += "      if(currentProduct.otherPaymentLink){ window.open(currentProduct.otherPaymentLink, '_blank'); }\n";
+    m += "      else { alert('No other payment link provided.'); }\n";
+    m += "    } else if(currentProduct.paymentMethod === 'paypalEmail'){\n";
+    m += "      // Check that color and size are selected\n";
+    m += "      var selectedColorEl = productModal.querySelector('#modalColorOptions span.selected');\n";
+    m += "      var selectedSizeEl = productModal.querySelector('#modalSizeOptions span.selected');\n";
+    m += "      if(!selectedColorEl || !selectedSizeEl){\n";
+    m += "         alert('Please select a color and size before proceeding.');\n";
+    m += "         return;\n";
+    m += "      }\n";
+    m += "      var quantity = parseInt(currentQty, 10);\n";
+    m += "      if(isNaN(quantity) || quantity < 1){ quantity = 1; }\n";
+    m += "      var total = (basePrice * quantity) + shippingFee;\n";
+    m += "      var hiddenForm = document.createElement('form');\n";
+    m += "      hiddenForm.method = 'POST';\n";
+    m += "      hiddenForm.action = 'https://www.paypal.com/cgi-bin/webscr';\n";
+    m += "      hiddenForm.style.display = 'none';\n";
+    m += "      var fields = [\n";
+    m += "        { name: 'cmd', value: '_xclick' },\n";
+    m += "        { name: 'business', value: currentProduct.paypalEmail },\n";
+    m += "        { name: 'currency_code', value: (currentProduct.currency && currentProduct.currency.length <= 3) ? currentProduct.currency : 'USD' },\n";
+    m += "        { name: 'amount', value: total.toFixed(2) }\n";
+    m += "      ];\n";
+    m += "      fields.forEach(function(f){\n";
+    m += "        var inp = document.createElement('input');\n";
+    m += "        inp.type = 'hidden';\n";
+    m += "        inp.name = f.name;\n";
+    m += "        inp.value = f.value;\n";
+    m += "        hiddenForm.appendChild(inp);\n";
+    m += "      });\n";
+    m += "      // Build the item_name: product title + selected color + selected size + 'Quantity' + quantity\n";
+    m += "      var itemName = currentProduct.title || 'Product';\n";
+    m += "      itemName += ' ' + selectedColorEl.textContent;\n";
+    m += "      itemName += ' ' + selectedSizeEl.textContent;\n";
+    m += "      itemName += ' Quantity ' + quantity;\n";
+    m += "      var itemNameInp = document.createElement('input');\n";
+    m += "      itemNameInp.type = 'hidden';\n";
+    m += "      itemNameInp.name = 'item_name';\n";
+    m += "      itemNameInp.value = itemName;\n";
+    m += "      hiddenForm.appendChild(itemNameInp);\n";
+    m += "      document.body.appendChild(hiddenForm);\n";
+    m += "      hiddenForm.submit();\n";
+    m += "    } else {\n";
+    m += "      alert('Payment method not configured.');\n";
+    m += "    }\n";
+    m += "  };\n";
+    m += "})();";
+    m += "</scr" + "ipt>";
+    return m;
+  }
 
   function getCurrencySymbol(code){
-    const sym={
+    const sym = {
       USD:"$", EUR:"€", GBP:"£", JPY:"¥", AUD:"A$", CAD:"C$", CHF:"CHF",
       CNY:"¥", HKD:"HK$", NZD:"NZ$"
     };
     if(sym[code.toUpperCase()]) return sym[code.toUpperCase()];
-    return code+" ";
+    return code + " ";
   }
 
   function escapeHTML(str){
@@ -2021,18 +2108,18 @@ function buildProductModalScript(){
     if(!cont) return;
     cont.innerHTML = "";
 
-    if(products.length>0){
+    if(products.length > 0){
       const pDiv = document.createElement('div');
-      pDiv.innerHTML="<h3>Products in Website</h3>";
-      products.forEach((prod, idx)=>{
-        const row=document.createElement('div');
+      pDiv.innerHTML = "<h3>Products in Website</h3>";
+      products.forEach((prod, idx) => {
+        const row = document.createElement('div');
         row.classList.add('builder-item-row');
-        row.innerHTML=`<span>${escapeHTML(prod.title||"Untitled")}</span>`;
-        const delBtn=document.createElement('button');
+        row.innerHTML = `<span>${escapeHTML(prod.title || "Untitled")}</span>`;
+        const delBtn = document.createElement('button');
         delBtn.classList.add('delete-btn');
-        delBtn.textContent="×";
-        delBtn.onclick=function(){
-          products.splice(idx,1);
+        delBtn.textContent = "×";
+        delBtn.onclick = function(){
+          products.splice(idx, 1);
           updatePreview();
           updateManagementLists();
         };
@@ -2042,18 +2129,18 @@ function buildProductModalScript(){
       cont.appendChild(pDiv);
     }
 
-    if(reviews.length>0){
-      const rDiv=document.createElement('div');
-      rDiv.innerHTML="<h3>Reviews in Website</h3>";
-      reviews.forEach((rev, idx)=>{
-        const row=document.createElement('div');
+    if(reviews.length > 0){
+      const rDiv = document.createElement('div');
+      rDiv.innerHTML = "<h3>Reviews in Website</h3>";
+      reviews.forEach((rev, idx) => {
+        const row = document.createElement('div');
         row.classList.add('builder-item-row');
-        row.innerHTML=`<span>${escapeHTML(rev.name||"Unnamed")}</span>`;
-        const delBtn=document.createElement('button');
+        row.innerHTML = `<span>${escapeHTML(rev.name || "Unnamed")}</span>`;
+        const delBtn = document.createElement('button');
         delBtn.classList.add('delete-btn');
-        delBtn.textContent="×";
-        delBtn.onclick=function(){
-          reviews.splice(idx,1);
+        delBtn.textContent = "×";
+        delBtn.onclick = function(){
+          reviews.splice(idx, 1);
           updatePreview();
           updateManagementLists();
         };
@@ -2064,17 +2151,17 @@ function buildProductModalScript(){
     }
 
     if(contactData.formEmbed){
-      const cfDiv=document.createElement('div');
-      cfDiv.innerHTML="<h3>Contact Form</h3><span>Contact Form</span>";
-      const delBtn=document.createElement('button');
+      const cfDiv = document.createElement('div');
+      cfDiv.innerHTML = "<h3>Contact Form</h3><span>Contact Form</span>";
+      const delBtn = document.createElement('button');
       delBtn.classList.add('delete-btn');
-      delBtn.textContent="×";
-      delBtn.onclick=function(){
-        contactData.formEmbed="";
+      delBtn.textContent = "×";
+      delBtn.onclick = function(){
+        contactData.formEmbed = "";
         const addBtn = document.getElementById('addContactFormButton');
         if(addBtn){
           addBtn.classList.remove('success');
-          addBtn.textContent="Add Form";
+          addBtn.textContent = "Add Form";
         }
         updatePreview();
         updateManagementLists();
@@ -2095,33 +2182,33 @@ function buildProductModalScript(){
       "_blank",
       "width=500,height=700"
     );
-    var startTime=Date.now();
-    var thresholdTime=10000; // 10 seconds
-    var popupTimer=setInterval(function(){
+    var startTime = Date.now();
+    var thresholdTime = 10000; // 10 seconds
+    var popupTimer = setInterval(function(){
       if(paypalPopup && paypalPopup.closed){
         clearInterval(popupTimer);
-        var elapsedTime=Date.now()-startTime;
-        if(elapsedTime>=thresholdTime){
-          document.getElementById('emailVerificationRow').style.display='flex';
+        var elapsedTime = Date.now() - startTime;
+        if(elapsedTime >= thresholdTime){
+          document.getElementById('emailVerificationRow').style.display = 'flex';
         } else {
           alert("Payment was not completed. Please try again.");
         }
       }
-    },500);
+    }, 500);
   };
 
   document.getElementById('verifyEmailBtn').onclick = function(){
     var email = document.getElementById('verificationEmail').value.trim();
-    if(email===""){
+    if(email === ""){
       alert("Please enter your email for verification.");
       return;
     }
-    var payBtn=document.getElementById('payBtn');
-    payBtn.innerHTML="Payment Successful";
-    payBtn.style.background="green";
-    payBtn.disabled=true;
-    document.getElementById('downloadRow').style.display='flex';
-    document.getElementById('emailVerificationRow').style.display='none';
+    var payBtn = document.getElementById('payBtn');
+    payBtn.innerHTML = "Payment Successful";
+    payBtn.style.background = "green";
+    payBtn.disabled = true;
+    document.getElementById('downloadRow').style.display = 'flex';
+    document.getElementById('emailVerificationRow').style.display = 'none';
   };
 
   // Code Modal
@@ -2129,124 +2216,124 @@ function buildProductModalScript(){
     if(!finalHTML.trim()){
       finalHTML = buildFinalHTML();
     }
-    var codeOutput=document.getElementById('codeOutput');
-    codeOutput.value=finalHTML;
-    document.getElementById('codeModal').style.display='flex';
+    var codeOutput = document.getElementById('codeOutput');
+    codeOutput.value = finalHTML;
+    document.getElementById('codeModal').style.display = 'flex';
   }
-  window.openCodeModal=openCodeModal;
+  window.openCodeModal = openCodeModal;
 
-  document.getElementById('copyCodeButton').onclick=function(){
-    var codeOutput=document.getElementById('codeOutput');
+  document.getElementById('copyCodeButton').onclick = function(){
+    var codeOutput = document.getElementById('codeOutput');
     codeOutput.select();
     document.execCommand('copy');
-    this.textContent="Copied!";
-    setTimeout(()=>{
-      this.textContent="Copy Code";
-    },2000);
+    this.textContent = "Copied!";
+    setTimeout(() => {
+      this.textContent = "Copy Code";
+    }, 2000);
   };
-  document.getElementById('closeCodeModal').onclick=function(){
-    document.getElementById('codeModal').style.display='none';
+  document.getElementById('closeCodeModal').onclick = function(){
+    document.getElementById('codeModal').style.display = 'none';
   };
 
   // Exit Confirmation
-  document.addEventListener('DOMContentLoaded',function(){
-    const exitModalOverlay=document.getElementById('exitConfirm-modalOverlay');
-    const exitModal=document.getElementById('exitConfirm-modal');
-    if(!exitModalOverlay||!exitModal)return;
+  document.addEventListener('DOMContentLoaded', function(){
+    const exitModalOverlay = document.getElementById('exitConfirm-modalOverlay');
+    const exitModal = document.getElementById('exitConfirm-modal');
+    if(!exitModalOverlay || !exitModal) return;
 
-    const stayButton   = document.getElementById('exitConfirm-stayButton');
-    const leaveButton  = document.getElementById('exitConfirm-leaveButton');
+    const stayButton = document.getElementById('exitConfirm-stayButton');
+    const leaveButton = document.getElementById('exitConfirm-leaveButton');
     let intendedAction = null;
 
     function showExitModal(action){
-      intendedAction=action;
-      exitModalOverlay.style.display='flex';
+      intendedAction = action;
+      exitModalOverlay.style.display = 'flex';
     }
     function hideExitModal(){
-      exitModalOverlay.style.display='none';
-      intendedAction=null;
+      exitModalOverlay.style.display = 'none';
+      intendedAction = null;
     }
-    stayButton.addEventListener('click',function(){
+    stayButton.addEventListener('click', function(){
       hideExitModal();
     });
-    leaveButton.addEventListener('click',function(){
+    leaveButton.addEventListener('click', function(){
       hideExitModal();
-      if(typeof intendedAction==='function'){
+      if(typeof intendedAction === 'function'){
         intendedAction();
-      } else if(typeof intendedAction==='string'){
-        window.location.href=intendedAction;
+      } else if(typeof intendedAction === 'string'){
+        window.location.href = intendedAction;
       }
     });
 
-    const links=document.querySelectorAll('a');
+    const links = document.querySelectorAll('a');
     links.forEach(function(link){
-      link.addEventListener('click',function(e){
-        if(this.hasAttribute('data-ignore-exit-confirm'))return;
+      link.addEventListener('click', function(e){
+        if(this.hasAttribute('data-ignore-exit-confirm')) return;
         e.preventDefault();
-        const href=this.getAttribute('href');
-        showExitModal(function(){ window.location.href=href; });
+        const href = this.getAttribute('href');
+        showExitModal(function(){ window.location.href = href; });
       });
     });
-    const forms=document.querySelectorAll('form');
+    const forms = document.querySelectorAll('form');
     forms.forEach(function(form){
-      form.addEventListener('submit',function(e){
-        if(this.hasAttribute('data-ignore-exit-confirm'))return;
+      form.addEventListener('submit', function(e){
+        if(this.hasAttribute('data-ignore-exit-confirm')) return;
         e.preventDefault();
         showExitModal(function(){ form.submit(); });
       });
     });
-    window.addEventListener('beforeunload',function(e){
-      if(exitModalOverlay.style.display==='flex'){
+    window.addEventListener('beforeunload', function(e){
+      if(exitModalOverlay.style.display === 'flex'){
         return;
       }
       e.preventDefault();
-      e.returnValue='';
+      e.returnValue = '';
     });
   });
 
   // Contact Form Modal
   function setupContactFormModal(){
-    var modal     = document.getElementById('contactFormModal');
-    var openBtn   = document.getElementById('addContactFormButton');
-    var closeBtn  = document.getElementById('closeContactFormModal');
-    var confirmBtn= document.getElementById('confirmAddContactFormButton');
-    var textarea  = document.getElementById('contactFormIframe');
+    var modal = document.getElementById('contactFormModal');
+    var openBtn = document.getElementById('addContactFormButton');
+    var closeBtn = document.getElementById('closeContactFormModal');
+    var confirmBtn = document.getElementById('confirmAddContactFormButton');
+    var textarea = document.getElementById('contactFormIframe');
 
     if(!modal || !openBtn) return;
 
-    openBtn.onclick=function(){
+    openBtn.onclick = function(){
       if(contactData.formEmbed){
         alert("A contact form is already added. You can delete it before adding a new one.");
         return;
       }
-      modal.style.display='flex';
+      modal.style.display = 'flex';
     };
-    closeBtn.onclick=function(){
-      modal.style.display='none';
+    closeBtn.onclick = function(){
+      modal.style.display = 'none';
     };
-    confirmBtn.onclick=function(){
-      const embedCode=textarea.value.trim();
+    confirmBtn.onclick = function(){
+      const embedCode = textarea.value.trim();
       if(embedCode){
-        contactData.formEmbed=embedCode;
-        modal.style.display='none';
-        textarea.value='';
+        contactData.formEmbed = embedCode;
+        modal.style.display = 'none';
+        textarea.value = '';
         openBtn.classList.add('success');
-        openBtn.textContent='Form Added';
-        const statusDiv=document.getElementById('contactFormStatus');
-        statusDiv.innerHTML='';
-        const delFormBtn=document.createElement('button');
-        delFormBtn.textContent='Delete Form';
-        delFormBtn.style.background='red';
-        delFormBtn.style.color='#fff';
-        delFormBtn.style.border='none';
-        delFormBtn.style.cursor='pointer';
-        delFormBtn.style.borderRadius='4px';
-        delFormBtn.style.padding='5px 10px';
-        delFormBtn.onclick=function(){
-          contactData.formEmbed='';
+        openBtn.textContent = 'Form Added';
+        const statusDiv = document.getElementById('contactFormStatus');
+        statusDiv.innerHTML = '';
+        const delFormBtn = document.createElement('button');
+        delFormBtn.textContent = 'Delete Form';
+        delFormBtn.style.background = 'red';
+        delFormBtn.style.color = '#fff';
+        delFormBtn.style.border = 'none';
+        delFormBtn.style.cursor = 'pointer';
+        delFormBtn.style.borderRadius = '4px';
+        delFormBtn.style.padding = '5px 10px';
+        delFormBtn.onclick = function(){
+          contactData.formEmbed = '';
           openBtn.classList.remove('success');
-          openBtn.textContent='Add Form';
-          statusDiv.innerHTML='';
+          openBtn.textContent = 'Add Form';
+          statusDiv.innerHTML = '';
           updatePreview();
         };
         statusDiv.appendChild(delFormBtn);
@@ -2256,13 +2343,15 @@ function buildProductModalScript(){
         alert("Please paste your contact form embed code.");
       }
     };
-    window.onclick=function(event){
-      if(event.target===modal){
-        modal.style.display='none';
+    window.onclick = function(event){
+      if(event.target === modal){
+        modal.style.display = 'none';
       }
     };
   }
 </script>
+
+
 
 
 <script>
