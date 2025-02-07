@@ -1583,23 +1583,27 @@ function renderAddedProductsList() {
     return top;
   }
 
-  function downloadSite(){
-  if(!finalHTML.trim()){
+  (function downloadSite(){
+  if (!finalHTML.trim()){
     finalHTML = buildFinalHTML();
   }
   
   // Create a new instance of JSZip
   var zip = new JSZip();
   
-  // Add index.html directly to the root of the zip
-  zip.file("index.html", finalHTML);
+  // Create a folder inside the zip archive (name it as you wish)
+  var folder = zip.folder("MyFolder");  // Change "MyFolder" to your preferred folder name
+  
+  // Add index.html inside the created folder
+  folder.file("index.html", finalHTML);
   
   // Generate the zip file as a blob and trigger the download
-  zip.generateAsync({type: "blob"}).then(function(content) {
+  zip.generateAsync({ type: "blob" }).then(function(content) {
     // Use FileSaver.js to prompt the user to save the file
     saveAs(content, "My Website.zip");
   });
-}
+})();
+
 
 
   function buildGlobalCSS(){
