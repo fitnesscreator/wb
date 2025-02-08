@@ -1017,9 +1017,9 @@
   - Download it immediately after payment.<br><br>
   📤 <strong>How to publish your website?</strong><br>
   - Extract the folder from the ZIP file.<br>
-  - Drag and drop the folder to <strong>Netlify.com</strong> for easy website publishing.<br>
-  - Or, drag and drop the <code>index.html</code> file to any free hosting platform like <strong>GitHub.com</strong> or <strong>Blogger.com</strong>.<br>
-  - (For Blogger, <strong>watch my video tutorial</strong>.)<br><br>
+  - Drag and drop the folder to <strong><a href="https://www.netlify.com/" target="_blank">Netlify.com</a></strong> for easy website publishing.<br>
+  - Or, drag and drop the <code>index.html</code> file to any free hosting platform like <strong><a href="https://github.com/" target="_blank">GitHub.com</a></strong> or <strong><a href="https://www.blogger.com/" target="_blank">Blogger.com</a></strong>.<br>
+  - (For Blogger, <strong><a href="YOUR_YOUTUBE_VIDEO_LINK" target="_blank">watch my video tutorial</a></strong>.)<br><br>
   <strong>The payment button will be available once you finish creating your website.</strong>
 </p>
 
@@ -1376,60 +1376,61 @@
   };
 
   // ============== CURRENCY DROPDOWN INIT ==============
-  document.addEventListener('DOMContentLoaded', function() {
-    const currencyInput  = document.getElementById('productCurrency');
-    const currencyList   = document.getElementById('currencyList');
-    const currencySearch = document.getElementById('currencySearch');
+document.addEventListener('DOMContentLoaded', function() {
+  const currencyInput  = document.getElementById('productCurrency');
+  const currencyList   = document.getElementById('currencyList');
+  const currencySearch = document.getElementById('currencySearch');
 
-    // Populate currency data
-    currencyData.forEach(currency => {
-      const item = document.createElement('div');
-      item.classList.add('currency-item');
-      item.innerHTML = `
-        <span class="currency-flag">${currency.flag}</span>
-        <span class="currency-code">${currency.code}</span>
-        <span class="currency-name">${currency.name}</span>
-      `;
-      item.addEventListener('click', () => {
-        currencyInput.value = `${currency.code} - ${currency.name}`;
-        currencyInput.setAttribute('data-code', currency.code);
-        currencyList.classList.remove('visible');
-        updatePreview();
-      });
-      currencyList.appendChild(item);
+  // Populate currency data
+  currencyData.forEach(currency => {
+    const item = document.createElement('div');
+    item.classList.add('currency-item');
+    item.innerHTML = `
+      <span class="currency-flag">${currency.flag}</span>
+      <span class="currency-code">${currency.code}</span>
+      <span class="currency-name">${currency.name}</span>
+    `;
+    item.addEventListener('click', (e) => {
+      e.stopPropagation();  // Prevent the click from bubbling up
+      currencyInput.value = `${currency.code} - ${currency.name}`;
+      currencyInput.setAttribute('data-code', currency.code);
+      currencyList.classList.remove('visible');
+      updatePreview();
     });
-
-    // Default to EUR
-    const defaultCurr = currencyData.find(c => c.code === "EUR");
-    if (defaultCurr) {
-      currencyInput.value = `${defaultCurr.code} - ${defaultCurr.name}`;
-      currencyInput.setAttribute('data-code', defaultCurr.code);
-    }
-
-    currencyInput.addEventListener('click', () => {
-      currencyList.classList.toggle('visible');
-      currencySearch.focus();
-    });
-
-    document.addEventListener('click', function(e) {
-      if (!currencyInput.contains(e.target) && !currencyList.contains(e.target)) {
-        currencyList.classList.remove('visible');
-      }
-    });
-
-    currencySearch.addEventListener('input', function() {
-      const filter = currencySearch.value.toUpperCase();
-      const items  = currencyList.getElementsByClassName('currency-item');
-      for (let i = 0; i < items.length; i++) {
-        const txtValue = items[i].textContent || items[i].innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
-          items[i].style.display = "";
-        } else {
-          items[i].style.display = "none";
-        }
-      }
-    });
+    currencyList.appendChild(item);
   });
+
+  // Default to EUR
+  const defaultCurr = currencyData.find(c => c.code === "EUR");
+  if (defaultCurr) {
+    currencyInput.value = `${defaultCurr.code} - ${defaultCurr.name}`;
+    currencyInput.setAttribute('data-code', defaultCurr.code);
+  }
+
+  currencyInput.addEventListener('click', () => {
+    currencyList.classList.toggle('visible');
+    currencySearch.focus();
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!currencyInput.contains(e.target) && !currencyList.contains(e.target)) {
+      currencyList.classList.remove('visible');
+    }
+  });
+
+  currencySearch.addEventListener('input', function() {
+    const filter = currencySearch.value.toUpperCase();
+    const items  = currencyList.getElementsByClassName('currency-item');
+    for (let i = 0; i < items.length; i++) {
+      const txtValue = items[i].textContent || items[i].innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        items[i].style.display = "";
+      } else {
+        items[i].style.display = "none";
+      }
+    }
+  });
+});
 
   // ============== FUNCTIONS ==============
   function updateAddProductFormFields() {
