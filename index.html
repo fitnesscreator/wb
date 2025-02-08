@@ -508,6 +508,49 @@
       margin-top: 15px;
       background: transparent;
     }
+    
+    /* New Buttons for Contact Form Modal */
+.contact-btn {
+  display: inline-block;
+  padding: 4px 8px; /* reduced padding for a smaller button */
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 12px; /* smaller font size */
+  font-weight: bold;
+  cursor: pointer;
+  margin: 0 5px;
+  position: relative;
+  background: #333; /* fallback color */
+  transition: background 0.3s ease, transform 0.3s ease;
+  width: 140px;
+  height: 40px;
+}
+
+/* Arrow to indicate redirection on hover */
+.contact-btn::after {
+  content: "→";
+  opacity: 0;
+  display: inline-block;
+  margin-left: 5px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.contact-btn:hover::after {
+  opacity: 1;
+  transform: translateX(3px);
+}
+
+/* Jotform button with a red-to-gold gradient */
+.jotform-btn {
+  background: linear-gradient(to right, #ff6c6c, #ffc371);
+}
+
+/* Google Forms button with a blue-to-green gradient */
+.googleforms-btn {
+  background: linear-gradient(to right, #4285f4, #34a853);
+}
+
+
     /* Gradient Line for Section Titles */
     .section-title {
       position: relative;
@@ -927,8 +970,10 @@
       <span class="modal-close-contact" id="closeContactFormModal">&times;</span>
       <h2>Create Your Contact Form</h2>
       <p style="font-weight:bold">
-        Step 1: Create your contact form in one of these companies (Jotform, Google Forms...)
-      </p>
+  Step 1: Create your contact form in one of these companies:
+  <button type="button" class="contact-btn jotform-btn" onclick="window.open('https://www.jotform.com', '_blank')">Jotform</button>
+  <button type="button" class="contact-btn googleforms-btn" onclick="window.open('https://www.google.com/forms/about/', '_blank')">Google Forms</button>
+</p>
       <p style="font-weight:bold">
         Step 2: Paste the embed HTML code of your form here:
       </p>
