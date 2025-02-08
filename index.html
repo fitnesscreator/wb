@@ -728,8 +728,39 @@
 /* Rotate the refresh icon when clicked */
 #refreshBtn:active::after {
     transform: rotate(360deg);
-
+  
+}
     
+    /* Payment Card Wrapper */
+.payment-card {
+  width: auto;
+  border-radius: 8px;                   /* Same border radius as other forms */
+  overflow: hidden;                     /* Ensures child content respects the rounded corners */
+  padding: 20px;                        /* Internal spacing */
+  margin-top: 20px;                     /* Spacing above the card */
+  /* Animated Gradient Background */
+  background: linear-gradient(270deg, #ffe4d5, #f2cdff, #cddeff);
+  background-size: 800% 800%;
+  animation: gradientAnimation 15s ease infinite;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional subtle shadow */
+}
+
+/* Keyframes for smooth gradient animation */
+@keyframes gradientAnimation {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+   #paymentSection .section-title {
+  color: #fff; /* Change this to your desired title color */
+}
+
+#paymentSection p {
+  color: #333; /* Change this to your desired paragraph color */
+  text-align: left;
+}
+
+  
   </style>
 </head>
 <body>
@@ -932,28 +963,40 @@
         <div id="contactFormStatus" style="margin-top: 10px;"></div>
       </form>
       <!-- Payment Section: Get Your Website -->
-      <section id="paymentSection" class="payment-section">
-        <h2 class="section-title">Get your website</h2>
-        <p>
-          Pay to unlock the download button. If you refresh this page, you will lose the website 
-          that you created, so pay and download the website before losing the website you created. After successful payment, you will download a Zip file that contains your website file ( index.html )
-        </p>
-        <!-- Pay Button with icon -->
-        <button id="payBtn" class="payment-btn" disabled>
-          <img id="paypalIcon" src="https://i.ibb.co/PsWwm11F/2ea99dfb-27c1-43a9-84ba-acb7533f7784.png" alt="PayPal Icon">
-          <span id="payBtnText">Pay €12</span>
-        </button>
-        <!-- Email Verification Row (hidden by default) -->
-        <div id="emailVerificationRow">
-          <input type="email" id="verificationEmail" placeholder="Enter your email to verify payment">
-          <button id="verifyEmailBtn">Verify</button>
-        </div>
-        <!-- Download & Show Code buttons (hidden initially) -->
-        <div class="download-row" id="downloadRow" style="display: none;">
-          <button id="downloadBtn" onclick="downloadSite()" class="unlock-button">Download Website File</button>
-          <button id="showCodeBtn" onclick="openCodeModal()" class="unlock-button">Copy Website Code</button>
-        </div>
-      </section>
+<div class="payment-card">
+  <section id="paymentSection" class="payment-section">
+    <h2 class="section-title">Download your website</h2>
+    <p>
+  You need to <strong>pay to download</strong> your website.<br><br>
+  ⚠ <strong>Important:</strong> If you <strong>refresh or leave this page, your website will be lost</strong>.<br><br>
+  💾 <strong>What happens after payment?</strong><br>
+  - You will get a <strong>ZIP file</strong> containing your website (<code>index.html</code>).<br>
+  - Download it immediately after payment.<br><br>
+  📤 <strong>How to publish your website?</strong><br>
+  - Extract the folder from the ZIP file.<br>
+  - Drag and drop the folder to <strong>Netlify.com</strong> for easy website publishing.<br>
+  - Or, drag and drop the <code>index.html</code> file to any free hosting platform like <strong>GitHub.com</strong> or <strong>Blogger.com</strong>.<br>
+  - (For Blogger, <strong>watch my video tutorial</strong>.)<br><br>
+  <strong>The payment button will be available once you finish creating your website.</strong>
+</p>
+
+    <!-- Pay Button with icon -->
+    <button id="payBtn" class="payment-btn" disabled>
+      <img id="paypalIcon" src="https://i.ibb.co/PsWwm11F/2ea99dfb-27c1-43a9-84ba-acb7533f7784.png" alt="PayPal Icon">
+      <span id="payBtnText">Pay €12</span>
+    </button>
+    <!-- Email Verification Row (hidden by default) -->
+    <div id="emailVerificationRow">
+      <input type="email" id="verificationEmail" placeholder="Enter your email to verify payment">
+      <button id="verifyEmailBtn">Verify</button>
+    </div>
+    <!-- Download & Show Code buttons (hidden initially) -->
+    <div class="download-row" id="downloadRow" style="display: none;">
+      <button id="downloadBtn" onclick="downloadSite()" class="unlock-button">Download Website File</button>
+      <button id="showCodeBtn" onclick="openCodeModal()" class="unlock-button">Copy Website Code</button>
+    </div>
+  </section>
+</div>
     </div>
     <!-- Preview section on the right -->
 <div class="preview-section">
