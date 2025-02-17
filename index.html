@@ -2,6 +2,46 @@
 <html>
 <head>
   <meta charset="UTF-8">
+  <!-- Primary Meta Tags -->
+<title>Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
+<meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
+<meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bossinpajamas.com/">
+<meta property="og:title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
+<meta property="og:description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
+<meta property="og:image" content="https://i.ibb.co/XNg8tLy/Bella-89.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://bossinpajamas.com/">
+<meta property="twitter:title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
+<meta property="twitter:description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
+<meta property="twitter:image" content="https://i.ibb.co/XNg8tLy/Bella-89.png">
+
+<!-- Canonical Link -->
+<link rel="canonical" href="https://bossinpajamas.com/" />
+
+<!-- Organization Schema (JSON-LD) -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Boss in Pajamas",
+  "url": "https://bossinpajamas.com/",
+  "logo": "https://i.ibb.co/XNg8tLy/Bella-89.png",
+  "sameAs": [
+    "https://facebook.com/your-company",
+    "https://twitter.com/your-company",
+    "https://instagram.com/your-company",
+    "https://linkedin.com/company/your-company"
+  ],
+  "description": "Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience."
+}
+</script>
   <title>Create Website</title>
   <style>
     /* Basic builder layout */
@@ -101,11 +141,11 @@
     }
     button[onclick="addProduct()"],
     button[onclick="addReview()"] {
-      background: linear-gradient(to right, #6561e0, #61a3ff);
+      background: linear-gradient(to right, #ff8f5a, #ff3096);
     }
     button[onclick="addProduct()"]:hover,
     button[onclick="addReview()"]:hover {
-      background: linear-gradient(to right, #5450c0, #5090d0);
+      background: #fe2c55;
     }
     button:hover:not([onclick="addProduct()"]):not([onclick="addReview()"]) {
       background: #1976f2;
@@ -136,23 +176,23 @@
     /* When payment is successful, icon disappears and text changes */
     /* Buttons for Download and Copy Code */
     #downloadBtn {
-      background: linear-gradient(to right, #6561e0, #61a3ff);
+      background: #388eff;
+      margin-right: 3px;
     }
     #downloadBtn:hover {
-      background: linear-gradient(to right, #5450c0, #5090d0);
+      background: #38b6ff;
     }
     #showCodeBtn {
-      background: #17a2b8;
-      margin-top: 10px;
+      background: #004aad;
+      margin-left: 3px;
     }
     #showCodeBtn:hover {
-      background: #138496;
+      background: #0057cc;
     }
     /* Stylized Add Image Button */
     #addImagesBtn {
-      background: transparent;
-      border: 1px solid #6561e0;
-      color: #6561e0;
+      background: #fec7e0;
+      color: #ffffff;
       border-radius: 4px;
       padding: 12px 20px;
       cursor: pointer;
@@ -170,7 +210,7 @@
       transition: transform 0.2s;
     }
     #addImagesBtn:hover {
-      background: linear-gradient(to right, #6561e0, #61a3ff);
+      background: #ff66c4;
       color: #fff;
       border: none;
     }
@@ -222,7 +262,7 @@
     .preview-section h2 {
       margin-bottom: 15px;
       font-size: 1.5rem;
-      color: #555;
+      color: #777;
       position: relative;
       display: flex;
       align-items: center;
@@ -311,14 +351,14 @@
     }
     /* Stylized Add Product Form */
     #addProductForm {
-      border: 1px solid #5e91ff;
+      border: 1px solid #ff3096;
       border-radius: 8px;
       padding: 20px;
       margin-top: 15px;
     }
     /* Stylized Upload Photos Form */
     #uploadPhotosForm {
-      border: 1px solid #5e91ff;
+      border: 1px solid #ff3096;
       border-radius: 8px;
       padding: 20px;
       margin-top: 15px;
@@ -337,7 +377,7 @@
     #heroLogoForm,
     #addReviewForm,
     #aboutForm {
-      border: 1px solid #5e91ff;
+      border: 1px solid #ff3096;
       border-radius: 8px;
       padding: 20px;
       margin-top: 15px;
@@ -405,6 +445,39 @@
   font-size: 12px;
   color: #888;
 }
+    
+    /* Custom CSS for the "Select Payment Method" button */
+#paymentMethodBtn {
+  background-color: #5e91ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  text-transform: normal;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#paymentMethodBtn:hover {
+  background-color: #4a7bd4;
+  transform: scale(1.03);
+}
+
+#paymentMethodBtn:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(94, 145, 255, 0.5);
+}
+    
+    /* When a payment method is selected */
+#paymentMethodBtn.selected {
+  background-color: #4caf50; /* A nice green */
+  color: #fff;
+  border: none;
+}
+
+
 
 
     #howtocreatepaypalbutton {
@@ -502,7 +575,7 @@
     }
     /* Contact Us form in the builder */
     #contactUsForm {
-      border: 1px solid #5e91ff;
+      border: 1px solid #ff3096;
       border-radius: 8px;
       padding: 20px;
       margin-top: 15px;
@@ -547,7 +620,7 @@
 
 /* Google Forms button with a blue-to-green gradient */
 .googleforms-btn {
-  background: linear-gradient(to right, #4285f4, #34a853);
+  background: linear-gradient(to right, #000000, #004aad);
 }
 
 
@@ -568,7 +641,7 @@
       transform: translateY(-50%);
       width: 5px;
       height: 35px;
-      background: linear-gradient(to bottom, #6561e0, #a862ea);
+      background: linear-gradient(to bottom, #ff8f5a, #ff3096, #fe2c55) !important;
       border-radius: 3px;
     }
     /* Email Verification Row Styling */
@@ -593,6 +666,7 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
+      margin-top: 7px;
     }
     /* Code Modal Styles */
     #codeModal .modal-content {
@@ -696,7 +770,7 @@
 }
     
     #refreshBtn {
-    background: linear-gradient(135deg, #007bff, #0056b3);
+    background: linear-gradient(135deg, #ff8f5a, #ff3096);
     color: white;
     font-size: 16px;
     font-weight: bold;
@@ -739,7 +813,7 @@
   padding: 20px;                        /* Internal spacing */
   margin-top: 20px;                     /* Spacing above the card */
   /* Animated Gradient Background */
-  background: linear-gradient(270deg, #ffe4d5, #f2cdff, #cddeff);
+  background: linear-gradient(270deg, #ff8f5a, #ff99cb, #ff99ad);
   background-size: 800% 800%;
   animation: gradientAnimation 15s ease infinite;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional subtle shadow */
@@ -756,9 +830,292 @@
 }
 
 #paymentSection p {
-  color: #333; /* Change this to your desired paragraph color */
+  color: #fff; /* Change this to your desired paragraph color */
   text-align: left;
 }
+    
+    /* Styles for About Section Color Pickers */
+.icon-container {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+}
+.icon-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 50px;
+    border: 2px solid #fec7e0; /* Light gray border */
+    border-radius: 10px; /* Rounded corners */
+    background-color: #fff; /* Default background color */
+    cursor: pointer; /* Pointer cursor on hover */
+}
+.custom-t-icon {
+    font-size: 25px;
+    font-weight: bold;
+    color: #666; /* Light gray for the "T" icon */
+}
+.fa-paint-brush {
+    font-size: 18px;
+    color: #666; /* Light gray for the brush icon */
+}
+.fa-sliders-h {
+    font-size: 20px;
+    color: #666; /* Light gray for the brush icon */
+}
+/* Hide the color picker inputs */
+.color-picker {
+    display: none;
+}
+    
+    /* New styles for the font dropdown */
+.dropdown-menu {
+  min-width: 120px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-height: 200px;
+  overflow-y: auto;
+}
+.dropdown-menu div {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+.dropdown-menu div:hover {
+  background: #f0f0f0;
+}
+    
+    .cta-color-options {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+    
+    .flex-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+    
+    /* Container for each input + button */
+.input-row {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+/* Square upload button */
+.upload-btn {
+  width: 38px;            /* make it square by setting width = height */
+  height: 38px;
+  background-color: #fec7e0;
+  color: #fff;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-left: 8px;       /* small gap from the input */
+  margin-top: 6px;
+  display: inline-flex;   /* center icon both vertically & horizontally */
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.upload-btn:hover {
+  background-color: #ff66c4 !important;
+}
+
+
+/* icon in the button */
+.upload-btn i {
+  margin: 0;
+  font-size: 1.2rem;
+}
+    
+    /* Upload Modal Styles */
+#uploadModal {
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+#uploadModal .modal-content {
+  max-width: 600px;
+  height: 400px;
+  text-align: center;
+}
+
+#uploadModal .modal-close {
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+/* Upload Drop Area */
+#uploadDropArea {
+  border: 2px dashed #ccc;
+  padding: 20px;
+  margin: 10px 0;
+  height: 230px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#uploadDropArea i {
+  font-size: 5rem;
+  color: #ccc;
+  transition: transform 0.3s, color 0.3s;
+}
+
+#uploadDropArea:hover i {
+  color: #ff3096;
+  transform: scale(1.1);
+}
+
+
+/* Hide the file input */
+#uploadFileInput {
+  display: none;
+}
+
+/* Browse Button Styles */
+#browseButton {
+  background: linear-gradient(to right, #ff8f5a, #ff3096);
+  border: none;
+  color: #fff;
+  border-radius: 4px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#browseButton:hover {
+  background: #fe2c55;
+}
+
+    
+    /* Modal Overlay */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4); /* Subtle dark overlay */
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Content */
+.modal-content {
+  background: #fff;
+  border-radius: 16px; /* Extra smooth corners */
+  padding: 40px 50px;
+  width: 800px; /* Fixed width of 800px */
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+  position: relative;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  text-align: left;
+  animation: slideDown 0.4s ease-out;
+  overflow: hidden;
+  border: 1px solid #e6e6e6;
+}
+
+/* Close Button */
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #666;
+  transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+  color: #333;
+}
+
+/* Modal Header */
+.modal h2 {
+  margin: 0 0 25px;
+  font-size: 2rem;
+  text-align: center;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Payment Options List */
+.payment-options {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.payment-options li {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px 25px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: background 0.3s, border-color 0.3s, transform 0.2s;
+  text-align: left;
+}
+
+.payment-options li:hover {
+  background: #e7f3ff; /* Light blue background on hover */
+  border-color: #2575d6; /* Darker blue border on hover */
+  transform: translateY(-2px);
+}
+
+
+.payment-options li h3 {
+  margin: 0 0 12px;
+  font-size: 1.4rem;
+  color: #222;
+  display: flex;
+  align-items: center;
+}
+
+.payment-options li h3 img {
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+  margin-right: 12px;
+}
+
+.payment-options li p {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+.payment-options li small {
+  font-size: 0.90rem;
+  color: black;
+  display: block;
+  margin-top: 8px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
 
   
   </style>
@@ -767,6 +1124,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
   <!-- Then include FileSaver.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&family=Open+Sans&family=Lato&family=Montserrat&family=Source+Sans+Pro&family=Raleway&family=Ubuntu&family=Poppins&family=Merriweather&family=Oswald&family=Patrick+Hand&family=Indie+Flower&family=Shadows+Into+Light&family=Dancing+Script&family=Homemade+Apple&family=Caveat&family=Sacramento&family=Gloria+Hallelujah&family=Handlee&family=Reenie+Beanie&family=Pacifico&family=Lobster&family=Amatic+SC&family=Satisfy&family=Cookie&display=swap" rel="stylesheet">
+
 
   <script>
   // Create a new link element
@@ -775,211 +1134,610 @@
   // Set the attributes for the favicon
   faviconLink.rel = 'icon';
   faviconLink.type = 'image/png';
-  faviconLink.href = 'https://i.ibb.co/rKjzTzWM/Bella-70.png';
+  faviconLink.href = 'https://i.ibb.co/r2dwry1t/Bella-2025-02-14-T170359-184.png';
   
   // Append the link element to the document head
   document.head.appendChild(faviconLink);
 </script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <body>
   <!-- Main container: forms on the left, preview on the right -->
   <div class="main-container">
     <!-- Forms section on the left -->
     <div class="forms-section">
-      <!-- Upload Photos Section -->
-      <form id="uploadPhotosForm">
-        <h2>Upload Photos</h2>
-        <!-- Font Awesome CDN -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-<p style="text-align: left;">📸 Upload your Logo, Products Photos... to get their links 🔗</p>
-
-<p style="text-align: left;">  
-  1️⃣ <strong>Go to <a href="https://imgbb.com/" target="_blank" data-ignore-exit-confirm>ImgBB.com</a> & Create an Account</strong><br>
-  Click “Sign up” → Use Email or Google for quick access.  
-</p>
-
-<p style="text-align: left;">  
-  2️⃣ <strong>Click “Start Uploading”</strong><br>
-  Select ALL your images at once or drag & drop them.  
-</p>
-
-<p style="text-align: left;">  
-  3️⃣ <strong>Go to “My Profile” (Top Right)</strong><br>
-  All your uploaded images are stored here forever!  
-</p>
-
-<p style="text-align: left;">  
-  4️⃣ <strong>Tap the <i class="fas fa-code"></i> Icon on the Image You Want to Use</strong><br>
-  Then copy the **Direct Link** and paste it in the sections below.  
-</p>
-
-<p style="text-align: left;">✅ Done! Now you have all your image links in one place 🚀</p>
-
-
-
-
-        <button type="button" id="uploadBtn" onclick="redirectToUpload()">Upload <span class="arrow">&#10148;</span></button>
-      </form>
+      
       <!-- Hero & Logo Section -->
-      <form id="heroLogoForm">
-        <h2>Hero & Logo Section</h2>
-        <label>Logo Image URL
-          <input id="logo" type="text" placeholder="https://example.com/logo.png" required spellcheck="false" maxlength="300">
-        </label>
-        <label>Hero Banner Image URL
-          <input id="banner" type="text" placeholder="https://example.com/hero.jpg" required spellcheck="false" maxlength="300">
-        </label>
-        <label>Hero Title
-          <textarea id="heroText" rows="2" placeholder="Your amazing headline" required spellcheck="false" maxlength="70"></textarea>
-        </label>
-        <label>CTA Button Text
-          <input id="ctaText" type="text" placeholder="Shop Now!" required spellcheck="false" maxlength="30">
-        </label>
-      </form>
-      <!-- Add Products -->
-      <form id="addProductForm">
-        <h2 class="section-title">Add Products</h2>
-        <label>Product Title
-          <input id="productTitle" type="text" placeholder="Awesome Gadget" required spellcheck="false" maxlength="60">
-        </label>
-        <label>1st Image URL
-          <input id="image1" type="text" placeholder="https://example.com/product1.jpg" required spellcheck="false" maxlength="300">
-        </label>
-        <div id="additionalImage2" style="display:none;">
-          <label>2nd Image URL
-            <input id="image2" type="text" placeholder="https://example.com/product2.jpg" spellcheck="false" maxlength="300">
-          </label>
-        </div>
-        <div id="additionalImage3" style="display:none;">
-          <label>3rd Image URL
-            <input id="image3" type="text" placeholder="https://example.com/product3.jpg" spellcheck="false" maxlength="300">
-          </label>
-        </div>
-        <button type="button" id="addImagesBtn" onclick="addImageField()">Add Image +</button>
-        <label>Your Paypal Currency
-          <div class="currency-dropdown">
-            <input type="text" id="productCurrency" class="currency-input" placeholder="Select Currency" readonly spellcheck="false">
-            <div class="currency-list" id="currencyList">
-              <div class="currency-search">
-                <input type="text" id="currencySearch" placeholder="Search Currency" spellcheck="false">
-              </div>
-            </div>
-          </div>
-        </label>
-        <label>Number Sold
-          <input id="sold" type="text" placeholder="e.g. 500 (blank or 0 to hide)">
-        </label>
-        <label>Price
-          <input id="price" type="text" placeholder="12.99" required spellcheck="false" maxlength="15">
-        </label>
-        <label>Shipping Cost (set 0 for FREE)
-          <input id="shipping" type="text" placeholder="e.g. 3.99 or 0" required spellcheck="false" maxlength="15">
-        </label>
-        <label>Returns
-          <select id="returns" required>
-            <option value="Accepted">Accepted</option>
-            <option value="Not Accepted">Not Accepted</option>
-          </select>
-          <label>Custom Color Label
-  <input id="colorLabel" type="text" placeholder="e.g., Shade, Hue, Tint" spellcheck="false" maxlength="30">
-</label>
-        </label>
-        <label>Color Options (comma-separated)
-          <input id="colorOptions" type="text" placeholder="Black, Cream, Green..." required spellcheck="false" maxlength="100">
-        </label>
-        <label>Custom Size Label
-  <input id="sizeLabel" type="text" placeholder="e.g., Dimension, Fit" spellcheck="false" maxlength="30">
-</label>
-        <label>Size Options (comma-separated)
-          <input id="sizeOptions" type="text" placeholder="S, M, L, XL..." required spellcheck="false" maxlength="100">
-        </label>
-        <label>Description
-          <textarea id="description" rows="3" placeholder="Describe the product here" required spellcheck="false" maxlength="300"></textarea>
-        </label>
-        <!-- Payment Method -->
-        <label class="payment-method-label">
-          <div class="payment-method-row">
-            <img src="https://i.ibb.co/tC9LHLG/Bella-52.png" alt="PayPal">
-            <img src="https://i.ibb.co/cCtHLKs/Bella-58.png" alt="Stripe">
-            <img src="https://i.ibb.co/m496tmj/Bella-53.png" alt="Checkout Page">
-            <span>Select Payment Method</span>
-          </div>
-          <div class="payment-method-select">
-            <select id="productPaymentMethod" required>
-  <option value="paypalEmail">PayPal Email</option>
-  <optgroup label="With this option, you lose inventory control, sales will keep coming even if you’re sold out"></optgroup>
-  
-  <option value="paypalEmbed">PayPal Button Embed Code</option>
-  <optgroup label="You control your inventory by setting stock limits as you create your button"></optgroup>
-  
-  <option value="paypalLink">PayPal Button Link</option>
-  <optgroup label="You control your inventory by setting stock limits as you create your button"></optgroup>
-  
-  <option value="other">Other Payment Button link or Checkout Page link</option>
-  <optgroup label="Example: Stripe, Sumup, Square..."></optgroup>
-</select>
+<form id="heroLogoForm">
+  <h2 class="section-title">Hero & Logo Section</h2>
 
-          </div>
-        </label>
-        <div id="productLinkField">
-          <label>PayPal Button Link (for this product)
-            <textarea id="productLink" rows="2" placeholder="https://www.paypal.com/checkoutnow?token=YOURTOKEN" spellcheck="false" maxlength="1000"></textarea>
-          </label>
-        </div>
-        <div id="productEmbedField" style="display:none;">
-          <label>PayPal Button Embed Code (for this product)
-            <textarea id="productEmbed" rows="2" placeholder="Embed code..." spellcheck="false" maxlength="2000"></textarea>
-          </label>
-        </div>
-        <div id="otherPaymentField" style="display:none;">
-          <label>Other Payment Button or Checkout Page Link
-            <input id="otherPaymentLink" type="text" placeholder="https://example.com/checkout" spellcheck="false" maxlength="1000">
-          </label>
-        </div>
-        <div id="paypalEmailField" style="display: none;">
-  <label>PayPal Email
-    <input id="paypalEmailInput" type="email" placeholder="yourpaypal@email.com" 
-           spellcheck="false" maxlength="200">
+  <!-- Logo Image Row -->
+  <label>Upload Logo Image</label>
+  <div class="input-row">
+    <input
+      id="logo"
+      type="text"
+      placeholder="Or Paste the Logo Link Here"
+      required
+      spellcheck="false"
+      maxlength="300"
+    />
+    <button
+      type="button"
+      class="upload-btn"
+      id="uploadLogoBtn"
+      title="Upload Logo"
+      onclick="openUploadModal('uploadLogoBtn')"
+    >
+      <i class="fas fa-cloud-upload-alt"></i>
+    </button>
+  </div>
+
+  <!-- Hero Banner Image Row -->
+  <label>Upload Your Hero Banner Image</label>
+  <div class="input-row">
+    <input
+      id="banner"
+      type="text"
+      placeholder="Or Paste Its Link Here"
+      required
+      spellcheck="false"
+      maxlength="300"
+    />
+    <button
+      type="button"
+      class="upload-btn"
+      id="uploadBannerBtn"
+      title="Upload Hero Banner"
+      onclick="openUploadModal('uploadBannerBtn')"
+    >
+      <i class="fas fa-cloud-upload-alt"></i>
+    </button>
+  </div>
+
+  <label>Hero Title
+    <textarea
+      id="heroText"
+      rows="2"
+      placeholder="Your amazing headline"
+      required
+      spellcheck="false"
+      maxlength="70"
+    ></textarea>
   </label>
-</div>
-        
-        <button type="button" onclick="addProduct()">Add Product</button>
-        <div id="addedProductsList"></div>
-      </form>
-      <!-- Add Reviews -->
-      <form id="addReviewForm">
-        <h2>Reviews Section (max 3)</h2>
-        <label>Reviewer Name
-          <input id="reviewerName" type="text" placeholder="John Doe" required spellcheck="false" maxlength="60">
-        </label>
-        <label>Stars (1–5)
-          <select id="reviewStars" required>
-            <option value="1">1 star</option>
-            <option value="2">2 stars</option>
-            <option value="3" selected>3 stars</option>
-            <option value="4">4 stars</option>
-            <option value="5">5 stars</option>
-          </select>
-        </label>
-        <label>Review Text
-          <textarea id="reviewText" rows="2" placeholder="What do you think?" required spellcheck="false" maxlength="300"></textarea>
-        </label>
-        <button type="button" onclick="addReview()">Add Review</button>
-        <div id="addedReviewsList"></div>
-      </form>
+
+  <label>Hero Title Color &amp; Font</label>
+  <div class="flex-row" style="position: relative;">
+    <!-- Color Picker Button -->
+    <div class="icon-wrapper" onclick="document.getElementById('heroTitleColorPicker').click()">
+      <div class="custom-t-icon">T</div>
+      <input
+        type="color"
+        id="heroTitleColorPicker"
+        class="color-picker"
+        value="#000000"
+        onchange="updateHeroTitleColor()"
+      />
+    </div>
+    <!-- Font Button -->
+    <div
+      class="icon-wrapper"
+      id="heroFontButton"
+      onclick="event.stopPropagation(); toggleFontDropdown()"
+    >
+      Font
+    </div>
+    <!-- Dropdown Menu (initially hidden) -->
+    <div
+      id="fontDropdown"
+      class="dropdown-menu"
+      style="
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        z-index: 1000;
+      "
+    >
+      <!-- Font options will be populated by JavaScript -->
+    </div>
+  </div>
+
+  <label>CTA Button Text
+    <input
+      id="ctaText"
+      type="text"
+      placeholder="Shop Now!"
+      required
+      spellcheck="false"
+      maxlength="30"
+    />
+  </label>
+
+  <label>CTA Button Colors</label>
+  <div class="cta-color-options">
+    <div class="icon-wrapper" onclick="document.getElementById('ctaBgColorPicker').click()">
+      <i class="fas fa-paint-brush"></i>
+      <input
+        type="color"
+        id="ctaBgColorPicker"
+        class="color-picker"
+        value="#007bff"
+        onchange="updateCTAButtonColors()"
+      />
+    </div>
+    <div class="icon-wrapper" onclick="document.getElementById('ctaTextColorPicker').click()">
+      <div class="custom-t-icon">T</div>
+      <input
+        type="color"
+        id="ctaTextColorPicker"
+        class="color-picker"
+        value="#ffffff"
+        onchange="updateCTAButtonColors()"
+      />
+    </div>
+  </div>
+</form>
+
+
+
+      <!-- Add Products -->
+<form id="addProductForm">
+  <h2 class="section-title">Add Products</h2>
+
+  <label>Product Title
+    <input
+      id="productTitle"
+      type="text"
+      placeholder="Awesome Gadget"
+      required
+      spellcheck="false"
+      maxlength="60"
+    >
+  </label>
+
+  <label>Upload Main Product Image</label>
+  <div class="input-row">
+    <input
+      id="image1"
+      type="text"
+      placeholder="Or Paste its Link Here"
+      required
+      spellcheck="false"
+      maxlength="300"
+    >
+    <button
+      type="button"
+      class="upload-btn"
+      id="uploadImage1Btn"
+      title="Upload 1st Image"
+      onclick="openUploadModal('uploadImage1Btn')"
+    >
+      <i class="fas fa-cloud-upload-alt"></i>
+    </button>
+  </div>
+
+  <div id="additionalImage2" style="display:none;">
+    <label>Upload 2nd Product Image</label>
+    <div class="input-row">
+      <input
+        id="image2"
+        type="text"
+        placeholder="Or Paste Its Link Here"
+        spellcheck="false"
+        maxlength="300"
+      >
+      <button
+        type="button"
+        class="upload-btn"
+        id="uploadImage2Btn"
+        title="Upload 2nd Image"
+        onclick="openUploadModal('uploadImage2Btn')"
+      >
+        <i class="fas fa-cloud-upload-alt"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="additionalImage3" style="display:none;">
+    <label>Upload 3rd Product Image</label>
+    <div class="input-row">
+      <input
+        id="image3"
+        type="text"
+        placeholder="Or Paste its Link Here"
+        spellcheck="false"
+        maxlength="300"
+      >
+      <button
+        type="button"
+        class="upload-btn"
+        id="uploadImage3Btn"
+        title="Upload 3rd Image"
+        onclick="openUploadModal('uploadImage3Btn')"
+      >
+        <i class="fas fa-cloud-upload-alt"></i>
+      </button>
+    </div>
+  </div>
+
+  <button
+    type="button"
+    id="addImagesBtn"
+    onclick="addImageField()"
+  >
+    Add Image +
+  </button>
+
+  <label>Your Paypal Currency
+    <div class="currency-dropdown">
+      <input
+        type="text"
+        id="productCurrency"
+        class="currency-input"
+        placeholder="Select Currency"
+        readonly
+        spellcheck="false"
+      >
+      <div class="currency-list" id="currencyList">
+        <div class="currency-search">
+          <input
+            type="text"
+            id="currencySearch"
+            placeholder="Search Currency"
+            spellcheck="false"
+          >
+        </div>
+      </div>
+    </div>
+  </label>
+
+  <label>Number Sold
+    <input
+      id="sold"
+      type="text"
+      placeholder="e.g. 500 (blank or 0 to hide)"
+    >
+  </label>
+
+  <label>Price
+    <input
+      id="price"
+      type="text"
+      placeholder="12.99"
+      required
+      spellcheck="false"
+      maxlength="15"
+    >
+  </label>
+
+  <label>Shipping Cost (set 0 for FREE)
+    <input
+      id="shipping"
+      type="text"
+      placeholder="e.g. 3.99 or 0"
+      required
+      spellcheck="false"
+      maxlength="15"
+    >
+  </label>
+
+  <label>Returns
+    <select id="returns" required>
+      <option value="Accepted">Accepted</option>
+      <option value="Not Accepted">Not Accepted</option>
+    </select>
+
+    <label>Selectable Options 1 🏷️
+      <input
+        id="colorLabel"
+        type="text"
+        placeholder="Example : Color"
+        spellcheck="false"
+        maxlength="30"
+      >
+    </label>
+
+    <input
+      id="colorOptions"
+      type="text"
+      placeholder="Example : Black, Cream, Pink...(comma-separated)"
+      required
+      spellcheck="false"
+      maxlength="100"
+    >
+  </label>
+
+  <label>Selectable Options 2 🏷️
+    <input
+      id="sizeLabel"
+      type="text"
+      placeholder="Example : Size"
+      spellcheck="false"
+      maxlength="30"
+    >
+
+    <input
+      id="sizeOptions"
+      type="text"
+      placeholder="Example : S, M, L, XL...(comma-separated)"
+      required
+      spellcheck="false"
+      maxlength="100"
+    >
+  </label>
+
+  <label>Description
+    <textarea
+      id="description"
+      rows="3"
+      placeholder="Describe the product here"
+      required
+      spellcheck="false"
+      maxlength="300"
+    ></textarea>
+  </label>
+
+  <!-- Payment Method -->
+  <label class="payment-method-label">
+    <div class="payment-method-row">
+      <img
+        src="https://i.ibb.co/tC9LHLG/Bella-52.png"
+        alt="PayPal"
+      >
+      <img
+        src="https://i.ibb.co/cCtHLKs/Bella-58.png"
+        alt="Stripe"
+      >
+      <img
+        src="https://i.ibb.co/m496tmj/Bella-53.png"
+        alt="Checkout Page"
+      >
+      <span>Select Payment Method</span>
+    </div>
+    <div class="payment-method-select">
+      <button type="button" id="paymentMethodBtn">Select Payment Method</button>
+<input type="hidden" id="productPaymentMethod" name="productPaymentMethod" value="paypalEmail">
+    </div>
+  </label>
+
+  <div id="productLinkField">
+    <label>PayPal Button Link (for this product)
+      <textarea
+        id="productLink"
+        rows="2"
+        placeholder="https://www.paypal.com/checkoutnow?token=YOURTOKEN"
+        spellcheck="false"
+        maxlength="1000"
+      ></textarea>
+    </label>
+  </div>
+
+  <div
+    id="productEmbedField"
+    style="display:none;"
+  >
+    <label>PayPal Button Embed Code (for this product)
+      <textarea
+        id="productEmbed"
+        rows="2"
+        placeholder="Embed code..."
+        spellcheck="false"
+        maxlength="2000"
+      ></textarea>
+    </label>
+  </div>
+
+  <div
+    id="otherPaymentField"
+    style="display:none;"
+  >
+    <label>Other Payment Button or Checkout Page Link
+      <input
+        id="otherPaymentLink"
+        type="text"
+        placeholder="https://example.com/checkout"
+        spellcheck="false"
+        maxlength="1000"
+      >
+    </label>
+  </div>
+
+  <div
+    id="paypalEmailField"
+    style="display: none;"
+  >
+    <label>PayPal Email
+      <input
+        id="paypalEmailInput"
+        type="email"
+        placeholder="yourpaypal@email.com"
+        spellcheck="false"
+        maxlength="200"
+      >
+    </label>
+  </div>
+
+  <button
+    type="button"
+    onclick="addProduct()"
+  >
+    Add Product
+  </button>
+
+  <label>Buy now button styles</label>
+  <div
+    id="productButtonStyleContainer"
+    class="icon-container"
+    style="margin: 10px 0;"
+  >
+    <!-- Background Color Picker for Buy Now Button -->
+    <div
+      class="icon-wrapper"
+      onclick="document.getElementById('buyNowBgColorPicker').click()"
+    >
+      <i class="fas fa-paint-brush"></i>
+      <input
+        type="color"
+        id="buyNowBgColorPicker"
+        class="color-picker"
+        value="#007bff"
+        onchange="updateProductBuyNowStyles()"
+      >
+    </div>
+
+    <!-- Text Color Picker for Buy Now Button -->
+    <div
+      class="icon-wrapper"
+      onclick="document.getElementById('buyNowTextColorPicker').click()"
+    >
+      <div class="custom-t-icon">T</div>
+      <input
+        type="color"
+        id="buyNowTextColorPicker"
+        class="color-picker"
+        value="#fff"
+        onchange="updateProductBuyNowStyles()"
+      >
+    </div>
+
+    <!-- Corner Radius Adjuster for Buy Now Button -->
+    <div
+      class="icon-wrapper"
+      id="cornerPickerWrapper"
+    >
+      <i class="fas fa-sliders-h"></i>
+    </div>
+  </div>
+
+  <div id="addedProductsList"></div>
+</form>
+
+
+<!-- Add Reviews -->
+<form id="addReviewForm">
+    <h2 class="section-title">Reviews Section (max 3)</h2>
+  <label>Reviewer Name
+    <input
+      id="reviewerName"
+      type="text"
+      placeholder="John Doe"
+      required
+      spellcheck="false"
+      maxlength="60"
+    >
+  </label>
+  <label>Stars (1–5)
+    <select id="reviewStars" required>
+      <option value="1">1 star</option>
+      <option value="2">2 stars</option>
+      <option value="3" selected>3 stars</option>
+      <option value="4">4 stars</option>
+      <option value="5">5 stars</option>
+    </select>
+  </label>
+  <label>Review Text
+    <textarea
+      id="reviewText"
+      rows="2"
+      placeholder="What do you think?"
+      required
+      spellcheck="false"
+      maxlength="300"
+    ></textarea>
+  </label>
+  <button
+    type="button"
+    onclick="addReview()"
+  >
+    Add Review
+  </button>
+  <div id="addedReviewsList"></div>
+</form>
       <!-- About Us -->
-      <form id="aboutForm">
-        <h2>About Us Section</h2>
-        <label>About Title
-          <input id="aboutTitle" type="text" placeholder="Who We Are" required spellcheck="false" maxlength="60">
-        </label>
-        <label>About Paragraph
-          <textarea id="aboutParagraph" rows="3" placeholder="Our story..." required spellcheck="false" maxlength="500"></textarea>
-        </label>
-        <label>About Image URL
-          <input id="aboutImage" type="text" placeholder="https://example.com/about.jpg" required spellcheck="false" maxlength="300">
-        </label>
-      </form>
+<form id="aboutForm">
+      <h2 class="section-title">About Us Section</h2>
+
+  <label>About Title
+    <input
+      id="aboutTitle"
+      type="text"
+      placeholder="Who We Are"
+      required
+      spellcheck="false"
+      maxlength="60"
+    >
+  </label>
+
+  <label>About Paragraph
+    <textarea
+      id="aboutParagraph"
+      rows="3"
+      placeholder="Our story..."
+      required
+      spellcheck="false"
+      maxlength="500"
+    ></textarea>
+  </label>
+
+  <label>Upload About Us Image</label>
+  <div class="input-row">
+    <input
+      id="aboutImage"
+      type="text"
+      placeholder="Or Paste its Link Here"
+      required
+      spellcheck="false"
+      maxlength="300"
+    >
+    <button
+      type="button"
+      class="upload-btn"
+      id="uploadAboutImgBtn"
+      title="Upload About Image"
+      onclick="openUploadModal('uploadAboutImgBtn')"
+    >
+      <i class="fas fa-cloud-upload-alt"></i>
+    </button>
+  </div>
+
+  <label>About Section Colors</label>
+  <div id="aboutColorsContainer" class="icon-container">
+    <!-- Background Color Picker Button -->
+    <div
+      class="icon-wrapper"
+      onclick="document.getElementById('aboutBgColorPicker').click()"
+    >
+      <i class="fas fa-paint-brush"></i>
+      <input
+        type="color"
+        id="aboutBgColorPicker"
+        class="color-picker"
+        value="#ffffff"
+        onchange="updateAboutColors()"
+      >
+    </div>
+    <!-- Text Color Picker Button -->
+    <div
+      class="icon-wrapper"
+      onclick="document.getElementById('aboutTextColorPicker').click()"
+    >
+      <div class="custom-t-icon">T</div>
+      <input
+        type="color"
+        id="aboutTextColorPicker"
+        class="color-picker"
+        value="#333333"
+        onchange="updateAboutColors()"
+      >
+    </div>
+  </div>
+</form>
+
+
       <!-- Contact Us -->
       <form id="contactUsForm">
         <h2 class="section-title">Contact Us</h2>
@@ -1005,11 +1763,8 @@
           <input id="contactEmail" type="text" placeholder="info@example.com" required spellcheck="false" maxlength="300">
         </label>
         <div class="add-contact-form-row">
-          <img src="https://i.ibb.co/jVBBPwZ/Bella-61.png" alt="Jotform">
-          <img src="https://i.ibb.co/HNPsXkj/Bella-60.png" alt="Google Forms">
-          <span>Add Contact Form</span>
         </div>
-        <button type="button" id="addContactFormButton">Add Form</button>
+        <button type="button" id="addContactFormButton">Add Contact Form</button>
         <div id="contactFormStatus" style="margin-top: 10px;"></div>
       </form>
       <!-- Payment Section: Get Your Website -->
@@ -1017,8 +1772,6 @@
   <section id="paymentSection" class="payment-section">
     <h2 class="section-title">Download your website</h2>
     <p>
-  You need to <strong>pay to download</strong> your website.<br><br>
-  ⚠ <strong>Important:</strong> If you <strong>refresh or leave this page, your website will be lost</strong>.<br><br>
   💾 <strong>What happens after payment?</strong><br>
   - You will get a <strong>ZIP file</strong> containing your website (<code>index.html</code>).<br>
   - Download it immediately after payment.<br><br>
@@ -1036,12 +1789,12 @@
     </button>
     <!-- Email Verification Row (hidden by default) -->
     <div id="emailVerificationRow">
-      <input type="email" id="verificationEmail" placeholder="Enter your email to verify payment">
+      <input type="email" id="verificationEmail" placeholder="Enter your Paypal email to verify payment">
       <button id="verifyEmailBtn">Verify</button>
     </div>
     <!-- Download & Show Code buttons (hidden initially) -->
     <div class="download-row" id="downloadRow" style="display: none;">
-      <button id="downloadBtn" onclick="downloadSite()" class="unlock-button">Download Website File</button>
+      <button id="downloadBtn" onclick="downloadSite()" class="unlock-button">Download Website Folder</button>
       <button id="showCodeBtn" onclick="openCodeModal()" class="unlock-button">Copy Website Code</button>
     </div>
   </section>
@@ -1049,30 +1802,35 @@
     </div>
     <!-- Preview section on the right -->
 <div class="preview-section">
-  <h2 id="livePreviewTitle">Live Preview 
-    <button id="refreshBtn">Refresh</button>
-  </h2>
+  <h2 id="livePreviewTitle" class="section-title">
+  Live Preview of your Website 
+  <button id="refreshBtn">Refresh</button>
+</h2>
   <iframe id="previewFrame"></iframe>
 </div>
 </div>
   
   <!-- Contact Form Modal -->
-  <div id="contactFormModal" class="modal">
-    <div class="modal-content">
-      <span class="modal-close-contact" id="closeContactFormModal">&times;</span>
-      <h2>Create Your Contact Form</h2>
-      <p style="font-weight:bold">
-  Step 1: Create your contact form in one of these companies:
-  <button type="button" class="contact-btn jotform-btn" onclick="window.open('https://www.jotform.com', '_blank')">Jotform</button>
-  <button type="button" class="contact-btn googleforms-btn" onclick="window.open('https://www.google.com/forms/about/', '_blank')">Google Forms</button>
-</p>
-      <p style="font-weight:bold">
-        Step 2: Paste the embed HTML code of your form here:
-      </p>
-      <textarea id="contactFormIframe" rows="5" placeholder="Paste your contact form iframe HTML code here..."></textarea>
-      <button type="button" id="confirmAddContactFormButton">Add</button>
-    </div>
+<div id="contactFormModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close-contact" id="closeContactFormModal">&times;</span>
+    <h2>Create Your Contact Form</h2>
+    <p style="font-weight:bold">
+      Step 1: Create your contact form in one of these companies:
+      <button type="button" class="contact-btn jotform-btn" onclick="window.open('https://www.jotform.com', '_blank')">Jotform</button>
+      <button type="button" class="contact-btn googleforms-btn" onclick="window.open('https://embedsocial.com/', '_blank')">EmbedSocial</button>
+    </p>
+    <p>
+      Note: Google Forms doesnt work well here, unfortunately
+    </p>
+    <p style="font-weight:bold">
+      Step 2: Paste the embed HTML code of your form here:
+    </p>
+    <textarea id="contactFormIframe" rows="5" placeholder="Paste your contact form iframe HTML code here..."></textarea>
+    <button type="button" id="confirmAddContactFormButton">Add</button>
   </div>
+</div>
+
   
   <!-- Code Modal for Copying Website Code -->
   <div id="codeModal" class="modal">
@@ -1094,6 +1852,100 @@
       </div>
     </div>
   </div>
+  
+  <!-- Border Radius Modal -->
+<div id="borderRadiusModal" class="modal" style="display:none; justify-content: center; align-items: center;">
+  <div class="modal-content" style="max-width:300px; text-align: center;">
+    <h3>Adjust Rounded Corners</h3>
+    <!-- Border preview box with "Buy Now" text -->
+    <div id="borderPreview" style="margin: 20px auto; width: 100px; height: 50px; border: 1px solid #ccc; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #333;">
+      Buy Now
+    </div>
+    <!-- Slider to adjust border radius -->
+    <input type="range" id="borderRadiusSlider" min="0" max="30" value="4" style="width: 80%;">
+    <br><br>
+    <!-- Save button -->
+    <button id="saveBorderRadiusBtn" style="background: #388eff;padding: 8px 16px;">Save</button>
+  </div>
+</div>
+
+  <!-- NEW: Upload Modal -->
+<div id="uploadModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" id="uploadModalClose">&times;</span>
+    <h2>Upload Photo</h2>
+    <div id="uploadDropArea" onclick="document.getElementById('uploadFileInput').click();">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <p>Drag &amp; Drop your photo here</p>
+    </div>
+    <input type="file" id="uploadFileInput" accept="image/*" />
+    <button id="browseButton" onclick="document.getElementById('uploadFileInput').click();">Browse Files</button>
+  </div>
+</div>
+
+  
+ <!-- Payment Method Modal -->
+<div id="paymentMethodModal" class="modal">
+  <div class="modal-content">
+    <span class="modal-close" id="closePaymentMethodModal">&times;</span>
+    <h2>Select Payment Method</h2>
+    <ul class="payment-options">
+      <li data-value="paypalEmail" data-label="PayPal Email">
+        <h3>
+          <img src="https://i.ibb.co/67p1dsJm/paypal-icon-logo-png-transparent.png" alt="PayPal Icon">
+          PayPal Email
+        </h3>
+        <p>
+          Uses your PayPal email to automatically create a checkout.
+          <strong>Note:</strong> With PayPal Email, you lose control over stock and sales will keep coming even if you Sold Out.
+        </p>
+        <small>Product Options: Selectable – Customers can choose options like size, color, etc.</small>
+      </li>
+      <li data-value="paypalEmbed" data-label="PayPal Button Embed Code">
+        <h3>
+          <img src="https://i.ibb.co/67p1dsJm/paypal-icon-logo-png-transparent.png" alt="PayPal Icon">
+          PayPal Button Embed Code
+        </h3>
+        <p>
+          Embeds a PayPal button directly on your site.
+          <strong>Create this button in your PayPal account, set a Stock Limit for each product, and copy its embed code Here.</strong>
+        </p>
+        <small>Product Options: Selectable – Customers can choose options like size, color, etc.</small>
+      </li>
+      <li data-value="paypalLink" data-label="PayPal Button Link">
+        <h3>
+          <img src="https://i.ibb.co/67p1dsJm/paypal-icon-logo-png-transparent.png" alt="PayPal Icon">
+          PayPal Button Link
+        </h3>
+        <p>
+          Provides a direct URL to a PayPal checkout.
+          <strong>Create this button in your PayPal account and paste its link here.</strong>
+        </p>
+        <small>Product Options: Not Selectable – Options are shown but cannot be selected.</small>
+      </li>
+      <li data-value="other" data-label="Other Payment Button Link">
+        <h3>
+          <img src="https://i.ibb.co/cCtHLKs/Bella-58.png" alt="Stripe Icon">
+          <img src="https://i.ibb.co/V3gG6tw/Bella-56.png" alt="Sumup Icon">
+          <img src="https://i.ibb.co/QJY6Cp7/Bella-57.png" alt="Square Icon">
+          <img src="https://i.ibb.co/m496tmj/Bella-53.png" alt="Checkout Icon">
+          Other Payment Button Link
+        </h3>
+        <p>
+          Uses a payment button from another platform (like Stripe, Square, etc.).
+          <strong>Create the button on that platform and paste its link here.</strong>
+        </p>
+        <small>Product Options: Not Selectable – Options are shown but cannot be selected.</small>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+
+
+
+
   
   <!-- Popup Message -->
   <div id="popupMessage" class="popup-message">
@@ -1117,7 +1969,20 @@
   var defaultPaymentMethod = '';
   var defaultPaypalEmail = "";
   var downloadCount = 0;
-
+  var aboutData = { title:'', paragraph:'', image:'', bgColor: '#ffffff', textColor: '#333333' };
+  var productBuyNowBgColor = "#007bff"; // default background color for Buy Now button
+  var productBuyNowTextColor = "#fff";  // default text color for Buy Now button
+  var productBuyNowBorderRadius = 4;    // default border radius (in pixels)
+  var heroData = { 
+  logo: '', 
+  banner: '', 
+  heroText: '', 
+  ctaText: '', 
+  heroTitleColor: '#000000',  // default hero title color (black)
+  ctaBgColor: '#007bff',        // default CTA button background color
+  ctaTextColor: '#ffffff'       // default CTA button text color
+};
+    var heroTitleFont = "Roboto"; // default font (keep the current hero title font as default)
   // ============== CURRENCY DATA ==============
     const currencyData = [
       { code: "AED", name: "United Arab Emirates Dirham", symbol: "د.إ", flag: "🇦🇪" },
@@ -1305,19 +2170,45 @@
 
   // ============== Mandatory Fields Check ==============
   function checkMandatory() {
-    // Must have global fields plus at least 1 product + 1 review
-    if (document.getElementById('logo').value.trim() === "") return false;
-    if (document.getElementById('banner').value.trim() === "") return false;
-    if (document.getElementById('heroText').value.trim() === "") return false;
-    if (document.getElementById('ctaText').value.trim() === "") return false;
-    if (products.length < 1) return false;
-    if (reviews.length < 1) return false;
-    if (document.getElementById('aboutTitle').value.trim() === "") return false;
-    if (document.getElementById('aboutParagraph').value.trim() === "") return false;
-    if (document.getElementById('aboutImage').value.trim() === "") return false;
-    if (document.getElementById('contactEmail').value.trim() === "") return false;
-    return true;
-  }
+  // For the Logo: require either a URL or an uploaded image
+  if (
+    document.getElementById('logo').value.trim() === "" &&
+    !uploadedImages['uploadLogoBtn']
+  ) return false;
+
+  // For the Banner: require either a URL or an uploaded image
+  if (
+    document.getElementById('banner').value.trim() === "" &&
+    !uploadedImages['uploadBannerBtn']
+  ) return false;
+
+  // Other mandatory fields:
+  if (document.getElementById('heroText').value.trim() === "") return false;
+  if (document.getElementById('ctaText').value.trim() === "") return false;
+  if (products.length < 1) return false;
+  if (reviews.length < 1) return false;
+  if (document.getElementById('aboutTitle').value.trim() === "") return false;
+  if (document.getElementById('aboutParagraph').value.trim() === "") return false;
+  // About Image remains as it is (not mandatory)
+  if (document.getElementById('contactEmail').value.trim() === "") return false;
+
+  return true;
+}
+    
+
+// Ensure these are defined before any HTML uses them
+window.currentUploadField = null;
+window.uploadedImages = {};
+window.backupImages = {};
+
+window.openUploadModal = function(fieldId) {
+  console.log("openUploadModal called for " + fieldId);
+  // Your code to open the upload modal goes here.
+  document.getElementById('uploadModal').style.display = 'flex';
+  window.currentUploadField = fieldId;
+};
+
+
 
   // ============== ON LOAD ==============
   window.onload = function() {
@@ -1479,18 +2370,18 @@ document.addEventListener('DOMContentLoaded', function() {
   function addProduct(){
   // Gather inputs
   var title         = document.getElementById('productTitle').value.trim();
-  var img1          = document.getElementById('image1').value.trim();
-  var img2          = document.getElementById('image2').value.trim();
-  var img3          = document.getElementById('image3').value.trim();
+  var img1 = uploadedImages['uploadImage1Btn'] || document.getElementById('image1').value.trim();
+  var img2 = uploadedImages['uploadImage2Btn'] || document.getElementById('image2').value.trim();
+  var img3 = uploadedImages['uploadImage3Btn'] || document.getElementById('image3').value.trim();
   var currencyInput = document.getElementById('productCurrency');
   var currencyCode  = currencyInput.getAttribute('data-code') || 'EUR';
   var sold          = document.getElementById('sold').value.trim();
   var price         = document.getElementById('price').value.trim();
   var shipping      = document.getElementById('shipping').value.trim();
   var returns       = document.getElementById('returns').value;
-  var colorLabel = document.getElementById('colorLabel').value.trim(); // new input
+  var colorLabel    = document.getElementById('colorLabel').value.trim();
   var coloroptions  = document.getElementById('colorOptions').value.trim();
-  var sizeLabel  = document.getElementById('sizeLabel').value.trim();  // new input
+  var sizeLabel     = document.getElementById('sizeLabel').value.trim();
   var sizeoptions   = document.getElementById('sizeOptions').value.trim();
   var desc          = document.getElementById('description').value.trim();
   var paymentMethod = document.getElementById('productPaymentMethod').value;
@@ -1510,25 +2401,48 @@ document.addEventListener('DOMContentLoaded', function() {
     otherPaymentLink = document.getElementById('otherPaymentLink').value.trim();
   }
 
-  // If not embed, coloroptions is required
-  if(!title || !img1 || !price || !desc ||
-     (paymentMethod !== 'paypalEmbed' && !coloroptions)) {
-    alert("Please fill out all mandatory fields before adding.");
+  // Basic mandatory checks for existing fields
+  if (!title || !img1 || !price || !desc) {
+    alert("Please fill out all mandatory fields (Title, First Image, Price, and Description).");
+    return;
+  }
+  
+  // New: Check that the Color Options field is filled (if payment method is not paypalEmbed)
+  if (paymentMethod !== 'paypalEmbed' && !coloroptions) {
+    alert("Please fill out the Color Options field.");
+    return;
+  }
+  
+  // New: Validate the field corresponding to the selected payment method
+  if (paymentMethod === 'paypalLink' && !productLink) {
+    alert("Please fill out the PayPal Button Link.");
+    return;
+  }
+  if (paymentMethod === 'paypalEmbed' && !productEmbed) {
+    alert("Please fill out the PayPal Button Embed Code.");
+    return;
+  }
+  if (paymentMethod === 'other' && !otherPaymentLink) {
+    alert("Please fill out the Other Payment Button/Checkout Page Link.");
+    return;
+  }
+  if (paymentMethod === 'paypalEmail' && !paypalEmail) {
+    alert("Please fill out the PayPal Email.");
     return;
   }
 
-  // Gather images
+  // Gather images into an array
   var imgs = [img1];
   if(img2) imgs.push(img2);
   if(img3) imgs.push(img3);
 
-  // shipping
+  // Set shipping value
   var shippingVal = "FREE";
   if(shipping && shipping !== "0"){
     shippingVal = shipping;
   }
 
-  // sold
+  // Set sold value
   var soldVal = "";
   if(sold && sold !== "0"){
     soldVal = sold;
@@ -1545,8 +2459,8 @@ document.addEventListener('DOMContentLoaded', function() {
     returns      : returns,
     coloroptions : coloroptions,
     sizeoptions  : sizeoptions,
-    colorLabel: colorLabel || "Color",
-    sizeLabel: sizeLabel || "Size",
+    colorLabel   : colorLabel || "Color",
+    sizeLabel    : sizeLabel || "Size",
     description  : desc,
     paymentMethod: paymentMethod,
     paypalLink   : productLink,
@@ -1557,45 +2471,61 @@ document.addEventListener('DOMContentLoaded', function() {
 
   products.push(product);
 
-  // Clear form fields
-  document.getElementById('productTitle').value = '';
-  document.getElementById('image1').value = '';
-  document.getElementById('image2').value = '';
-  document.getElementById('image3').value = '';
-  // Instead of clearing the currency field, reapply the remembered selection:
-  if (defaultCurrency) {
-    currencyInput.value = defaultCurrency;
-    currencyInput.setAttribute('data-code', defaultCurrencyCode);
-  } else {
-    currencyInput.value = '';
-    currencyInput.removeAttribute('data-code');
-  }
-  document.getElementById('sold').value = '';
-  document.getElementById('price').value = '';
-  document.getElementById('shipping').value = '';
-  document.getElementById('description').value = '';
-  document.getElementById('colorOptions').value = '';
-  document.getElementById('sizeOptions').value = '';
-  document.getElementById('productLink').value = '';
-  document.getElementById('productEmbed').value = '';
-  document.getElementById('otherPaymentLink').value = '';
-  // Instead of simply clearing the PayPal Email field, retain it if paypalEmail is the selected payment method:
-  if (paymentMethod !== 'paypalEmail') {
-    document.getElementById('paypalEmailInput').value = '';
-  } else {
-    document.getElementById('paypalEmailInput').value = defaultPaypalEmail;
-  }
-  updateAddProductFormFields();
+  // Clear product input fields
+document.getElementById('productTitle').value = '';
+document.getElementById('image1').value = '';
+document.getElementById('image2').value = '';
+document.getElementById('image3').value = '';
 
-  imageCount = 1;
-  document.getElementById('additionalImage2').style.display = 'none';
-  document.getElementById('additionalImage3').style.display = 'none';
-  document.getElementById('addImagesBtn').style.display = 'block';
-
-  // Force the preview to refresh—even if it’s showing the PayPal page
-  forceRefreshPreview();
-  renderAddedProductsList();
+if (defaultCurrency) {
+  currencyInput.value = defaultCurrency;
+  currencyInput.setAttribute('data-code', defaultCurrencyCode);
+} else {
+  currencyInput.value = '';
+  currencyInput.removeAttribute('data-code');
 }
+
+document.getElementById('sold').value = '';
+document.getElementById('price').value = '';
+document.getElementById('shipping').value = '';
+document.getElementById('description').value = '';
+document.getElementById('colorOptions').value = '';
+document.getElementById('sizeOptions').value = '';
+document.getElementById('productLink').value = '';
+document.getElementById('productEmbed').value = '';
+document.getElementById('otherPaymentLink').value = '';
+if (paymentMethod !== 'paypalEmail') {
+  document.getElementById('paypalEmailInput').value = '';
+} else {
+  document.getElementById('paypalEmailInput').value = defaultPaypalEmail;
+}
+
+updateAddProductFormFields();
+
+// Reset the upload fields for product images by deleting their entries 
+delete window.uploadedImages['uploadImage1Btn'];
+delete window.uploadedImages['uploadImage2Btn'];
+delete window.uploadedImages['uploadImage3Btn'];
+delete window.backupImages['uploadImage1Btn'];
+delete window.backupImages['uploadImage2Btn'];
+delete window.backupImages['uploadImage3Btn'];
+
+// Reset the upload button icons for product images
+document.getElementById('uploadImage1Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+document.getElementById('uploadImage2Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+document.getElementById('uploadImage3Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+
+// Reset image field count and hide additional fields
+imageCount = 1;
+document.getElementById('additionalImage2').style.display = 'none';
+document.getElementById('additionalImage3').style.display = 'none';
+document.getElementById('addImagesBtn').style.display = 'block';
+
+// Refresh the preview and update the added products list
+forceRefreshPreview();
+renderAddedProductsList();
+}
+
 
 function renderAddedProductsList() {
   const container = document.getElementById('addedProductsList');
@@ -1669,15 +2599,17 @@ function renderAddedProductsList() {
 
   function updatePreview() {
     // gather hero data
-    heroData.logo     = document.getElementById('logo').value.trim();
-    heroData.banner   = document.getElementById('banner').value.trim();
+    heroData.logo = uploadedImages['uploadLogoBtn'] || document.getElementById('logo').value.trim();
+    heroData.banner = uploadedImages['uploadBannerBtn'] || document.getElementById('banner').value.trim();
     heroData.heroText = document.getElementById('heroText').value.trim();
     heroData.ctaText  = document.getElementById('ctaText').value.trim();
 
     // about data
     aboutData.title     = document.getElementById('aboutTitle').value.trim();
     aboutData.paragraph = document.getElementById('aboutParagraph').value.trim();
-    aboutData.image     = document.getElementById('aboutImage').value.trim();
+    aboutData.image = uploadedImages['uploadAboutImgBtn'] || document.getElementById('aboutImage').value.trim();
+    aboutData.bgColor = document.getElementById('aboutBgColorPicker').value;
+aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
 
     // contact data
     contactData.intro       = document.getElementById('contactIntro').value.trim();
@@ -1708,45 +2640,54 @@ function renderAddedProductsList() {
       payBtn.classList.remove('enabled');
     }
   }
+    
+    function updateAboutColors() {
+  // Update aboutData with the chosen colors
+  aboutData.bgColor = document.getElementById('aboutBgColorPicker').value;
+  aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
+  updatePreview(); // Refresh the preview to apply the new colors
+}
 
   function buildFinalHTML(){
-    var top = "<!DOCTYPE html><html><head><meta charset='UTF-8'><title></title>";
-    top += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
-    top += "<link href='https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap' rel='stylesheet'>";
-    top += buildGlobalCSS();
+  var top = "<!DOCTYPE html><html><head><meta charset='UTF-8'><title></title>";
+  top += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+  // Use the currently selected font for the hero title:
+  top += "<link href='https://fonts.googleapis.com/css2?family=" 
+         + heroTitleFont.split(" ").join("+")
+         + ":wght@400;500;700&display=swap' rel='stylesheet'>";
+  top += buildGlobalCSS();
 
-    // Fav icon
-    if(heroData.logo.trim() !== ""){
-      top += "<link rel='shortcut icon' href='" + escapeHTML(heroData.logo.trim()) + "'>";
-    }
-    if(contactData.googleAnalytics){
-      top += "\n<!-- Google Analytics -->\n" + contactData.googleAnalytics + "\n";
-    }
-    top += "</head><body>";
-
-    top += buildTopHeader();
-    top += buildHero();
-    top += buildProductsSection();
-    top += buildReviewsSection();
-    top += buildAboutSection();
-    top += buildContactSection();
-    top += buildProductModalScript(); // Insert the product modal script
-
-    top += "</body></html>";
-    return top;
+  // Fav icon
+  if(heroData.logo.trim() !== ""){
+    top += "<link rel='shortcut icon' href='" + escapeHTML(heroData.logo.trim()) + "'>";
   }
+  if(contactData.googleAnalytics){
+    top += "\n<!-- Google Analytics -->\n" + contactData.googleAnalytics + "\n";
+  }
+  top += "</head><body>";
+
+  top += buildTopHeader();
+  top += buildHero();
+  top += buildProductsSection();
+  top += buildReviewsSection();
+  top += buildAboutSection();
+  top += buildContactSection();
+  top += buildProductModalScript(); // Insert the product modal script
+
+  top += "</body></html>";
+  return top;
+}
+
+
 
   function downloadSite(){
-  // Check if download limit has been reached
   if(downloadCount >= 4){
     alert("Oops! You've reached the 4-download limit!");
     return;
   }
   
-  // Increment the download count
   downloadCount++;
   
-  // Optionally disable the download button on the 4th download
   if(downloadCount === 4) {
     var downloadBtn = document.getElementById("downloadBtn");
     if(downloadBtn){
@@ -1755,41 +2696,67 @@ function renderAddedProductsList() {
     }
   }
   
-  // Build finalHTML if not built yet
   if (!finalHTML.trim()){
     finalHTML = buildFinalHTML();
   }
   
-  // Create a new instance of JSZip
+  // Create a new JSZip instance and a root folder "MyWebsite"
   var zip = new JSZip();
+  var websiteFolder = zip.folder("MyWebsite");
   
-  // Create a folder inside the zip archive
-  var folder = zip.folder("MyWebsite");  // Change "MyFolder" as needed
+  // Add index.html to the root folder
+  websiteFolder.file("index.html", finalHTML);
   
-  // Add index.html inside the created folder
-  folder.file("index.html", finalHTML);
+  // Create an "Images" folder inside "MyWebsite"
+  var imagesFolder = websiteFolder.folder("Images");
   
-  // Generate the zip file as a blob and trigger the download using FileSaver.js
-  zip.generateAsync({ type: "blob" }).then(function(content) {
-    saveAs(content, "My Website.zip");
-  });
+  // If any files were uploaded via your new mechanism, add them
+  var filePromises = [];
+  if(window.uploadedFiles) {
+    for (const key in window.uploadedFiles) {
+      const file = window.uploadedFiles[key];
+      filePromises.push(new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          // e.target.result is an ArrayBuffer that preserves the original file
+          imagesFolder.file(file.name, e.target.result);
+          resolve();
+        };
+        reader.onerror = reject;
+        reader.readAsArrayBuffer(file);
+      }));
+    }
+  }
+  
+  Promise.all(filePromises)
+    .then(() => {
+      // Generate the ZIP and trigger the download
+      zip.generateAsync({ type: "blob" }).then(function(content) {
+        saveAs(content, "My Website.zip");
+      });
+    })
+    .catch(err => {
+      console.error("Error reading files:", err);
+      alert("Error reading files. Check console for details.");
+    });
 }
+
 
 
 
   function buildGlobalCSS(){
   var s = "<style>html{scroll-behavior:smooth;}*{box-sizing:border-box;transition:all 0.2s ease;}\n\
-html,body{margin:0;padding:0;font-family:'Roboto',sans-serif;background:#ffffff;color:#333;line-height:1.6;}\n\
+html,body { margin: 0; padding: 0; font-family: 'Roboto', sans-serif; background: #ffffff; color: #333; line-height: 1.6; }\n\
 a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;height:auto;display:block}\n\
 .top-header{background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);padding:15px 10px;text-align:center}\n\
 .logo-wrapper{display:inline-block}\n\
-.logo-wrapper img{max-height:50px;width:auto;}\n\
+.logo-wrapper img{max-height:75px;width:auto;}\n\
 .nav-links{margin-top:10px}\n\
 .nav-links a{display:inline-block;margin:0 10px;padding:8px 12px;color:#555;font-weight:500;border-radius:4px;transition:background 0.2s,color 0.2s}\n\
 .hero-banner{position:relative;min-height:70vh;display:flex;align-items:center;justify-content:center;overflow:hidden;background-size:cover;background-position:center}\n\
 .hero-overlay{position:relative;z-index:1;text-align:center;color:#fff;padding:15px}\n\
 .hero-title{font-size:2.5rem;margin:0 0 15px;text-shadow:1px 1px 3px rgba(0,0,0,0.3)}\n\
-.hero-cta{display:inline-block;padding:12px 25px;background:#fff;color:#333;font-weight:600;border-radius:4px;transition:background 0.3s}\n\
+.hero-cta{display:inline-block;padding:12px 25px;background:#fff;color:#333;font-size:1.2rem;font-weight:600;border-radius:4px;transition:background 0.3s}\n\
 .hero-cta:hover{background:#2196f3;color:#fff}\n\
 .products-grid{display:grid;grid-gap:20px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));padding:30px 10px;max-width:1300px;margin:0 auto}\n\
 .product-item{background:#fff;border-radius:8px;overflow:hidden;border:1px solid #eee;cursor:pointer;text-align:left;transition:transform 0.2s,box-shadow 0.2s}\n\
@@ -1798,8 +2765,8 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
 .product-content{padding:15px}\n\
 .product-content h3{margin:0 0 8px;font-size:1.2rem;font-weight:600;color:#222}\n\
 .product-content h2{margin:0 0 10px;font-size:1rem;font-weight:500;color:#28a745}\n\
-.buy-now{display:block;width:100%;padding:10px 0;background:#007bff;color:#fff;text-align:center;border-radius:4px;font-weight:600;transition:background 0.3s}\n\
-.buy-now:hover{background:#0056b3}\n\
+.buy-now{display:block;width:100%;padding:10px 0;background:" + productBuyNowBgColor + ";color:" + productBuyNowTextColor + ";text-align:center;border-radius:" + productBuyNowBorderRadius + "px;font-weight:600;transition:background 0.3s}\n\
+.buy-now:hover{background-color:" + shadeColor(productBuyNowBgColor, -10) + ";}\n\
 .reviews-section{background:#fff;padding:40px 20px;text-align:center}\n\
 .reviews-section h2{margin-bottom:30px;font-size:1.8rem;color:#555}\n\
 .review-container{display:flex;justify-content:center;flex-wrap:wrap;gap:20px}\n\
@@ -2040,6 +3007,7 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
 "  .about-left p {\n" +
 "    font-size: 1rem;\n" +
 "    line-height: 1.6;\n" +
+"    max-width: 100%;\n" +
 "  }\n" +
 "  .about-right img {\n" +
 "    max-width: 100%;\n" +
@@ -2102,33 +3070,33 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
   }
 
   function buildHero(){
-    if(!heroData.banner){
-      // minimal hero
-      var minimal = "";
-      minimal += "<section class='hero-banner' style='background:none; min-height:200px;'>";
-      minimal += "<div class='hero-overlay'>";
-      if(heroData.heroText){
-        minimal += "<h1 class='hero-title'>"+escapeHTML(heroData.heroText)+"</h1>";
-      }
-      if(heroData.ctaText){
-        minimal += "<a class='hero-cta' href='#products'>"+escapeHTML(heroData.ctaText)+"</a>";
-      }
-      minimal += "</div></section>";
-      return minimal;
-    }
-    // big hero
-    var bkg = escapeHTML(heroData.banner);
-    var s   = "<section class='hero-banner' style=\"background-image:url('"+bkg+"');\">";
-    s += "<div class='hero-overlay'>";
+  if(!heroData.banner){
+    // minimal hero
+    var minimal = "";
+    minimal += "<section class='hero-banner' style='background:none; min-height:200px;'>";
+    minimal += "<div class='hero-overlay'>";
     if(heroData.heroText){
-      s += "<h1 class='hero-title'>"+escapeHTML(heroData.heroText)+"</h1>";
-    }
+  minimal += "<h1 class='hero-title' style='color:" + (heroData.heroTitleColor || '#000000') + "; font-family:" + heroTitleFont + ";'>" + escapeHTML(heroData.heroText) + "</h1>";
+}
     if(heroData.ctaText){
-      s += "<a class='hero-cta' href='#products'>"+escapeHTML(heroData.ctaText)+"</a>";
+      minimal += "<a class='hero-cta' style='background-color:" + (heroData.ctaBgColor || '#007bff') + "; color:" + (heroData.ctaTextColor || '#ffffff') + ";' href='#products'>" + escapeHTML(heroData.ctaText) + "</a>";
     }
-    s += "</div></section>";
-    return s;
+    minimal += "</div></section>";
+    return minimal;
   }
+  // big hero
+  var bkg = escapeHTML(heroData.banner);
+  var s   = "<section class='hero-banner' style=\"background-image:url('" + bkg + "');\">";
+  s += "<div class='hero-overlay'>";
+  if(heroData.heroText){
+  s += "<h1 class='hero-title' style='color:" + (heroData.heroTitleColor || '#000000') + "; font-family:" + heroTitleFont + ";'>" + escapeHTML(heroData.heroText) + "</h1>";
+}
+  if(heroData.ctaText){
+    s += "<a class='hero-cta' style='background-color:" + (heroData.ctaBgColor || '#007bff') + "; color:" + (heroData.ctaTextColor || '#ffffff') + ";' href='#products'>" + escapeHTML(heroData.ctaText) + "</a>";
+  }
+  s += "</div></section>";
+  return s;
+}
 
   function buildProductsSection(){
     if(products.length === 0){
@@ -2166,7 +3134,7 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
       html += "<div class='product-content'>";
       html += (p.title ? "<h3>"+escapeHTML(p.title)+"</h3>" : "<h3>Untitled Product</h3>");
       html += "<h2>"+ symbol + escapeHTML(p.price||"0") +"</h2>";
-      html += "<a class='buy-now' href='#'>Buy Now</a>";
+      html += "<a class='buy-now' style='background-color:" + productBuyNowBgColor + "; color:" + productBuyNowTextColor + "; border-radius:" + productBuyNowBorderRadius + "px;' href='#'>Buy Now</a>";
       html += "</div></div>";
     }
     return "<section id='products'><div class='products-grid'>"+html+"</div></section>";
@@ -2191,17 +3159,24 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
   }
 
   function buildAboutSection(){
-    if(!aboutData.title && !aboutData.paragraph && !aboutData.image) return "";
-    var a = "<section class='about-section' id='about'><div class='about-left'>";
-    a += "<h2>"+escapeHTML(aboutData.title||"Who We Are")+"</h2>";
-    a += "<p>"+escapeHTML(aboutData.paragraph||"We are a small business...")+"</p>";
-    a += "</div><div class='about-right'>";
-    if(aboutData.image){
-      a += "<img src='"+escapeHTML(aboutData.image)+"' alt='About Image'>";
-    }
-    a += "</div></section>";
-    return a;
+  if(!aboutData.title && !aboutData.paragraph && !aboutData.image) return "";
+  // Only apply background color on the section
+  var styleAttr = "";
+  if(aboutData.bgColor) { 
+    styleAttr += "background-color:" + aboutData.bgColor + ";"; 
   }
+  var a = "<section class='about-section' id='about' style='" + styleAttr + "'>";
+  a += "<div class='about-left'>";
+  // Apply text color directly on the heading and paragraph
+  a += "<h2 style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.title||"Who We Are") + "</h2>";
+  a += "<p style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.paragraph||"Our story...") + "</p>";
+  a += "</div><div class='about-right'>";
+  if(aboutData.image){
+    a += "<img src='" + escapeHTML(aboutData.image) + "' alt='About Image'>";
+  }
+  a += "</div></section>";
+  return a;
+}
 
   function buildContactSection(){
     var anyFilled = contactData.intro || contactData.instagram || contactData.tiktok ||
@@ -2268,7 +3243,6 @@ function buildProductModalScript(){
   m += "  modal.className = 'modal';\n";
   
   // The modal's inner HTML (using 'Color:' and 'Size:' labels)
-  // Updated quantity wrapper uses buttons and a span for display
   m += "  modal.innerHTML = `\\\n\
 <div class='modal-content'>\\\n\
   <span class='modal-close'>&times;</span>\\\n\
@@ -2843,52 +3817,160 @@ function buildProductModalScript(){
   m += "      if(currentProduct.otherPaymentLink){ window.open(currentProduct.otherPaymentLink, '_blank'); }\n";
   m += "      else { alert('No other payment link provided.'); }\n";
   m += "    } else if(currentProduct.paymentMethod === 'paypalEmail'){\n";
-  m += "      var selectedColorEl = productModal.querySelector('#modalColorOptions span.selected');\n";
-  m += "      var selectedSizeEl = productModal.querySelector('#modalSizeOptions span.selected');\n";
-  m += "      if(!selectedColorEl || !selectedSizeEl){\n";
-  m += "         alert('Please select a color and size before proceeding.');\n";
-  m += "         return;\n";
-  m += "      }\n";
-  m += "      var quantity = parseInt(currentQty, 10);\n";
-  m += "      if(isNaN(quantity) || quantity < 1){ quantity = 1; }\n";
-  m += "      var total = (basePrice * quantity) + shippingFee;\n";
-  m += "      var hiddenForm = document.createElement('form');\n";
-  m += "      hiddenForm.method = 'POST';\n";
-  m += "      hiddenForm.action = 'https://www.paypal.com/cgi-bin/webscr';\n";
-  m += "      hiddenForm.style.display = 'none';\n";
-  m += "      var fields = [\n";
-  m += "        { name: 'cmd', value: '_xclick' },\n";
-  m += "        { name: 'business', value: currentProduct.paypalEmail },\n";
-  m += "        { name: 'currency_code', value: (currentProduct.currency && currentProduct.currency.length <= 3) ? currentProduct.currency : 'USD' },\n";
-  m += "        { name: 'amount', value: total.toFixed(2) }\n";
-  m += "      ];\n";
-  m += "      fields.forEach(function(f){\n";
-  m += "        var inp = document.createElement('input');\n";
-  m += "        inp.type = 'hidden';\n";
-  m += "        inp.name = f.name;\n";
-  m += "        inp.value = f.value;\n";
-  m += "        hiddenForm.appendChild(inp);\n";
-  m += "      });\n";
-  m += "      var itemName = currentProduct.title || 'Product';\n";
-  m += "      itemName += ' ' + selectedColorEl.textContent;\n";
-  m += "      itemName += ' ' + selectedSizeEl.textContent;\n";
-  m += "      itemName += ' Quantity ' + quantity;\n";
-  m += "      var itemNameInp = document.createElement('input');\n";
-  m += "      itemNameInp.type = 'hidden';\n";
-  m += "      itemNameInp.name = 'item_name';\n";
-  m += "      itemNameInp.value = itemName;\n";
-  m += "      hiddenForm.appendChild(itemNameInp);\n";
-  m += "      document.body.appendChild(hiddenForm);\n";
-  m += "      hiddenForm.submit();\n";
-  m += "    } else {\n";
-  m += "      alert('Payment method not configured.');\n";
-  m += "    }\n";
-  m += "  };\n";
-  m += "})();";
+m += "      var selectedColorEl = productModal.querySelector('#modalColorOptions span.selected');\n";
+m += "      if(!selectedColorEl){\n";
+m += "         alert('Please select a color before proceeding.');\n";
+m += "         return;\n";
+m += "      }\n";
+m += "      var quantity = parseInt(currentQty, 10);\n";
+m += "      if(isNaN(quantity) || quantity < 1){ quantity = 1; }\n";
+m += "      var total = (basePrice * quantity) + shippingFee;\n";
+m += "      var hiddenForm = document.createElement('form');\n";
+m += "      hiddenForm.method = 'POST';\n";
+m += "      hiddenForm.action = 'https://www.paypal.com/cgi-bin/webscr';\n";
+m += "      hiddenForm.style.display = 'none';\n";
+m += "      var fields = [\n";
+m += "        { name: 'cmd', value: '_xclick' },\n";
+m += "        { name: 'business', value: currentProduct.paypalEmail },\n";
+m += "        { name: 'currency_code', value: (currentProduct.currency && currentProduct.currency.length <= 3) ? currentProduct.currency : 'USD' },\n";
+m += "        { name: 'amount', value: total.toFixed(2) }\n";
+m += "      ];\n";
+m += "      fields.forEach(function(f){\n";
+m += "        var inp = document.createElement('input');\n";
+m += "        inp.type = 'hidden';\n";
+m += "        inp.name = f.name;\n";
+m += "        inp.value = f.value;\n";
+m += "        hiddenForm.appendChild(inp);\n";
+m += "      });\n";
+m += "      var itemName = currentProduct.title || 'Product';\n";
+m += "      itemName += ' ' + selectedColorEl.textContent;\n";
+m += "      itemName += ' Quantity ' + quantity;\n";
+m += "      var itemNameInp = document.createElement('input');\n";
+m += "      itemNameInp.type = 'hidden';\n";
+m += "      itemNameInp.name = 'item_name';\n";
+m += "      itemNameInp.value = itemName;\n";
+m += "      hiddenForm.appendChild(itemNameInp);\n";
+m += "      document.body.appendChild(hiddenForm);\n";
+m += "      hiddenForm.submit();\n";
+m += "    } else {\n";
+m += "      alert('Payment method not configured.');\n";
+m += "    }\n";
+m += "  };\n";
+m += "})();";
   m += "</scr" + "ipt>";
   return m;
 }
+    
+    function updateProductBuyNowStyles(){
+  productBuyNowBgColor = document.getElementById('buyNowBgColorPicker').value;
+  productBuyNowTextColor = document.getElementById('buyNowTextColorPicker').value;
+  // Read the border radius from the slider in the modal
+  productBuyNowBorderRadius = document.getElementById('borderRadiusSlider').value;
+  
+  // Update the border preview element (using the correct ID)
+  document.getElementById('borderPreview').style.borderRadius = productBuyNowBorderRadius + "px";
+  
+  // Refresh the website preview so the changes take effect
+  updatePreview();
+}
+    
+    function updateHeroTitleColor(){
+  heroData.heroTitleColor = document.getElementById('heroTitleColorPicker').value;
+  updatePreview();
+}
 
+function updateCTAButtonColors(){
+  heroData.ctaBgColor = document.getElementById('ctaBgColorPicker').value;
+  heroData.ctaTextColor = document.getElementById('ctaTextColorPicker').value;
+  updatePreview();
+}
+
+
+
+    
+function shadeColor(color, percent) {
+  var num = parseInt(color.slice(1),16),
+      amt = Math.round(2.55 * percent),
+      R = (num >> 16) + amt,
+      G = (num >> 8 & 0x00FF) + amt,
+      B = (num & 0x0000FF) + amt;
+  return "#" + (
+    0x1000000 +
+    (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+    (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+    (B < 255 ? (B < 1 ? 0 : B) : 255)
+  ).toString(16).slice(1);
+}
+
+
+function toggleFontDropdown() {
+  var dropdown = document.getElementById('fontDropdown');
+  if (dropdown.style.display === "none" || dropdown.style.display === "") {
+    dropdown.style.display = "block";
+  } else {
+    dropdown.style.display = "none";
+  }
+}
+
+
+
+function selectHeroFont(fontName) {
+  heroTitleFont = fontName;      // update global variable
+  updatePreview();               // refresh preview so new font is applied
+  document.getElementById('fontDropdown').style.display = "none"; // close dropdown
+}
+
+// Populate the dropdown with font options on page load
+window.addEventListener('load', function(){
+  // List of fonts: 10 modern fonts from your snippet + the extra fonts
+  var fonts = [
+    "Roboto",          // modern
+    "Open Sans",       // modern
+    "Lato",            // modern
+    "Montserrat",      // modern
+    "Source Sans Pro", // modern
+    "Raleway",         // modern
+    "Ubuntu",          // modern
+    "Poppins",         // modern
+    "Merriweather",    // modern
+    "Oswald",          // modern
+    "Patrick Hand",    // extra
+    "Indie Flower",    // extra
+    "Shadows Into Light", // extra
+    "Dancing Script",  // extra
+    "Homemade Apple",  // extra
+    "Caveat",          // extra
+    "Sacramento",      // extra
+    "Gloria Hallelujah", // extra
+    "Handlee",         // extra
+    "Reenie Beanie",   // extra
+    "Pacifico",        // extra
+    "Lobster",         // extra
+    "Amatic SC",       // extra
+    "Satisfy",         // extra
+    "Cookie"           // extra
+  ];
+  var dropdown = document.getElementById('fontDropdown');
+  fonts.forEach(function(font) {
+    var option = document.createElement('div');
+    option.textContent = font;
+    option.style.fontFamily = font; // preview the font
+    option.onclick = function() {
+      selectHeroFont(font);
+    };
+    dropdown.appendChild(option);
+  });
+});
+
+
+// Close the dropdown if clicking outside of it
+document.addEventListener('click', function(e) {
+  var dropdown = document.getElementById('fontDropdown');
+  var fontButton = document.getElementById('heroFontButton');
+  if (dropdown && !dropdown.contains(e.target) && e.target !== fontButton) {
+    dropdown.style.display = "none";
+  }
+});
 
 
 
@@ -3171,8 +4253,191 @@ function buildProductModalScript(){
   defaultCurrency = this.value;
   defaultCurrencyCode = this.getAttribute('data-code') || '';
 });
+    
+    document.getElementById('cornerPickerWrapper').addEventListener('click', function(e) {
+  // Set the slider to the current border radius value
+  document.getElementById('borderRadiusSlider').value = productBuyNowBorderRadius;
+  // Set the preview box’s border radius to match
+  document.getElementById('borderPreview').style.borderRadius = productBuyNowBorderRadius + "px";
+  // Open the modal
+  document.getElementById('borderRadiusModal').style.display = 'flex';
+});
 
+
+document.getElementById('saveBorderRadiusBtn').addEventListener('click', function() {
+  // Update the global variable with the slider's value
+  productBuyNowBorderRadius = document.getElementById('borderRadiusSlider').value;
+  // Call the update function to refresh the preview (this function should rebuild your final HTML preview)
+  updateProductBuyNowStyles();
+  // Close the modal
+  document.getElementById('borderRadiusModal').style.display = 'none';
+});
+
+    document.getElementById('borderRadiusSlider').addEventListener('input', function(){
+  document.getElementById('borderPreview').style.borderRadius = this.value + "px";
+});
+
+
+// For the Logo field
+document.getElementById('logo').addEventListener('input', function() {
+  if (this.value.trim() !== "") {
+    // If a Base64 image exists, back it up and remove it so the URL takes precedence.
+    if (uploadedImages['uploadLogoBtn']) {
+      backupImages['uploadLogoBtn'] = uploadedImages['uploadLogoBtn'];
+      delete uploadedImages['uploadLogoBtn'];
+      // Reset button icon to cloud upload (since the URL is now active)
+      document.getElementById('uploadLogoBtn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+    }
+  } else {
+    // If the user clears the URL, restore the previously uploaded image (if available)
+    if (backupImages['uploadLogoBtn']) {
+      uploadedImages['uploadLogoBtn'] = backupImages['uploadLogoBtn'];
+      // Update button icon to green check since a Base64 image is now active
+      document.getElementById('uploadLogoBtn').innerHTML = '<i class="fas fa-check" style="color: green;"></i>';
+      delete backupImages['uploadLogoBtn'];
+    }
+  }
+  updatePreview();
+});
+
+// For the Banner field
+document.getElementById('banner').addEventListener('input', function() {
+  if (this.value.trim() !== "") {
+    if (uploadedImages['uploadBannerBtn']) {
+      backupImages['uploadBannerBtn'] = uploadedImages['uploadBannerBtn'];
+      delete uploadedImages['uploadBannerBtn'];
+      document.getElementById('uploadBannerBtn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+    }
+  } else {
+    if (backupImages['uploadBannerBtn']) {
+      uploadedImages['uploadBannerBtn'] = backupImages['uploadBannerBtn'];
+      document.getElementById('uploadBannerBtn').innerHTML = '<i class="fas fa-check" style="color: green;"></i>';
+      delete backupImages['uploadBannerBtn'];
+    }
+  }
+  updatePreview();
+});
+
+// For the 1st Product Image field
+document.getElementById('image1').addEventListener('input', function() {
+  if (this.value.trim() !== "") {
+    if (uploadedImages['uploadImage1Btn']) {
+      backupImages['uploadImage1Btn'] = uploadedImages['uploadImage1Btn'];
+      delete uploadedImages['uploadImage1Btn'];
+      document.getElementById('uploadImage1Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+    }
+  } else {
+    if (backupImages['uploadImage1Btn']) {
+      uploadedImages['uploadImage1Btn'] = backupImages['uploadImage1Btn'];
+      document.getElementById('uploadImage1Btn').innerHTML = '<i class="fas fa-check" style="color: green;"></i>';
+      delete backupImages['uploadImage1Btn'];
+    }
+  }
+  updatePreview();
+});
+
+// For the 2nd Product Image field
+document.getElementById('image2').addEventListener('input', function() {
+  if (this.value.trim() !== "") {
+    if (uploadedImages['uploadImage2Btn']) {
+      backupImages['uploadImage2Btn'] = uploadedImages['uploadImage2Btn'];
+      delete uploadedImages['uploadImage2Btn'];
+      document.getElementById('uploadImage2Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+    }
+  } else {
+    if (backupImages['uploadImage2Btn']) {
+      uploadedImages['uploadImage2Btn'] = backupImages['uploadImage2Btn'];
+      document.getElementById('uploadImage2Btn').innerHTML = '<i class="fas fa-check" style="color: green;"></i>';
+      delete backupImages['uploadImage2Btn'];
+    }
+  }
+  updatePreview();
+});
+
+// For the 3rd Product Image field
+document.getElementById('image3').addEventListener('input', function() {
+  if (this.value.trim() !== "") {
+    if (uploadedImages['uploadImage3Btn']) {
+      backupImages['uploadImage3Btn'] = uploadedImages['uploadImage3Btn'];
+      delete uploadedImages['uploadImage3Btn'];
+      document.getElementById('uploadImage3Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+    }
+  } else {
+    if (backupImages['uploadImage3Btn']) {
+      uploadedImages['uploadImage3Btn'] = backupImages['uploadImage3Btn'];
+      document.getElementById('uploadImage3Btn').innerHTML = '<i class="fas fa-check" style="color: green;"></i>';
+      delete backupImages['uploadImage3Btn'];
+    }
+  }
+  updatePreview();
+});
+
+// For the About Image field (unchanged since it's not mandatory)
+document.getElementById('aboutImage').addEventListener('input', function() {
+  if (this.value.trim() !== "") {
+    if (uploadedImages['uploadAboutImgBtn']) {
+      backupImages['uploadAboutImgBtn'] = uploadedImages['uploadAboutImgBtn'];
+      delete uploadedImages['uploadAboutImgBtn'];
+      document.getElementById('uploadAboutImgBtn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+    }
+  } else {
+    if (backupImages['uploadAboutImgBtn']) {
+      uploadedImages['uploadAboutImgBtn'] = backupImages['uploadAboutImgBtn'];
+      document.getElementById('uploadAboutImgBtn').innerHTML = '<i class="fas fa-check" style="color: green;"></i>';
+      delete backupImages['uploadAboutImgBtn'];
+    }
+  }
+  updatePreview();
+});
+
+
+document.getElementById('paymentMethodBtn').addEventListener('click', function() {
+  document.getElementById('paymentMethodModal').style.display = 'block';
+});
+
+document.getElementById('closePaymentMethodModal').addEventListener('click', function() {
+  document.getElementById('paymentMethodModal').style.display = 'none';
+});
+
+document.querySelectorAll('#paymentMethodModal ul li').forEach(function(item) {
+  item.addEventListener('click', function() {
+    var value = this.getAttribute('data-value');
+    document.getElementById('productPaymentMethod').value = value;
+    // Do not update the button text—keep it static as "Select Payment Method"
+    document.getElementById('paymentMethodModal').style.display = 'none';
+    
+    // Trigger any change event if needed:
+    var event = new Event('change');
+    document.getElementById('productPaymentMethod').dispatchEvent(event);
+  });
+});
+    
+    document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('#paymentMethodModal ul li').forEach(function(item) {
+    item.addEventListener('click', function() {
+      var value = this.getAttribute('data-value');
+      document.getElementById('productPaymentMethod').value = value;
+      
+      // Update the button appearance and text
+      var paymentBtn = document.getElementById('paymentMethodBtn');
+      paymentBtn.classList.add('selected');
+      paymentBtn.innerHTML = 'Payment method selected  <i class="fas fa-check"></i>';
+      
+      document.getElementById('paymentMethodModal').style.display = 'none';
+      
+      // Optionally, trigger a change event if needed
+      var event = new Event('change');
+      document.getElementById('productPaymentMethod').dispatchEvent(event);
+    });
+  });
+});
+
+
+   
 </script>
+  
+  
+
 
 
 
@@ -3206,6 +4471,133 @@ window.addEventListener('beforeunload', function(e) {
   gtag('js', new Date());
 
   gtag('config', 'G-FJEE98DCQM');
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Remove duplicate declarations if needed (or move these to one global spot)
+  window.currentUploadField = null;
+  window.uploadedImages = {};
+  window.backupImages = {};
+
+  // Expose openUploadModal globally:
+  window.openUploadModal = function(fieldId) {
+    console.log("openUploadModal called for " + fieldId);
+    if (window.uploadedImages[fieldId]) {
+      if (confirm("Do you want to delete the uploaded image?")) {
+        delete window.uploadedImages[fieldId];
+        if (window.backupImages[fieldId]) {
+          delete window.backupImages[fieldId];
+        }
+        document.getElementById(fieldId).innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+        updatePreview();
+        return;
+      } else {
+        return;
+      }
+    }
+    window.currentUploadField = fieldId;
+    document.getElementById('uploadModal').style.display = 'flex';
+  };
+
+  function closeUploadModal() {
+    document.getElementById('uploadModal').style.display = 'none';
+    window.currentUploadField = null;
+  }
+
+  document.getElementById('uploadModalClose').addEventListener('click', closeUploadModal);
+  document.getElementById('browseButton').addEventListener('click', function() {
+    document.getElementById('uploadFileInput').click();
+  });
+
+  // File input handling:
+  document.getElementById('uploadFileInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file && window.currentUploadField) {
+    // Create an object URL for preview
+    const objectURL = URL.createObjectURL(file);
+    // Save the original file object for downloading and also the URL for preview
+    window.uploadedFiles = window.uploadedFiles || {};
+    window.uploadedImages = window.uploadedImages || {};
+    window.uploadedFiles[window.currentUploadField] = file;
+    window.uploadedImages[window.currentUploadField] = objectURL;
+    // Update preview using the object URL
+    updatePreviewForField(window.currentUploadField, objectURL);
+    const btn = document.getElementById(window.currentUploadField);
+    if (btn) {
+      btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
+    }
+    closeUploadModal();
+    e.target.value = "";
+  }
+});
+
+
+
+
+
+  // Drag & drop handling:
+const dropArea = document.getElementById('uploadDropArea');
+dropArea.addEventListener('dragover', function(e) {
+  e.preventDefault();
+  dropArea.style.borderColor = '#2196F3';
+});
+dropArea.addEventListener('dragleave', function(e) {
+  e.preventDefault();
+  dropArea.style.borderColor = '#ccc';
+});
+dropArea.addEventListener('drop', function(e) {
+  e.preventDefault();
+  dropArea.style.borderColor = '#ccc';
+  const file = e.dataTransfer.files[0];
+  if (file && window.currentUploadField) {
+    // Create an object URL for preview (using the original file without scaling)
+    const objectURL = URL.createObjectURL(file);
+    window.uploadedFiles = window.uploadedFiles || {};
+    window.uploadedImages = window.uploadedImages || {};
+    window.uploadedFiles[window.currentUploadField] = file;
+    window.uploadedImages[window.currentUploadField] = objectURL;
+    updatePreviewForField(window.currentUploadField, objectURL);
+    const btn = document.getElementById(window.currentUploadField);
+    if (btn) {
+      btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
+    }
+    closeUploadModal();
+  }
+});
+
+
+
+  function updatePreviewForField(fieldId, objectURL) {
+  const fieldMapping = {
+    'uploadLogoBtn': { input: 'logo', target: 'heroData.logo' },
+    'uploadBannerBtn': { input: 'banner', target: 'heroData.banner' },
+    'uploadImage1Btn': { input: 'image1', target: 'productImage1' },
+    'uploadImage2Btn': { input: 'image2', target: 'productImage2' },
+    'uploadImage3Btn': { input: 'image3', target: 'productImage3' },
+    'uploadAboutImgBtn': { input: 'aboutImage', target: 'aboutData.image' }
+  };
+  const mapping = fieldMapping[fieldId];
+  if (!mapping) return;
+  const inputEl = document.getElementById(mapping.input);
+  if (inputEl && inputEl.value.trim() !== "") {
+    window.backupFiles = window.backupFiles || {};
+    window.backupFiles[fieldId] = window.uploadedFiles ? window.uploadedFiles[fieldId] : null;
+    inputEl.value = "";
+  }
+  // Save the object URL to heroData/aboutData accordingly
+  if (mapping.target === 'heroData.logo') {
+    heroData.logo = objectURL;
+  } else if (mapping.target === 'heroData.banner') {
+    heroData.banner = objectURL;
+  } else if (mapping.target === 'aboutData.image') {
+    aboutData.image = objectURL;
+  }
+  updatePreview();
+}
+
+
+
 </script>
 
 
