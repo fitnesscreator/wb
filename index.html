@@ -1962,6 +1962,7 @@
         y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
     })(window, document, "clarity", "script", "pyh4snlwpe");
 </script>
+  
   <script>
   // Global variables to remember selections
   var defaultCurrency = '';
@@ -2207,6 +2208,15 @@ window.openUploadModal = function(fieldId) {
   document.getElementById('uploadModal').style.display = 'flex';
   window.currentUploadField = fieldId;
 };
+    
+    // Add this helper to get the final image URL (for the downloaded website)
+function getFinalImageURL(fieldId, currentURL) {
+  if (window.uploadedFiles && window.uploadedFiles[fieldId]) {
+    return "Images/" + window.uploadedFiles[fieldId].name;
+  }
+  return currentURL;
+}
+
 
 
 
@@ -2370,9 +2380,25 @@ document.addEventListener('DOMContentLoaded', function() {
   function addProduct(){
   // Gather inputs
   var title         = document.getElementById('productTitle').value.trim();
-  var img1 = uploadedImages['uploadImage1Btn'] || document.getElementById('image1').value.trim();
-  var img2 = uploadedImages['uploadImage2Btn'] || document.getElementById('image2').value.trim();
-  var img3 = uploadedImages['uploadImage3Btn'] || document.getElementById('image3').value.trim();
+  
+  // Process first image: store both blob URL and final path
+  var img1Blob = uploadedImages['uploadImage1Btn'] || document.getElementById('image1').value.trim();
+  var img1Final = (window.uploadedFiles && window.uploadedFiles['uploadImage1Btn'])
+                ? "Images/" + window.uploadedFiles['uploadImage1Btn'].name
+                : img1Blob;
+  
+  // Process second image
+  var img2Blob = uploadedImages['uploadImage2Btn'] || document.getElementById('image2').value.trim();
+  var img2Final = (window.uploadedFiles && window.uploadedFiles['uploadImage2Btn'])
+                ? "Images/" + window.uploadedFiles['uploadImage2Btn'].name
+                : img2Blob;
+  
+  // Process third image
+  var img3Blob = uploadedImages['uploadImage3Btn'] || document.getElementById('image3').value.trim();
+  var img3Final = (window.uploadedFiles && window.uploadedFiles['uploadImage3Btn'])
+                ? "Images/" + window.uploadedFiles['uploadImage3Btn'].name
+                : img3Blob;
+  
   var currencyInput = document.getElementById('productCurrency');
   var currencyCode  = currencyInput.getAttribute('data-code') || 'EUR';
   var sold          = document.getElementById('sold').value.trim();
@@ -2402,7 +2428,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Basic mandatory checks for existing fields
-  if (!title || !img1 || !price || !desc) {
+  if (!title || !img1Blob || !price || !desc) {
     alert("Please fill out all mandatory fields (Title, First Image, Price, and Description).");
     return;
   }
@@ -2431,10 +2457,17 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
-  // Gather images into an array
-  var imgs = [img1];
-  if(img2) imgs.push(img2);
-  if(img3) imgs.push(img3);
+  // Gather images into an array of objects with both preview and final URLs
+  var imgs = [];
+  if (img1Blob) {
+    imgs.push({ preview: img1Blob, final: img1Final });
+  }
+  if (img2Blob) {
+    imgs.push({ preview: img2Blob, final: img2Final });
+  }
+  if (img3Blob) {
+    imgs.push({ preview: img3Blob, final: img3Final });
+  }
 
   // Set shipping value
   var shippingVal = "FREE";
@@ -2472,58 +2505,58 @@ document.addEventListener('DOMContentLoaded', function() {
   products.push(product);
 
   // Clear product input fields
-document.getElementById('productTitle').value = '';
-document.getElementById('image1').value = '';
-document.getElementById('image2').value = '';
-document.getElementById('image3').value = '';
+  document.getElementById('productTitle').value = '';
+  document.getElementById('image1').value = '';
+  document.getElementById('image2').value = '';
+  document.getElementById('image3').value = '';
 
-if (defaultCurrency) {
-  currencyInput.value = defaultCurrency;
-  currencyInput.setAttribute('data-code', defaultCurrencyCode);
-} else {
-  currencyInput.value = '';
-  currencyInput.removeAttribute('data-code');
-}
+  if (defaultCurrency) {
+    currencyInput.value = defaultCurrency;
+    currencyInput.setAttribute('data-code', defaultCurrencyCode);
+  } else {
+    currencyInput.value = '';
+    currencyInput.removeAttribute('data-code');
+  }
 
-document.getElementById('sold').value = '';
-document.getElementById('price').value = '';
-document.getElementById('shipping').value = '';
-document.getElementById('description').value = '';
-document.getElementById('colorOptions').value = '';
-document.getElementById('sizeOptions').value = '';
-document.getElementById('productLink').value = '';
-document.getElementById('productEmbed').value = '';
-document.getElementById('otherPaymentLink').value = '';
-if (paymentMethod !== 'paypalEmail') {
-  document.getElementById('paypalEmailInput').value = '';
-} else {
-  document.getElementById('paypalEmailInput').value = defaultPaypalEmail;
-}
+  document.getElementById('sold').value = '';
+  document.getElementById('price').value = '';
+  document.getElementById('shipping').value = '';
+  document.getElementById('description').value = '';
+  document.getElementById('colorOptions').value = '';
+  document.getElementById('sizeOptions').value = '';
+  document.getElementById('productLink').value = '';
+  document.getElementById('productEmbed').value = '';
+  document.getElementById('otherPaymentLink').value = '';
+  if (paymentMethod !== 'paypalEmail') {
+    document.getElementById('paypalEmailInput').value = '';
+  } else {
+    document.getElementById('paypalEmailInput').value = defaultPaypalEmail;
+  }
 
-updateAddProductFormFields();
+  updateAddProductFormFields();
 
-// Reset the upload fields for product images by deleting their entries 
-delete window.uploadedImages['uploadImage1Btn'];
-delete window.uploadedImages['uploadImage2Btn'];
-delete window.uploadedImages['uploadImage3Btn'];
-delete window.backupImages['uploadImage1Btn'];
-delete window.backupImages['uploadImage2Btn'];
-delete window.backupImages['uploadImage3Btn'];
+  // Reset the upload fields for product images by deleting their entries 
+  delete window.uploadedImages['uploadImage1Btn'];
+  delete window.uploadedImages['uploadImage2Btn'];
+  delete window.uploadedImages['uploadImage3Btn'];
+  delete window.backupImages['uploadImage1Btn'];
+  delete window.backupImages['uploadImage2Btn'];
+  delete window.backupImages['uploadImage3Btn'];
 
-// Reset the upload button icons for product images
-document.getElementById('uploadImage1Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
-document.getElementById('uploadImage2Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
-document.getElementById('uploadImage3Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+  // Reset the upload button icons for product images
+  document.getElementById('uploadImage1Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+  document.getElementById('uploadImage2Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
+  document.getElementById('uploadImage3Btn').innerHTML = '<i class="fas fa-cloud-upload-alt"></i>';
 
-// Reset image field count and hide additional fields
-imageCount = 1;
-document.getElementById('additionalImage2').style.display = 'none';
-document.getElementById('additionalImage3').style.display = 'none';
-document.getElementById('addImagesBtn').style.display = 'block';
+  // Reset image field count and hide additional fields
+  imageCount = 1;
+  document.getElementById('additionalImage2').style.display = 'none';
+  document.getElementById('additionalImage3').style.display = 'none';
+  document.getElementById('addImagesBtn').style.display = 'block';
 
-// Refresh the preview and update the added products list
-forceRefreshPreview();
-renderAddedProductsList();
+  // Refresh the preview and update the added products list
+  forceRefreshPreview();
+  renderAddedProductsList();
 }
 
 
@@ -2599,15 +2632,18 @@ function renderAddedProductsList() {
 
   function updatePreview() {
     // gather hero data
-    heroData.logo = uploadedImages['uploadLogoBtn'] || document.getElementById('logo').value.trim();
-    heroData.banner = uploadedImages['uploadBannerBtn'] || document.getElementById('banner').value.trim();
+    heroData.logoPreview = uploadedImages['uploadLogoBtn'] || document.getElementById('logo').value.trim();
+    heroData.logoFinal   = getFinalImageURL('uploadLogoBtn', heroData.logoPreview);
+    heroData.bannerPreview = uploadedImages['uploadBannerBtn'] || document.getElementById('banner').value.trim();
+    heroData.bannerFinal   = getFinalImageURL('uploadBannerBtn', heroData.bannerPreview);
     heroData.heroText = document.getElementById('heroText').value.trim();
     heroData.ctaText  = document.getElementById('ctaText').value.trim();
 
     // about data
     aboutData.title     = document.getElementById('aboutTitle').value.trim();
     aboutData.paragraph = document.getElementById('aboutParagraph').value.trim();
-    aboutData.image = uploadedImages['uploadAboutImgBtn'] || document.getElementById('aboutImage').value.trim();
+    aboutData.imagePreview = uploadedImages['uploadAboutImgBtn'] || document.getElementById('aboutImage').value.trim();
+    aboutData.imageFinal   = getFinalImageURL('uploadAboutImgBtn', aboutData.imagePreview);
     aboutData.bgColor = document.getElementById('aboutBgColorPicker').value;
 aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
 
@@ -2659,8 +2695,8 @@ aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
 
   // Fav icon
   if(heroData.logo.trim() !== ""){
-    top += "<link rel='shortcut icon' href='" + escapeHTML(heroData.logo.trim()) + "'>";
-  }
+    top += "<link rel='shortcut icon' href='" + escapeHTML(getFinalImageURL('uploadLogoBtn', heroData.logo.trim())) + "'>";
+}
   if(contactData.googleAnalytics){
     top += "\n<!-- Google Analytics -->\n" + contactData.googleAnalytics + "\n";
   }
@@ -2710,8 +2746,9 @@ aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
   // Create an "Images" folder inside "MyWebsite"
   var imagesFolder = websiteFolder.folder("Images");
   
-  // If any files were uploaded via your new mechanism, add them
   var filePromises = [];
+  
+  // 1. Process any files uploaded via your new mechanism (stored in window.uploadedFiles)
   if(window.uploadedFiles) {
     for (const key in window.uploadedFiles) {
       const file = window.uploadedFiles[key];
@@ -2728,9 +2765,41 @@ aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
     }
   }
   
+  // 2. Loop through each product and for each image, if the final URL is an external URL, fetch it.
+  products.forEach((product, pIndex) => {
+    if(product.images && product.images.length > 0){
+      product.images.forEach((img, i) => {
+        let url = img.final;
+        // Check if the URL exists and is an external URL (starts with http)
+        if(url && url.startsWith("http")){
+          filePromises.push(
+            fetch(url)
+              .then(response => {
+                if(!response.ok) throw new Error("Network response was not ok");
+                return response.arrayBuffer();
+              })
+              .then(arrayBuffer => {
+                // Derive a filename using the product and image index.
+                let ext = "jpg"; // default extension
+                let parts = url.split('.');
+                if(parts.length > 1){
+                  ext = parts[parts.length - 1].split(/[?#]/)[0];
+                }
+                let filename = "product" + (pIndex+1) + "_img" + (i+1) + "." + ext;
+                imagesFolder.file(filename, arrayBuffer);
+              })
+              .catch(err => {
+                console.error("Error fetching image from URL:", url, err);
+              })
+          );
+        }
+      });
+    }
+  });
+  
+  // Wait for all file processing to complete, then generate and trigger the ZIP download.
   Promise.all(filePromises)
     .then(() => {
-      // Generate the ZIP and trigger the download
       zip.generateAsync({ type: "blob" }).then(function(content) {
         saveAs(content, "My Website.zip");
       });
@@ -2740,6 +2809,7 @@ aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
       alert("Error reading files. Check console for details.");
     });
 }
+
 
 
 
@@ -3054,12 +3124,14 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
 }
 
 
-  function buildTopHeader(){
-    var h = "";
-    h += "<header class='top-header'><div class='logo-wrapper'>";
-    if(heroData.logo){
-      h += "<img src='"+escapeHTML(heroData.logo)+"' alt='Logo'>";
-    }
+  function buildTopHeader() {
+  var h = "";
+  h += "<header class='top-header'><div class='logo-wrapper'>";
+
+  // Use .logoPreview for the preview
+  if (heroData.logoPreview) {
+    h += "<img src='" + escapeHTML(heroData.logoPreview) + "' alt='Logo'>";
+  }
     h += "</div><div class='nav-links'>";
     h += "<a href='#products'>Shop</a>";
     h += "<a href='#reviews'>Reviews</a>";
@@ -3085,8 +3157,8 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
     return minimal;
   }
   // big hero
-  var bkg = escapeHTML(heroData.banner);
-  var s   = "<section class='hero-banner' style=\"background-image:url('" + bkg + "');\">";
+  var bkg = heroData.bannerPreview || "";
+  var s   = "<section class='hero-banner' style=\"background-image:url('" + escapeHTML(bkg) + "');\">";
   s += "<div class='hero-overlay'>";
   if(heroData.heroText){
   s += "<h1 class='hero-title' style='color:" + (heroData.heroTitleColor || '#000000') + "; font-family:" + heroTitleFont + ";'>" + escapeHTML(heroData.heroText) + "</h1>";
@@ -3105,7 +3177,7 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
     var html = "";
     for(var i=0; i<products.length; i++){
       var p       = products[i];
-      var mainImg = (p.images.length > 0) ? escapeHTML(p.images[0]) : "";
+      var mainImg = (p.images.length > 0) ? escapeHTML(p.images[0].preview) : "";
       var symbol  = getCurrencySymbol(p.currency);
 
       html += "<div class='product-item'"+
@@ -3120,9 +3192,9 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
         " data-sizeoptions='"+escapeHTML(p.sizeoptions||"")+"'"+
         " data-colorlabel='"+escapeHTML(p.colorLabel||"Color")+"'"+
         " data-sizelabel='"+escapeHTML(p.sizeLabel||"Size")+"'"+
-        " data-images1='"+(p.images[0]||"")+"'"+
-        " data-images2='"+(p.images[1]||"")+"'"+
-        " data-images3='"+(p.images[2]||"")+"'"+
+        " data-images1='"+(p.images[0] ? p.images[0].preview : "")+"'"+
+        " data-images2='"+(p.images[1] ? p.images[1].preview : "")+"'"+
+        " data-images3='"+(p.images[2] ? p.images[2].preview : "")+"'"+
         " data-paymentmethod='"+escapeHTML(p.paymentMethod||"")+"'"+
         " data-paypallink='"+escapeHTML(p.paypalLink||"")+"'"+
         " data-paypalembed='"+escapeHTML(p.paypalEmbed||"")+"'"+
@@ -3171,8 +3243,8 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
   a += "<h2 style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.title||"Who We Are") + "</h2>";
   a += "<p style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.paragraph||"Our story...") + "</p>";
   a += "</div><div class='about-right'>";
-  if(aboutData.image){
-    a += "<img src='" + escapeHTML(aboutData.image) + "' alt='About Image'>";
+  if (aboutData.imagePreview) {
+    a += "<img src='" + escapeHTML(aboutData.imagePreview) + "' alt='About Image'>";
   }
   a += "</div></section>";
   return a;
@@ -3998,10 +4070,6 @@ document.addEventListener('click', function(e) {
     });
   }
 
-  function redirectToUpload(){
-    window.open("https://imgbb.com","_blank");
-  }
-
   function updateManagementLists(){
     const cont = document.getElementById('managementContainer');
     if(!cont) return;
@@ -4457,6 +4525,8 @@ window.addEventListener('load',function(){
 });
 document.querySelector('#popupMessage .close').addEventListener('click',closePopup);
 </script>
+  
+  
   <script>
 window.addEventListener('beforeunload', function(e) {
   e.preventDefault();
@@ -4465,6 +4535,8 @@ window.addEventListener('beforeunload', function(e) {
 </script>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-FJEE98DCQM"></script>
+  
+  
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -4473,16 +4545,20 @@ window.addEventListener('beforeunload', function(e) {
   gtag('config', 'G-FJEE98DCQM');
 </script>
 
+  
+  
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Remove duplicate declarations if needed (or move these to one global spot)
+  // Global variables
   window.currentUploadField = null;
   window.uploadedImages = {};
   window.backupImages = {};
+  window.uploadedFiles = {}; // Make sure to declare this as well
 
-  // Expose openUploadModal globally:
+  // Expose the upload modal function globally
   window.openUploadModal = function(fieldId) {
     console.log("openUploadModal called for " + fieldId);
+    // If an image is already uploaded for this field, confirm deletion
     if (window.uploadedImages[fieldId]) {
       if (confirm("Do you want to delete the uploaded image?")) {
         delete window.uploadedImages[fieldId];
@@ -4500,105 +4576,125 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('uploadModal').style.display = 'flex';
   };
 
+  // Helper: Get final image URL for download (if file was uploaded)
+  function getFinalImageURL(fieldId, currentURL) {
+    if (window.uploadedFiles && window.uploadedFiles[fieldId]) {
+      return "Images/" + window.uploadedFiles[fieldId].name;
+    }
+    return currentURL;
+  }
+
+  // File input handling (for browsing files)
+  var uploadFileInput = document.getElementById('uploadFileInput');
+  if (uploadFileInput) {
+    uploadFileInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!window.currentUploadField) {
+        console.error("No upload field is set!");
+        return;
+      }
+      // Create an object URL for preview
+      const objectURL = URL.createObjectURL(file);
+      window.uploadedFiles[window.currentUploadField] = file;
+      window.uploadedImages[window.currentUploadField] = objectURL;
+      console.log("File selected:", file.name, objectURL);
+      updatePreviewForField(window.currentUploadField, objectURL);
+      const btn = document.getElementById(window.currentUploadField);
+      if (btn) {
+        btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
+      }
+      e.target.value = "";
+      closeUploadModal();
+    });
+  }
+
+  // Drag & Drop handling for the upload drop area
+  var dropArea = document.getElementById('uploadDropArea');
+  if (dropArea) {
+    dropArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.dataTransfer.dropEffect = 'copy';
+      dropArea.style.borderColor = '#2196F3';
+      console.log("Dragover event fired.");
+    });
+    dropArea.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.style.borderColor = '#ccc';
+      console.log("Dragleave event fired.");
+    });
+    dropArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.style.borderColor = '#ccc';
+      const file = e.dataTransfer.files[0];
+      console.log("Drop event fired, file:", file);
+      if (file && window.currentUploadField) {
+        const objectURL = URL.createObjectURL(file);
+        console.log("Dropped file:", file.name, objectURL);
+        window.uploadedFiles[window.currentUploadField] = file;
+        window.uploadedImages[window.currentUploadField] = objectURL;
+        updatePreviewForField(window.currentUploadField, objectURL);
+        const btn = document.getElementById(window.currentUploadField);
+        if (btn) {
+          btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
+        }
+        closeUploadModal();
+      }
+    });
+  } else {
+    console.error("Drop area element not found.");
+  }
+
+  // Updates the preview for the given upload field
+  function updatePreviewForField(fieldId, objectURL) {
+    const fieldMapping = {
+      'uploadLogoBtn': { input: 'logo', target: 'heroData.logo' },
+      'uploadBannerBtn': { input: 'banner', target: 'heroData.banner' },
+      'uploadImage1Btn': { input: 'image1', target: 'productImage1' },
+      'uploadImage2Btn': { input: 'image2', target: 'productImage2' },
+      'uploadImage3Btn': { input: 'image3', target: 'productImage3' },
+      'uploadAboutImgBtn': { input: 'aboutImage', target: 'aboutData.image' }
+    };
+    const mapping = fieldMapping[fieldId];
+    if (!mapping) return;
+    const inputEl = document.getElementById(mapping.input);
+    if (inputEl && inputEl.value.trim() !== "") {
+      window.backupFiles = window.backupFiles || {};
+      window.backupFiles[fieldId] = window.uploadedFiles ? window.uploadedFiles[fieldId] : null;
+      inputEl.value = "";
+    }
+    // Save the object URL into the proper data object
+    if (mapping.target === 'heroData.logo') {
+      heroData.logo = objectURL;
+    } else if (mapping.target === 'heroData.banner') {
+      heroData.banner = objectURL;
+    } else if (mapping.target === 'aboutData.image') {
+      aboutData.image = objectURL;
+    }
+    updatePreview();
+  }
+
+  // Closes the upload modal
   function closeUploadModal() {
     document.getElementById('uploadModal').style.display = 'none';
     window.currentUploadField = null;
   }
 
-  document.getElementById('uploadModalClose').addEventListener('click', closeUploadModal);
-  document.getElementById('browseButton').addEventListener('click', function() {
-    document.getElementById('uploadFileInput').click();
-  });
-
-  // File input handling:
-  document.getElementById('uploadFileInput').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (file && window.currentUploadField) {
-    // Create an object URL for preview
-    const objectURL = URL.createObjectURL(file);
-    // Save the original file object for downloading and also the URL for preview
-    window.uploadedFiles = window.uploadedFiles || {};
-    window.uploadedImages = window.uploadedImages || {};
-    window.uploadedFiles[window.currentUploadField] = file;
-    window.uploadedImages[window.currentUploadField] = objectURL;
-    // Update preview using the object URL
-    updatePreviewForField(window.currentUploadField, objectURL);
-    const btn = document.getElementById(window.currentUploadField);
-    if (btn) {
-      btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
-    }
-    closeUploadModal();
-    e.target.value = "";
+  // Attach the browse button event (if not already attached)
+  var browseButton = document.getElementById('browseButton');
+  if (browseButton) {
+    browseButton.addEventListener('click', function() {
+      document.getElementById('uploadFileInput').click();
+    });
   }
+
+  // (Assuming updatePreview() is defined elsewhere in your code)
 });
-
-
-
-
-
-  // Drag & drop handling:
-const dropArea = document.getElementById('uploadDropArea');
-dropArea.addEventListener('dragover', function(e) {
-  e.preventDefault();
-  dropArea.style.borderColor = '#2196F3';
-});
-dropArea.addEventListener('dragleave', function(e) {
-  e.preventDefault();
-  dropArea.style.borderColor = '#ccc';
-});
-dropArea.addEventListener('drop', function(e) {
-  e.preventDefault();
-  dropArea.style.borderColor = '#ccc';
-  const file = e.dataTransfer.files[0];
-  if (file && window.currentUploadField) {
-    // Create an object URL for preview (using the original file without scaling)
-    const objectURL = URL.createObjectURL(file);
-    window.uploadedFiles = window.uploadedFiles || {};
-    window.uploadedImages = window.uploadedImages || {};
-    window.uploadedFiles[window.currentUploadField] = file;
-    window.uploadedImages[window.currentUploadField] = objectURL;
-    updatePreviewForField(window.currentUploadField, objectURL);
-    const btn = document.getElementById(window.currentUploadField);
-    if (btn) {
-      btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
-    }
-    closeUploadModal();
-  }
-});
-
-
-
-  function updatePreviewForField(fieldId, objectURL) {
-  const fieldMapping = {
-    'uploadLogoBtn': { input: 'logo', target: 'heroData.logo' },
-    'uploadBannerBtn': { input: 'banner', target: 'heroData.banner' },
-    'uploadImage1Btn': { input: 'image1', target: 'productImage1' },
-    'uploadImage2Btn': { input: 'image2', target: 'productImage2' },
-    'uploadImage3Btn': { input: 'image3', target: 'productImage3' },
-    'uploadAboutImgBtn': { input: 'aboutImage', target: 'aboutData.image' }
-  };
-  const mapping = fieldMapping[fieldId];
-  if (!mapping) return;
-  const inputEl = document.getElementById(mapping.input);
-  if (inputEl && inputEl.value.trim() !== "") {
-    window.backupFiles = window.backupFiles || {};
-    window.backupFiles[fieldId] = window.uploadedFiles ? window.uploadedFiles[fieldId] : null;
-    inputEl.value = "";
-  }
-  // Save the object URL to heroData/aboutData accordingly
-  if (mapping.target === 'heroData.logo') {
-    heroData.logo = objectURL;
-  } else if (mapping.target === 'heroData.banner') {
-    heroData.banner = objectURL;
-  } else if (mapping.target === 'aboutData.image') {
-    aboutData.image = objectURL;
-  }
-  updatePreview();
-}
-
-
-
 </script>
+
 
 
   
