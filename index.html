@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>Success in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>C in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -4058,6 +4058,7 @@ m += "    }\n";
 m += "  };\n";
 m += "})();";
   m += "</scr" + "ipt>";
+
   return m;
 }
     
@@ -4677,11 +4678,11 @@ window.addEventListener('beforeunload', function(e) {
   
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  // Global variables
+  // Global variables (set only once)
   window.currentUploadField = null;
   window.uploadedImages = {};
   window.backupImages = {};
-  window.uploadedFiles = {}; // Make sure to declare this as well
+  window.uploadedFiles = {};
 
   // Expose the upload modal function globally
   window.openUploadModal = function(fieldId) {
@@ -4716,25 +4717,25 @@ document.addEventListener('DOMContentLoaded', function() {
   var uploadFileInput = document.getElementById('uploadFileInput');
   if (uploadFileInput) {
     uploadFileInput.addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  if (!window.currentUploadField) {
-    console.error("No upload field is set!");
-    return;
-  }
-  // Create an object URL for preview
-  const objectURL = URL.createObjectURL(file);
-  window.uploadedFiles[window.currentUploadField] = file;
-  window.uploadedImages[window.currentUploadField] = objectURL;
-  console.log("File selected:", file.name, objectURL);
-  updatePreviewForField(window.currentUploadField, objectURL);
-  const btn = document.getElementById(window.currentUploadField);
-  if (btn) {
-    btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
-  }
-  e.target.value = "";
-  closeUploadModal();
-});
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!window.currentUploadField) {
+        console.error("No upload field is set!");
+        return;
+      }
+      // Create an object URL for preview
+      const objectURL = URL.createObjectURL(file);
+      window.uploadedFiles[window.currentUploadField] = file;
+      window.uploadedImages[window.currentUploadField] = objectURL;
+      console.log("File selected:", file.name, objectURL);
+      updatePreviewForField(window.currentUploadField, objectURL);
+      const btn = document.getElementById(window.currentUploadField);
+      if (btn) {
+        btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
+      }
+      e.target.value = "";
+      closeUploadModal();
+    });
   }
 
   // Drag & Drop handling for the upload drop area
@@ -4776,14 +4777,11 @@ document.addEventListener('DOMContentLoaded', function() {
     console.error("Drop area element not found.");
   }
 
-  // Updates the preview for the given upload field
-  // Updates the preview for the given upload field
-function updatePreviewForField(fieldId, objectURL) {
-  // Define a mapping for fields that affect the hero/about images.
-  // (For product images, note that you already handle them when adding the product.)
+  // Updates the preview for the given upload field (for preview purposes only)
+  function updatePreviewForField(fieldId, objectURL) {
+  console.log("Updating preview for", fieldId, "with URL", objectURL);
   switch(fieldId) {
     case 'uploadLogoBtn':
-      // For the logo, store the blob URL in a dedicated preview property.
       heroData.logoPreview = objectURL;
       break;
     case 'uploadBannerBtn':
@@ -4792,14 +4790,27 @@ function updatePreviewForField(fieldId, objectURL) {
     case 'uploadAboutImgBtn':
       aboutData.imagePreview = objectURL;
       break;
-    // If you need to handle other fields differently, add cases here.
+    // For product images—make sure these elements exist or update accordingly:
+    case 'uploadImage1Btn':
+      // If you have an <img id="productPreview1"> element:
+      var p1 = document.getElementById('productPreview1');
+      if (p1) { p1.src = objectURL; }
+      // Otherwise, store it somewhere or simply log it.
+      break;
+    case 'uploadImage2Btn':
+      var p2 = document.getElementById('productPreview2');
+      if (p2) { p2.src = objectURL; }
+      break;
+    case 'uploadImage3Btn':
+      var p3 = document.getElementById('productPreview3');
+      if (p3) { p3.src = objectURL; }
+      break;
     default:
-      // For any fields not handled explicitly, do nothing.
       break;
   }
-  // Call updatePreview() to rebuild the preview HTML (which will now use .logoPreview, etc.)
   updatePreview();
 }
+
 
 
   // Closes the upload modal
@@ -4808,7 +4819,7 @@ function updatePreviewForField(fieldId, objectURL) {
     window.currentUploadField = null;
   }
 
-  // Attach the browse button event (if not already attached)
+  // Attach the browse button event
   var browseButton = document.getElementById('browseButton');
   if (browseButton) {
     browseButton.addEventListener('click', function() {
@@ -4816,9 +4827,11 @@ function updatePreviewForField(fieldId, objectURL) {
     });
   }
 
-  // (Assuming updatePreview() is defined elsewhere in your code)
+  // (Make sure updatePreview() is defined elsewhere.)
 });
+
 </script>
+
 
 
 
