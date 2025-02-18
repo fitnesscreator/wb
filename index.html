@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>C in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -2714,6 +2714,40 @@ function buildPreviewHTML() {
   top += "</body></html>";
   return top;
 }
+    
+    function buildProductsSectionPreview() {
+  // For example, you can return the same HTML as your final products section:
+  return buildProductsSection();
+}
+function buildReviewsSectionPreview() {
+  return buildReviewsSection();
+}
+function buildAboutSectionPreview() {
+  return buildAboutSectionFinal(); // or buildAboutSection() if you prefer
+}
+function buildContactSectionPreview() {
+  return buildContactSection();
+}
+
+    
+    function buildPreviewHTML() {
+  let top = "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Live Preview</title>";
+  top += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+  top += "<link href='https://fonts.googleapis.com/css2?family=" + heroTitleFont.split(" ").join("+") + ":wght@400;500;700&display=swap' rel='stylesheet'>";
+  top += buildGlobalCSS();
+  top += "</head><body>";
+  top += buildTopHeaderPreview();
+  top += buildHeroPreview();
+  top += buildProductsSectionPreview();
+  top += buildReviewsSectionPreview();
+  top += buildAboutSectionPreview();
+  top += buildContactSectionPreview();
+  top += buildProductModalScript();
+  top += "</body></html>";
+  return top;
+}
+
+    
 
 // Your existing function, now *unchanged*, still references .logoFinal, .bannerFinal, etc.
 function buildFinalHTML() {
