@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>Test – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -2732,6 +2732,7 @@ aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
     }
   }
   
+  // Rebuild finalHTML if needed. (Ensure buildFinalHTML uses final URLs – e.g. heroData.logoFinal, heroData.bannerFinal, aboutData.imageFinal, and for product images use img.final)
   if (!finalHTML.trim()){
     finalHTML = buildFinalHTML();
   }
@@ -2748,14 +2749,14 @@ aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
   
   var filePromises = [];
   
-  // 1. Process any files uploaded via your new mechanism (stored in window.uploadedFiles)
+  // 1. Process files that were uploaded via your file input
   if(window.uploadedFiles) {
     for (const key in window.uploadedFiles) {
       const file = window.uploadedFiles[key];
       filePromises.push(new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = function(e) {
-          // e.target.result is an ArrayBuffer that preserves the original file
+          // e.target.result is an ArrayBuffer that preserves the original file data
           imagesFolder.file(file.name, e.target.result);
           resolve();
         };
@@ -2765,12 +2766,13 @@ aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
     }
   }
   
-  // 2. Loop through each product and for each image, if the final URL is an external URL, fetch it.
+  // 2. For each product, process its images:
   products.forEach((product, pIndex) => {
     if(product.images && product.images.length > 0){
       product.images.forEach((img, i) => {
+        // Use the final URL (which should be a relative path like "Images/filename.ext" if the file was uploaded)
         let url = img.final;
-        // Check if the URL exists and is an external URL (starts with http)
+        // If the URL is external (starts with "http"), fetch it and add its contents to the zip
         if(url && url.startsWith("http")){
           filePromises.push(
             fetch(url)
@@ -2809,6 +2811,7 @@ aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
       alert("Error reading files. Check console for details.");
     });
 }
+
 
 
 
