@@ -2383,21 +2383,21 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Process first image: store both blob URL and final path
   var img1Blob = uploadedImages['uploadImage1Btn'] || document.getElementById('image1').value.trim();
-  var img1Final = (window.uploadedFiles && window.uploadedFiles['uploadImage1Btn'])
-                ? "Images/" + window.uploadedFiles['uploadImage1Btn'].name
-                : img1Blob;
+var img1File = (window.uploadedFiles && window.uploadedFiles['uploadImage1Btn']) ? window.uploadedFiles['uploadImage1Btn'] : null;
+var img1Final = img1File ? "Images/" + img1File.name : img1Blob;
+
   
   // Process second image
   var img2Blob = uploadedImages['uploadImage2Btn'] || document.getElementById('image2').value.trim();
-  var img2Final = (window.uploadedFiles && window.uploadedFiles['uploadImage2Btn'])
-                ? "Images/" + window.uploadedFiles['uploadImage2Btn'].name
-                : img2Blob;
+var img2File = (window.uploadedFiles && window.uploadedFiles['uploadImage2Btn']) ? window.uploadedFiles['uploadImage2Btn'] : null;
+var img2Final = img2File ? "Images/" + img2File.name : img2Blob;
+
   
   // Process third image
   var img3Blob = uploadedImages['uploadImage3Btn'] || document.getElementById('image3').value.trim();
-  var img3Final = (window.uploadedFiles && window.uploadedFiles['uploadImage3Btn'])
-                ? "Images/" + window.uploadedFiles['uploadImage3Btn'].name
-                : img3Blob;
+var img3File = (window.uploadedFiles && window.uploadedFiles['uploadImage3Btn']) ? window.uploadedFiles['uploadImage3Btn'] : null;
+var img3Final = img3File ? "Images/" + img3File.name : img3Blob;
+
   
   var currencyInput = document.getElementById('productCurrency');
   var currencyCode  = currencyInput.getAttribute('data-code') || 'EUR';
@@ -2463,11 +2463,11 @@ document.addEventListener('DOMContentLoaded', function() {
     imgs.push({ preview: img1Blob, final: img1Final });
   }
   if (img2Blob) {
-    imgs.push({ preview: img2Blob, final: img2Final });
-  }
-  if (img3Blob) {
-    imgs.push({ preview: img3Blob, final: img3Final });
-  }
+  imgs.push({ preview: img2Blob, final: img2Final, file: img2File });
+}
+if (img3Blob) {
+  imgs.push({ preview: img3Blob, final: img3Final, file: img3File });
+}
 
   // Set shipping value
   var shippingVal = "FREE";
@@ -2633,7 +2633,7 @@ function renderAddedProductsList() {
   function updatePreview() {
     // gather hero data
     heroData.logoPreview = uploadedImages['uploadLogoBtn'] || document.getElementById('logo').value.trim();
-    heroData.logoFinal   = getFinalImageURL('uploadLogoBtn', heroData.logoPreview);
+    heroData.logoFinal = getFinalImageURL('uploadLogoBtn', document.getElementById('logo').value.trim());
     heroData.bannerPreview = uploadedImages['uploadBannerBtn'] || document.getElementById('banner').value.trim();
     heroData.bannerFinal   = getFinalImageURL('uploadBannerBtn', heroData.bannerPreview);
     heroData.heroText = document.getElementById('heroText').value.trim();
@@ -2768,36 +2768,46 @@ aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
   
   // 2. For each product, process its images:
   products.forEach((product, pIndex) => {
-    if(product.images && product.images.length > 0){
-      product.images.forEach((img, i) => {
-        // Use the final URL (which should be a relative path like "Images/filename.ext" if the file was uploaded)
-        let url = img.final;
-        // If the URL is external (starts with "http"), fetch it and add its contents to the zip
-        if(url && url.startsWith("http")){
-          filePromises.push(
-            fetch(url)
-              .then(response => {
-                if(!response.ok) throw new Error("Network response was not ok");
-                return response.arrayBuffer();
-              })
-              .then(arrayBuffer => {
-                // Derive a filename using the product and image index.
-                let ext = "jpg"; // default extension
-                let parts = url.split('.');
-                if(parts.length > 1){
-                  ext = parts[parts.length - 1].split(/[?#]/)[0];
-                }
-                let filename = "product" + (pIndex+1) + "_img" + (i+1) + "." + ext;
-                imagesFolder.file(filename, arrayBuffer);
-              })
-              .catch(err => {
-                console.error("Error fetching image from URL:", url, err);
-              })
-          );
-        }
-      });
-    }
-  });
+  if (product.images && product.images.length > 0) {
+    product.images.forEach((img, i) => {
+      // If a file object exists, use FileReader to read its data
+      if (img.file) {
+        filePromises.push(new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            imagesFolder.file(img.file.name, e.target.result);
+            resolve();
+          };
+          reader.onerror = reject;
+          reader.readAsArrayBuffer(img.file);
+        }));
+      }
+      // Else if the image is external, fetch it normally
+      else if (img.final && img.final.startsWith("http")) {
+        filePromises.push(
+          fetch(img.final)
+            .then(response => {
+              if (!response.ok) throw new Error("Network response was not ok");
+              return response.arrayBuffer();
+            })
+            .then(arrayBuffer => {
+              let ext = "jpg"; // default extension
+              let parts = img.final.split('.');
+              if (parts.length > 1) {
+                ext = parts[parts.length - 1].split(/[?#]/)[0];
+              }
+              let filename = "product" + (pIndex + 1) + "_img" + (i + 1) + "." + ext;
+              imagesFolder.file(filename, arrayBuffer);
+            })
+            .catch(err => {
+              console.error("Error fetching image from URL:", img.final, err);
+            })
+        );
+      }
+    });
+  }
+});
+
   
   // Wait for all file processing to complete, then generate and trigger the ZIP download.
   Promise.all(filePromises)
@@ -3132,8 +3142,10 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
   h += "<header class='top-header'><div class='logo-wrapper'>";
 
   // Use .logoPreview for the preview
-  if (heroData.logoPreview) {
-    h += "<img src='" + escapeHTML(heroData.logoPreview) + "' alt='Logo'>";
+  if (heroData.logoFinal) {
+  h += "<img src='" + escapeHTML(heroData.logoFinal) + "' alt='Logo'>";
+}
+
   }
     h += "</div><div class='nav-links'>";
     h += "<a href='#products'>Shop</a>";
@@ -3160,7 +3172,7 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
     return minimal;
   }
   // big hero
-  var bkg = heroData.bannerPreview || "";
+  var bkg = heroData.bannerFinal || "";
   var s   = "<section class='hero-banner' style=\"background-image:url('" + escapeHTML(bkg) + "');\">";
   s += "<div class='hero-overlay'>";
   if(heroData.heroText){
@@ -3180,7 +3192,7 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
     var html = "";
     for(var i=0; i<products.length; i++){
       var p       = products[i];
-      var mainImg = (p.images.length > 0) ? escapeHTML(p.images[0].preview) : "";
+      var mainImg = (p.images.length > 0) ? escapeHTML(p.images[0].final) : "";
       var symbol  = getCurrencySymbol(p.currency);
 
       html += "<div class='product-item'"+
@@ -3246,9 +3258,9 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
   a += "<h2 style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.title||"Who We Are") + "</h2>";
   a += "<p style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.paragraph||"Our story...") + "</p>";
   a += "</div><div class='about-right'>";
-  if (aboutData.imagePreview) {
-    a += "<img src='" + escapeHTML(aboutData.imagePreview) + "' alt='About Image'>";
-  }
+  if (aboutData.imageFinal) {
+  a += "<img src='" + escapeHTML(aboutData.imageFinal) + "' alt='About Image'>";
+}
   a += "</div></section>";
   return a;
 }
