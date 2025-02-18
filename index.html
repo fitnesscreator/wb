@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>Test in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>Hi in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -2657,14 +2657,13 @@ aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
     contactData.email       = document.getElementById('contactEmail').value.trim();
 
     // build
-    finalHTML = buildFinalHTML();
+    const previewHTML = buildPreviewHTML();
 
-    // insert into iframe
-    var iframe = document.getElementById('previewFrame');
-    var doc    = iframe.contentDocument || iframe.contentWindow.document;
-    doc.open();
-    doc.write(finalHTML);
-    doc.close();
+const iframe = document.getElementById('previewFrame');
+const doc = iframe.contentDocument || iframe.contentWindow.document;
+doc.open();
+doc.write(previewHTML);
+doc.close();
 
     // Payment button
     var payBtn = document.getElementById('payBtn');
@@ -2684,31 +2683,67 @@ aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
   updatePreview(); // Refresh the preview to apply the new colors
 }
 
-  function buildFinalHTML(){
-  var top = "<!DOCTYPE html><html><head><meta charset='UTF-8'><title></title>";
+  // NEW: Build the PREVIEW HTML (uses .logoPreview, .bannerPreview, etc.)
+function buildPreviewHTML() {
+  let top = "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Live Preview</title>";
   top += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
-  // Use the currently selected font for the hero title:
-  top += "<link href='https://fonts.googleapis.com/css2?family=" 
-         + heroTitleFont.split(" ").join("+")
-         + ":wght@400;500;700&display=swap' rel='stylesheet'>";
-  top += buildGlobalCSS();
 
-  // Fav icon
-  if(heroData.logo.trim() !== ""){
-    top += "<link rel='shortcut icon' href='" + escapeHTML(getFinalImageURL('uploadLogoBtn', heroData.logo.trim())) + "'>";
-}
-  if(contactData.googleAnalytics){
-    top += "\n<!-- Google Analytics -->\n" + contactData.googleAnalytics + "\n";
-  }
+  // Use the currently selected font for hero title, same as final:
+  top += "<link href='https://fonts.googleapis.com/css2?family="
+      + heroTitleFont.split(" ").join("+")
+      + ":wght@400;500;700&display=swap' rel='stylesheet'>";
+
+  // Include your global CSS:
+  top += buildGlobalCSS();
+  // No need for a favicon in the preview or Google Analytics
   top += "</head><body>";
 
-  top += buildTopHeader();
-  top += buildHero();
-  top += buildProductsSection();
-  top += buildReviewsSection();
-  top += buildAboutSection();
-  top += buildContactSection();
-  top += buildProductModalScript(); // Insert the product modal script
+  // *** Here we call the "preview" versions of the sections ***
+  top += buildTopHeaderPreview();
+  top += buildHeroPreview();
+  top += buildProductsSectionPreview();
+  top += buildReviewsSectionPreview();
+  top += buildAboutSectionPreview();
+  top += buildContactSectionPreview();
+
+  // For the preview, you typically do not need the full product modal script,
+  // but you *can* reuse it if you want the popup to appear in the preview.
+  // If you want it, include:
+  top += buildProductModalScript();
+
+  top += "</body></html>";
+  return top;
+}
+
+// Your existing function, now *unchanged*, still references .logoFinal, .bannerFinal, etc.
+function buildFinalHTML() {
+  var top = "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Final Site</title>";
+  top += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
+
+  top += "<link href='https://fonts.googleapis.com/css2?family="
+      + heroTitleFont.split(" ").join("+")
+      + ":wght@400;500;700&display=swap' rel='stylesheet'>";
+
+  top += buildGlobalCSS();
+
+  // Possibly add your favicon, analytics, etc.:
+  if (heroData.logo.trim() !== "") {
+    top += "<link rel='shortcut icon' href='" + escapeHTML(heroData.logoFinal) + "'>";
+  }
+  if (contactData.googleAnalytics) {
+    top += "\n<!-- Google Analytics -->\n" + contactData.googleAnalytics + "\n";
+  }
+
+  top += "</head><body>";
+
+  // *** Call the "final" versions below ***
+  top += buildTopHeaderFinal();
+  top += buildHeroFinal();
+  top += buildProductsSectionFinal();
+  top += buildReviewsSectionFinal();
+  top += buildAboutSectionFinal();
+  top += buildContactSectionFinal();
+  top += buildProductModalScript(); // keep the final script for real usage
 
   top += "</body></html>";
   return top;
@@ -3137,49 +3172,105 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
 }
 
 
-  function buildTopHeader() {
-  var h = "";
-  h += "<header class='top-header'><div class='logo-wrapper'>";
-
+  function buildTopHeaderPreview() {
+  let h = "<header class='top-header'><div class='logo-wrapper'>";
   // Use .logoPreview for the preview
-  if (heroData.logoFinal) {
-  h += "<img src='" + escapeHTML(heroData.logoFinal) + "' alt='Logo'>";
+  if (heroData.logoPreview) {
+    h += "<img src='" + escapeHTML(heroData.logoPreview) + "' alt='Logo'>";
+  }
+  h += "</div><div class='nav-links'>";
+  h += "<a href='#products'>Shop</a>";
+  h += "<a href='#reviews'>Reviews</a>";
+  h += "<a href='#about'>About Us</a>";
+  h += "<a href='#contact'>Contact Us</a>";
+  h += "</div></header>";
+  return h;
 }
 
+function buildTopHeaderFinal() {
+  let h = "<header class='top-header'><div class='logo-wrapper'>";
+  // Use .logoFinal for the final code
+  if (heroData.logoFinal) {
+    h += "<img src='" + escapeHTML(heroData.logoFinal) + "' alt='Logo'>";
   }
-    h += "</div><div class='nav-links'>";
-    h += "<a href='#products'>Shop</a>";
-    h += "<a href='#reviews'>Reviews</a>";
-    h += "<a href='#about'>About Us</a>";
-    h += "<a href='#contact'>Contact Us</a>";
-    h += "</div></header>";
-    return h;
-  }
+  h += "</div><div class='nav-links'>";
+  h += "<a href='#products'>Shop</a>";
+  h += "<a href='#reviews'>Reviews</a>";
+  h += "<a href='#about'>About Us</a>";
+  h += "<a href='#contact'>Contact Us</a>";
+  h += "</div></header>";
+  return h;
+}
 
-  function buildHero(){
-  if(!heroData.banner){
-    // minimal hero
-    var minimal = "";
+
+
+  // For the live preview – use the blob URL (heroData.bannerPreview)
+function buildHeroPreview() {
+  if (!heroData.bannerPreview) {
+    // Minimal hero (no banner uploaded)
+    let minimal = "";
     minimal += "<section class='hero-banner' style='background:none; min-height:200px;'>";
     minimal += "<div class='hero-overlay'>";
-    if(heroData.heroText){
-  minimal += "<h1 class='hero-title' style='color:" + (heroData.heroTitleColor || '#000000') + "; font-family:" + heroTitleFont + ";'>" + escapeHTML(heroData.heroText) + "</h1>";
-}
-    if(heroData.ctaText){
-      minimal += "<a class='hero-cta' style='background-color:" + (heroData.ctaBgColor || '#007bff') + "; color:" + (heroData.ctaTextColor || '#ffffff') + ";' href='#products'>" + escapeHTML(heroData.ctaText) + "</a>";
+    if (heroData.heroText) {
+      minimal += "<h1 class='hero-title' style='color:" + (heroData.heroTitleColor || '#000000') +
+                 "; font-family:" + heroTitleFont + ";'>" + escapeHTML(heroData.heroText) + "</h1>";
+    }
+    if (heroData.ctaText) {
+      minimal += "<a class='hero-cta' style='background-color:" + (heroData.ctaBgColor || '#007bff') +
+                 "; color:" + (heroData.ctaTextColor || '#ffffff') + ";' href='#products'>" +
+                 escapeHTML(heroData.ctaText) + "</a>";
     }
     minimal += "</div></section>";
     return minimal;
   }
-  // big hero
-  var bkg = heroData.bannerFinal || "";
-  var s   = "<section class='hero-banner' style=\"background-image:url('" + escapeHTML(bkg) + "');\">";
+  // Big hero using the preview URL
+  let bkg = heroData.bannerPreview || "";
+  let s = "<section class='hero-banner' style=\"background-image:url('" + escapeHTML(bkg) + "');\">";
   s += "<div class='hero-overlay'>";
-  if(heroData.heroText){
-  s += "<h1 class='hero-title' style='color:" + (heroData.heroTitleColor || '#000000') + "; font-family:" + heroTitleFont + ";'>" + escapeHTML(heroData.heroText) + "</h1>";
+  if (heroData.heroText) {
+    s += "<h1 class='hero-title' style='color:" + (heroData.heroTitleColor || '#000000') +
+         "; font-family:" + heroTitleFont + ";'>" + escapeHTML(heroData.heroText) + "</h1>";
+  }
+  if (heroData.ctaText) {
+    s += "<a class='hero-cta' style='background-color:" + (heroData.ctaBgColor || '#007bff') +
+         "; color:" + (heroData.ctaTextColor || '#ffffff') + ";' href='#products'>" +
+         escapeHTML(heroData.ctaText) + "</a>";
+  }
+  s += "</div></section>";
+  return s;
 }
-  if(heroData.ctaText){
-    s += "<a class='hero-cta' style='background-color:" + (heroData.ctaBgColor || '#007bff') + "; color:" + (heroData.ctaTextColor || '#ffffff') + ";' href='#products'>" + escapeHTML(heroData.ctaText) + "</a>";
+
+// For the final generated HTML – use the final image path (heroData.bannerFinal)
+function buildHeroFinal() {
+  if (!heroData.bannerFinal) {
+    // Minimal hero (no banner uploaded)
+    let minimal = "";
+    minimal += "<section class='hero-banner' style='background:none; min-height:200px;'>";
+    minimal += "<div class='hero-overlay'>";
+    if (heroData.heroText) {
+      minimal += "<h1 class='hero-title' style='color:" + (heroData.heroTitleColor || '#000000') +
+                 "; font-family:" + heroTitleFont + ";'>" + escapeHTML(heroData.heroText) + "</h1>";
+    }
+    if (heroData.ctaText) {
+      minimal += "<a class='hero-cta' style='background-color:" + (heroData.ctaBgColor || '#007bff') +
+                 "; color:" + (heroData.ctaTextColor || '#ffffff') + ";' href='#products'>" +
+                 escapeHTML(heroData.ctaText) + "</a>";
+    }
+    minimal += "</div></section>";
+    return minimal;
+  }
+  // Big hero using the final URL
+  let bkg = heroData.bannerFinal || "";
+  let s = "<section class='hero-banner' style=\"background-image:url('" + escapeHTML(bkg) + "');\">";
+  s += "<div class='hero-overlay'>";
+  if (heroData.heroText) {
+    s += "<h1 class='hero-title' style='color:" + (heroData.heroTitleColor || '#000000') +
+         "; font-family:" + heroTitleFont + ";'>" + escapeHTML(heroData.heroText) + "</h1>";
+  }
+  if (heroData.ctaText) {
+    s += "<a class='hero-cta' style='background-color:" + (heroData.ctaBgColor || '#007bff') +
+         "; color:" + (heroData.ctaTextColor || '#ffffff') + ";' href='#products'>" +
+         escapeHTML(heroData.ctaText) + "</a>";
   }
   s += "</div></section>";
   return s;
@@ -3245,25 +3336,47 @@ a{text-decoration:none;color:#2196f3}a:hover{opacity:0.8}img{max-width:100%;heig
     return r;
   }
 
-  function buildAboutSection(){
-  if(!aboutData.title && !aboutData.paragraph && !aboutData.image) return "";
+  function buildAboutSectionPreview() {
+  if (!aboutData.title && !aboutData.paragraph && !aboutData.image) return "";
   // Only apply background color on the section
-  var styleAttr = "";
-  if(aboutData.bgColor) { 
-    styleAttr += "background-color:" + aboutData.bgColor + ";"; 
+  let styleAttr = "";
+  if (aboutData.bgColor) {
+    styleAttr += "background-color:" + aboutData.bgColor + ";";
   }
-  var a = "<section class='about-section' id='about' style='" + styleAttr + "'>";
+  let a = "<section class='about-section' id='about' style='" + styleAttr + "'>";
   a += "<div class='about-left'>";
   // Apply text color directly on the heading and paragraph
-  a += "<h2 style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.title||"Who We Are") + "</h2>";
-  a += "<p style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.paragraph||"Our story...") + "</p>";
+  a += "<h2 style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.title || "Who We Are") + "</h2>";
+  a += "<p style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.paragraph || "Our story...") + "</p>";
   a += "</div><div class='about-right'>";
-  if (aboutData.imageFinal) {
-  a += "<img src='" + escapeHTML(aboutData.imageFinal) + "' alt='About Image'>";
-}
+  // Use the preview image (blob URL)
+  if (aboutData.imagePreview) {
+    a += "<img src='" + escapeHTML(aboutData.imagePreview) + "' alt='About Image'>";
+  }
   a += "</div></section>";
   return a;
 }
+function buildAboutSectionFinal() {
+  if (!aboutData.title && !aboutData.paragraph && !aboutData.image) return "";
+  // Only apply background color on the section
+  let styleAttr = "";
+  if (aboutData.bgColor) {
+    styleAttr += "background-color:" + aboutData.bgColor + ";";
+  }
+  let a = "<section class='about-section' id='about' style='" + styleAttr + "'>";
+  a += "<div class='about-left'>";
+  // Apply text color directly on the heading and paragraph
+  a += "<h2 style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.title || "Who We Are") + "</h2>";
+  a += "<p style='color:" + aboutData.textColor + ";'>" + escapeHTML(aboutData.paragraph || "Our story...") + "</p>";
+  a += "</div><div class='about-right'>";
+  // Use the final image path here
+  if (aboutData.imageFinal) {
+    a += "<img src='" + escapeHTML(aboutData.imageFinal) + "' alt='About Image'>";
+  }
+  a += "</div></section>";
+  return a;
+}
+
 
   function buildContactSection(){
     var anyFilled = contactData.intro || contactData.instagram || contactData.tiktok ||
