@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>1 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -3310,7 +3310,7 @@ function buildHeroFinal() {
   return s;
 }
 
-  function buildProductsSection(){
+  function buildProductsSectionFinal(){
     if(products.length === 0){
       return "<section id='products'><div class='products-grid'></div></section>";
     }
@@ -3351,6 +3351,57 @@ function buildHeroFinal() {
     }
     return "<section id='products'><div class='products-grid'>"+html+"</div></section>";
   }
+    
+    function buildProductsSectionPreview() {
+  if (products.length === 0) {
+    return "<section id='products'><div class='products-grid'></div></section>";
+  }
+  var html = "";
+  for (var i = 0; i < products.length; i++) {
+    var p = products[i];
+    // Use the preview image (blob URL) if available; otherwise, fallback to final URL.
+    var mainImg = "";
+    if (p.images.length > 0) {
+      mainImg = p.images[0].preview ? escapeHTML(p.images[0].preview)
+                                    : escapeHTML(p.images[0].final);
+    }
+    var symbol = getCurrencySymbol(p.currency);
+    
+    html += "<div class='product-item'" +
+      " data-title='" + escapeHTML(p.title || "") + "'" +
+      " data-sold='" + escapeHTML(p.sold || "") + "'" +
+      " data-price='" + escapeHTML(p.price || "0") + "'" +
+      " data-currency='" + escapeHTML(p.currency || "$") + "'" +
+      " data-description='" + escapeHTML(p.description || "") + "'" +
+      " data-shipping='" + escapeHTML(p.shipping || "FREE") + "'" +
+      " data-returns='" + escapeHTML(p.returns || "Accepted") + "'" +
+      " data-coloroptions='" + escapeHTML(p.coloroptions || "") + "'" +
+      " data-sizeoptions='" + escapeHTML(p.sizeoptions || "") + "'" +
+      " data-colorlabel='" + escapeHTML(p.colorLabel || "Color") + "'" +
+      " data-sizelabel='" + escapeHTML(p.sizeLabel || "Size") + "'" +
+      " data-images1='" + (p.images[0] ? p.images[0].preview : "") + "'" +
+      " data-images2='" + (p.images[1] ? p.images[1].preview : "") + "'" +
+      " data-images3='" + (p.images[2] ? p.images[2].preview : "") + "'" +
+      " data-paymentmethod='" + escapeHTML(p.paymentMethod || "") + "'" +
+      " data-paypallink='" + escapeHTML(p.paypalLink || "") + "'" +
+      " data-paypalembed='" + escapeHTML(p.paypalEmbed || "") + "'" +
+      " data-otherpaymentlink='" + escapeHTML(p.otherPaymentLink || "") + "'" +
+      " data-paypalemail='" + escapeHTML(p.paypalEmail || "") + "'" +
+      ">";
+    
+    html += "<div class='product-img' style=\"background-image:url('" + mainImg + "');\"></div>";
+    html += "<div class='product-content'>";
+    html += (p.title ? "<h3>" + escapeHTML(p.title) + "</h3>" : "<h3>Untitled Product</h3>");
+    html += "<h2>" + symbol + escapeHTML(p.price || "0") + "</h2>";
+    html += "<a class='buy-now' style='background-color:" + productBuyNowBgColor +
+            "; color:" + productBuyNowTextColor +
+            "; border-radius:" + productBuyNowBorderRadius + "px;' href='#'>Buy Now</a>";
+    html += "</div></div>";
+  }
+  return "<section id='products'><div class='products-grid'>" + html + "</div></section>";
+}
+
+
 
   function buildReviewsSection(){
     if(reviews.length === 0) return "";
