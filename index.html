@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>Hi in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>Success in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -4716,25 +4716,25 @@ document.addEventListener('DOMContentLoaded', function() {
   var uploadFileInput = document.getElementById('uploadFileInput');
   if (uploadFileInput) {
     uploadFileInput.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      if (!window.currentUploadField) {
-        console.error("No upload field is set!");
-        return;
-      }
-      // Create an object URL for preview
-      const objectURL = URL.createObjectURL(file);
-      window.uploadedFiles[window.currentUploadField] = file;
-      window.uploadedImages[window.currentUploadField] = objectURL;
-      console.log("File selected:", file.name, objectURL);
-      updatePreviewForField(window.currentUploadField, objectURL);
-      const btn = document.getElementById(window.currentUploadField);
-      if (btn) {
-        btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
-      }
-      e.target.value = "";
-      closeUploadModal();
-    });
+  const file = e.target.files[0];
+  if (!file) return;
+  if (!window.currentUploadField) {
+    console.error("No upload field is set!");
+    return;
+  }
+  // Create an object URL for preview
+  const objectURL = URL.createObjectURL(file);
+  window.uploadedFiles[window.currentUploadField] = file;
+  window.uploadedImages[window.currentUploadField] = objectURL;
+  console.log("File selected:", file.name, objectURL);
+  updatePreviewForField(window.currentUploadField, objectURL);
+  const btn = document.getElementById(window.currentUploadField);
+  if (btn) {
+    btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
+  }
+  e.target.value = "";
+  closeUploadModal();
+});
   }
 
   // Drag & Drop handling for the upload drop area
@@ -4777,33 +4777,30 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Updates the preview for the given upload field
-  function updatePreviewForField(fieldId, objectURL) {
-    const fieldMapping = {
-      'uploadLogoBtn': { input: 'logo', target: 'heroData.logo' },
-      'uploadBannerBtn': { input: 'banner', target: 'heroData.banner' },
-      'uploadImage1Btn': { input: 'image1', target: 'productImage1' },
-      'uploadImage2Btn': { input: 'image2', target: 'productImage2' },
-      'uploadImage3Btn': { input: 'image3', target: 'productImage3' },
-      'uploadAboutImgBtn': { input: 'aboutImage', target: 'aboutData.image' }
-    };
-    const mapping = fieldMapping[fieldId];
-    if (!mapping) return;
-    const inputEl = document.getElementById(mapping.input);
-    if (inputEl && inputEl.value.trim() !== "") {
-      window.backupFiles = window.backupFiles || {};
-      window.backupFiles[fieldId] = window.uploadedFiles ? window.uploadedFiles[fieldId] : null;
-      inputEl.value = "";
-    }
-    // Save the object URL into the proper data object
-    if (mapping.target === 'heroData.logo') {
-      heroData.logo = objectURL;
-    } else if (mapping.target === 'heroData.banner') {
-      heroData.banner = objectURL;
-    } else if (mapping.target === 'aboutData.image') {
-      aboutData.image = objectURL;
-    }
-    updatePreview();
+  // Updates the preview for the given upload field
+function updatePreviewForField(fieldId, objectURL) {
+  // Define a mapping for fields that affect the hero/about images.
+  // (For product images, note that you already handle them when adding the product.)
+  switch(fieldId) {
+    case 'uploadLogoBtn':
+      // For the logo, store the blob URL in a dedicated preview property.
+      heroData.logoPreview = objectURL;
+      break;
+    case 'uploadBannerBtn':
+      heroData.bannerPreview = objectURL;
+      break;
+    case 'uploadAboutImgBtn':
+      aboutData.imagePreview = objectURL;
+      break;
+    // If you need to handle other fields differently, add cases here.
+    default:
+      // For any fields not handled explicitly, do nothing.
+      break;
   }
+  // Call updatePreview() to rebuild the preview HTML (which will now use .logoPreview, etc.)
+  updatePreview();
+}
+
 
   // Closes the upload modal
   function closeUploadModal() {
