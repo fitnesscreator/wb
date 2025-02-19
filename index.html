@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>4 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>5 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -3332,9 +3332,9 @@ function buildHeroFinal() {
         " data-sizeoptions='"+escapeHTML(p.sizeoptions||"")+"'"+
         " data-colorlabel='"+escapeHTML(p.colorLabel||"Color")+"'"+
         " data-sizelabel='"+escapeHTML(p.sizeLabel||"Size")+"'"+
-        " data-images1='"+(p.images[0] ? p.images[0].preview : "")+"'"+
-        " data-images2='"+(p.images[1] ? p.images[1].preview : "")+"'"+
-        " data-images3='"+(p.images[2] ? p.images[2].preview : "")+"'"+
+        " data-images1='"+(p.images[0] ? p.images[0].final : "")+"'"+
+        " data-images2='"+(p.images[1] ? p.images[1].final : "")+"'"+
+        " data-images3='"+(p.images[2] ? p.images[2].final : "")+"'"+
         " data-paymentmethod='"+escapeHTML(p.paymentMethod||"")+"'"+
         " data-paypallink='"+escapeHTML(p.paypalLink||"")+"'"+
         " data-paypalembed='"+escapeHTML(p.paypalEmbed||"")+"'"+
@@ -3474,9 +3474,10 @@ function buildAboutSectionFinal() {
     if(!anyFilled) return "";
 
     var c = "<section class='contact-section' id='contact'><div class='contact-left'><div class='contact-logo-left'>";
-    if(heroData.logo){
-      c += "<img src='"+escapeHTML(heroData.logo)+"' alt='Logo'>";
-    }
+    var contactLogo = heroData.logoFinal || heroData.logoPreview || "";
+if(contactLogo){
+  c += "<img src='" + escapeHTML(contactLogo) + "' alt='Logo'>";
+}
     c += "</div>";
     if(contactData.intro){
       c += "<p>"+escapeHTML(contactData.intro)+"</p>";
