@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>5 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>6 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -1964,6 +1964,19 @@
 </script>
   
   <script>
+    
+    function generateSafeFileName(name) {
+  // Convert to lower case, trim, replace spaces with dashes,
+  // and remove any characters that are not letters, numbers, dot or dash.
+  return name
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')        // Replace spaces with dashes
+    .replace(/[^a-z0-9.-]/g, ''); // Remove any unsafe characters
+}
+
+    
+    
   // Global variables to remember selections
   var defaultCurrency = '';
   var defaultCurrencyCode = '';  // to store the currency’s data-code
@@ -2381,22 +2394,39 @@ document.addEventListener('DOMContentLoaded', function() {
   // Gather inputs
   var title         = document.getElementById('productTitle').value.trim();
   
-  // Process first image: store both blob URL and final path
-  var img1Blob = uploadedImages['uploadImage1Btn'] || document.getElementById('image1').value.trim();
+  // For image1:
+var img1Blob = uploadedImages['uploadImage1Btn'] || document.getElementById('image1').value.trim();
 var img1File = (window.uploadedFiles && window.uploadedFiles['uploadImage1Btn']) ? window.uploadedFiles['uploadImage1Btn'] : null;
-var img1Final = img1File ? "Images/" + img1File.name : img1Blob;
+var img1Final;
+if (img1File) {
+  var safeName = generateSafeFileName(img1File.name);
+  img1Final = "Images/" + safeName;
+} else {
+  img1Final = img1Blob;
+}
 
-  
-  // Process second image
-  var img2Blob = uploadedImages['uploadImage2Btn'] || document.getElementById('image2').value.trim();
+// For image2:
+var img2Blob = uploadedImages['uploadImage2Btn'] || document.getElementById('image2').value.trim();
 var img2File = (window.uploadedFiles && window.uploadedFiles['uploadImage2Btn']) ? window.uploadedFiles['uploadImage2Btn'] : null;
-var img2Final = img2File ? "Images/" + img2File.name : img2Blob;
+var img2Final;
+if (img2File) {
+  var safeName = generateSafeFileName(img2File.name);
+  img2Final = "Images/" + safeName;
+} else {
+  img2Final = img2Blob;
+}
 
-  
-  // Process third image
-  var img3Blob = uploadedImages['uploadImage3Btn'] || document.getElementById('image3').value.trim();
+// For image3:
+var img3Blob = uploadedImages['uploadImage3Btn'] || document.getElementById('image3').value.trim();
 var img3File = (window.uploadedFiles && window.uploadedFiles['uploadImage3Btn']) ? window.uploadedFiles['uploadImage3Btn'] : null;
-var img3Final = img3File ? "Images/" + img3File.name : img3Blob;
+var img3Final;
+if (img3File) {
+  var safeName = generateSafeFileName(img3File.name);
+  img3Final = "Images/" + safeName;
+} else {
+  img3Final = img3Blob;
+}
+
 
   
   var currencyInput = document.getElementById('productCurrency');
@@ -2826,7 +2856,7 @@ function buildFinalHTML() {
         const reader = new FileReader();
         reader.onload = function(e) {
           // e.target.result is an ArrayBuffer that preserves the original file data
-          imagesFolder.file(file.name, e.target.result);
+          imagesFolder.file(generateSafeFileName(file.name), e.target.result);
           resolve();
         };
         reader.onerror = reject;
