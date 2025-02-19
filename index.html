@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>2 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>3 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -3403,7 +3403,7 @@ function buildHeroFinal() {
 
 
 
-  function buildReviewsSectionFinal(){
+  function buildReviewsSection(){
     if(reviews.length === 0) return "";
     var r = "<section class='reviews-section' id='reviews'><h2>Reviews</h2><div class='review-container'>";
     for(var i=0; i<reviews.length; i++){
@@ -3420,6 +3420,10 @@ function buildHeroFinal() {
     r += "</div></section>";
     return r;
   }
+    function buildReviewsSectionFinal() {
+  return buildReviewsSection();
+}
+
 
   function buildAboutSectionPreview() {
   if (!aboutData.title && !aboutData.paragraph && !aboutData.image) return "";
