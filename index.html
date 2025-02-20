@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>6 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>10 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -2497,16 +2497,33 @@ if (img3File) {
   }
 
   // Gather images into an array of objects with both preview and final URLs
-  var imgs = [];
-if (img1Blob) {
-  imgs.push({ preview: img1Blob, final: img1Final, file: img1File });
-}
+   var imgs = [];
+  if (img1Blob) {
+    var imageObj = { preview: img1Blob, final: img1Final, file: img1File };
+    imgs.push(imageObj);
+  }
   if (img2Blob) {
-  imgs.push({ preview: img2Blob, final: img2Final, file: img2File });
-}
-if (img3Blob) {
-  imgs.push({ preview: img3Blob, final: img3Final, file: img3File });
-}
+    var imageObj = { preview: img2Blob, final: img2Final, file: img2File };
+    imgs.push(imageObj);
+  }
+  if (img3Blob) {
+    var imageObj = { preview: img3Blob, final: img3Final, file: img3File };
+    imgs.push(imageObj);
+  }
+  
+  // Assign unique names to uploaded image files
+  var productIndex = products.length + 1; // Next product index
+  imgs.forEach(function(img, index) {
+    if (img.file) {
+      var originalName = img.file.name;
+      var ext = originalName.split('.').pop();
+      // Generate a name like "product-3-img-1.jpg"
+      img.uniqueName = "product-" + productIndex + "-img-" + (index + 1) + "." + ext;
+      // Update the final URL accordingly
+      img.final = "Images/" + img.uniqueName;
+    }
+  });
+
 
   // Set shipping value
   var shippingVal = "FREE";
@@ -2901,16 +2918,16 @@ function buildFinalHTML() {
     product.images.forEach((img, i) => {
       // If a file object exists, use FileReader to read its data
       if (img.file) {
-        filePromises.push(new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            imagesFolder.file(img.file.name, e.target.result);
-            resolve();
-          };
-          reader.onerror = reject;
-          reader.readAsArrayBuffer(img.file);
-        }));
-      }
+  filePromises.push(new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      imagesFolder.file(img.uniqueName, e.target.result);
+      resolve();
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(img.file);
+  }));
+}
       // Else if the image is external, fetch it normally
       else if (img.final && img.final.startsWith("http")) {
         filePromises.push(
