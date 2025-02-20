@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>8 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>9 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -2490,9 +2490,9 @@ if (img3File) {
 
   // Gather images into an array of objects with both preview and final URLs
   var imgs = [];
-  if (img1Blob) {
-    imgs.push({ preview: img1Blob, final: img1Final });
-  }
+if (img1Blob) {
+  imgs.push({ preview: img1Blob, final: img1Final, file: img1File });
+}
   if (img2Blob) {
   imgs.push({ preview: img2Blob, final: img2Final, file: img2File });
 }
@@ -2803,7 +2803,7 @@ function buildContactSectionPreview() {
 
 // Your existing function, now *unchanged*, still references .logoFinal, .bannerFinal, etc.
 function buildFinalHTML() {
-  var top = "<!DOCTYPE html><html><head><meta charset='UTF-8'><title>Final Site</title>";
+  var top = "<!DOCTYPE html><html><head><meta charset='UTF-8'>";
   top += "<meta name='viewport' content='width=device-width, initial-scale=1.0'>";
 
   top += "<link href='https://fonts.googleapis.com/css2?family="
