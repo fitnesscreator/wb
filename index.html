@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>6 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -3567,50 +3567,88 @@ function buildAboutSectionFinal() {
 }
 
 
-  function buildContactSection(){
-    var anyFilled = contactData.intro || contactData.instagram || contactData.tiktok ||
-                    contactData.facebook || contactData.xLink || contactData.youtube ||
-                    contactData.email || contactData.formEmbed;
-    if(!anyFilled) return "";
+  // For the live preview – use blob URL first (if available)
+function buildContactSectionPreview() {
+  var anyFilled = contactData.intro || contactData.instagram || contactData.tiktok ||
+                  contactData.facebook || contactData.xLink || contactData.youtube ||
+                  contactData.email || contactData.formEmbed;
+  if (!anyFilled) return "";
 
-    var c = "<section class='contact-section' id='contact'><div class='contact-left'><div class='contact-logo-left'>";
-    var contactLogo = (heroData.logoPreview && heroData.logoPreview.startsWith("blob:"))
-  ? heroData.logoPreview
-  : (heroData.logoFinal || heroData.logoPreview || "");
-if(contactLogo){
-  c += "<img src='" + escapeHTML(contactLogo) + "' alt='Logo'>";
-}
-    c += "</div>";
-    if(contactData.intro){
-      c += "<p>"+escapeHTML(contactData.intro)+"</p>";
-    }
-    let iconsHTML = "";
-    if(contactData.instagram) iconsHTML+="<a href='"+escapeHTML(contactData.instagram)+"' target='_blank'><img src='https://i.ibb.co/N2yTY0Cj/Bella-73.png' alt='Instagram'></a>";
-    if(contactData.tiktok)    iconsHTML+="<a href='"+escapeHTML(contactData.tiktok)+"' target='_blank'><img src='https://i.ibb.co/2vSmtt0/Bella-49.png' alt='TikTok'></a>";
-    if(contactData.facebook)  iconsHTML+="<a href='"+escapeHTML(contactData.facebook)+"' target='_blank'><img src='https://i.ibb.co/gmDjkH3/Bella-48.png' alt='Facebook'></a>";
-    if(contactData.xLink)     iconsHTML+="<a href='"+escapeHTML(contactData.xLink)+"' target='_blank'><img src='https://i.ibb.co/fqp0KrB/Bella-63.png' alt='X'></a>";
-    if(contactData.youtube)   iconsHTML+="<a href='"+escapeHTML(contactData.youtube)+"' target='_blank'><img src='https://i.ibb.co/hC6CQzs/Bella-62.png' alt='Youtube'></a>";
-
-    if(iconsHTML){
-      c += "<div class='contact-social-icons'>"+iconsHTML+"</div>";
-    }
-    if(contactData.email){
-      c += "<div class='contact-email-line'>"+escapeHTML(contactData.email)+"</div>";
-      if(!contactData.formEmbed){
-        c += "<a class='email-btn' href='mailto:"+escapeHTML(contactData.email)+"'>Send Us an Email</a>";
-      }
-    }
-    c += "</div><div class='contact-right'>";
-    if(contactData.formEmbed){
-      c += "<div class='contact-embed'>"+ contactData.formEmbed +"</div>";
-    }
-    c += "</div></section>";
-    return c;
+  var c = "<section class='contact-section' id='contact'><div class='contact-left'><div class='contact-logo-left'>";
+  // In preview, use the blob URL if available
+  var contactLogo = heroData.logoPreview || heroData.logoFinal || "";
+  if (contactLogo) {
+    c += "<img src='" + escapeHTML(contactLogo) + "' alt='Logo'>";
   }
-    
-    function buildContactSectionFinal() {
-  return buildContactSection();
+  c += "</div>";
+  if (contactData.intro) {
+    c += "<p>" + escapeHTML(contactData.intro) + "</p>";
+  }
+  let iconsHTML = "";
+  if (contactData.instagram) iconsHTML += "<a href='" + escapeHTML(contactData.instagram) + "' target='_blank'><img src='https://i.ibb.co/N2yTY0Cj/Bella-73.png' alt='Instagram'></a>";
+  if (contactData.tiktok)    iconsHTML += "<a href='" + escapeHTML(contactData.tiktok) + "' target='_blank'><img src='https://i.ibb.co/2vSmtt0/Bella-49.png' alt='TikTok'></a>";
+  if (contactData.facebook)  iconsHTML += "<a href='" + escapeHTML(contactData.facebook) + "' target='_blank'><img src='https://i.ibb.co/gmDjkH3/Bella-48.png' alt='Facebook'></a>";
+  if (contactData.xLink)     iconsHTML += "<a href='" + escapeHTML(contactData.xLink) + "' target='_blank'><img src='https://i.ibb.co/fqp0KrB/Bella-63.png' alt='X'></a>";
+  if (contactData.youtube)   iconsHTML += "<a href='" + escapeHTML(contactData.youtube) + "' target='_blank'><img src='https://i.ibb.co/hC6CQzs/Bella-62.png' alt='Youtube'></a>";
+
+  if (iconsHTML) {
+    c += "<div class='contact-social-icons'>" + iconsHTML + "</div>";
+  }
+  if (contactData.email) {
+    c += "<div class='contact-email-line'>" + escapeHTML(contactData.email) + "</div>";
+    if (!contactData.formEmbed) {
+      c += "<a class='email-btn' href='mailto:" + escapeHTML(contactData.email) + "'>Send Us an Email</a>";
+    }
+  }
+  c += "</div><div class='contact-right'>";
+  if (contactData.formEmbed) {
+    c += "<div class='contact-embed'>" + contactData.formEmbed + "</div>";
+  }
+  c += "</div></section>";
+  return c;
 }
+
+// For the final generated website – use only the final URL
+function buildContactSectionFinal() {
+  var anyFilled = contactData.intro || contactData.instagram || contactData.tiktok ||
+                  contactData.facebook || contactData.xLink || contactData.youtube ||
+                  contactData.email || contactData.formEmbed;
+  if (!anyFilled) return "";
+
+  var c = "<section class='contact-section' id='contact'><div class='contact-left'><div class='contact-logo-left'>";
+  // In final build, use only the final logo URL
+  var contactLogo = heroData.logoFinal || "";
+  if (contactLogo) {
+    c += "<img src='" + escapeHTML(contactLogo) + "' alt='Logo'>";
+  }
+  c += "</div>";
+  if (contactData.intro) {
+    c += "<p>" + escapeHTML(contactData.intro) + "</p>";
+  }
+  let iconsHTML = "";
+  if (contactData.instagram) iconsHTML += "<a href='" + escapeHTML(contactData.instagram) + "' target='_blank'><img src='https://i.ibb.co/N2yTY0Cj/Bella-73.png' alt='Instagram'></a>";
+  if (contactData.tiktok)    iconsHTML += "<a href='" + escapeHTML(contactData.tiktok) + "' target='_blank'><img src='https://i.ibb.co/2vSmtt0/Bella-49.png' alt='TikTok'></a>";
+  if (contactData.facebook)  iconsHTML += "<a href='" + escapeHTML(contactData.facebook) + "' target='_blank'><img src='https://i.ibb.co/gmDjkH3/Bella-48.png' alt='Facebook'></a>";
+  if (contactData.xLink)     iconsHTML += "<a href='" + escapeHTML(contactData.xLink) + "' target='_blank'><img src='https://i.ibb.co/fqp0KrB/Bella-63.png' alt='X'></a>";
+  if (contactData.youtube)   iconsHTML += "<a href='" + escapeHTML(contactData.youtube) + "' target='_blank'><img src='https://i.ibb.co/hC6CQzs/Bella-62.png' alt='Youtube'></a>";
+
+  if (iconsHTML) {
+    c += "<div class='contact-social-icons'>" + iconsHTML + "</div>";
+  }
+  if (contactData.email) {
+    c += "<div class='contact-email-line'>" + escapeHTML(contactData.email) + "</div>";
+    if (!contactData.formEmbed) {
+      c += "<a class='email-btn' href='mailto:" + escapeHTML(contactData.email) + "'>Send Us an Email</a>";
+    }
+  }
+  c += "</div><div class='contact-right'>";
+  if (contactData.formEmbed) {
+    c += "<div class='contact-embed'>" + contactData.formEmbed + "</div>";
+  }
+  c += "</div></section>";
+  return c;
+}
+
 
 
   // ============== PRODUCT MODAL SCRIPT ==============
