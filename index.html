@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>10 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>11 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -2689,36 +2689,39 @@ function renderAddedProductsList() {
   function updatePreview() {
   // --- HERO DATA ---
 
-  // For the Logo:
-  if (uploadedImages['uploadLogoBtn'] && window.uploadedFiles && window.uploadedFiles['uploadLogoBtn']) {
-    heroData.logoPreview = uploadedImages['uploadLogoBtn'];
-    heroData.logoFinal = "Images/" + generateSafeFileName(window.uploadedFiles['uploadLogoBtn'].name);
-  } else {
-    heroData.logoPreview = document.getElementById('logo').value.trim();
-    heroData.logoFinal = document.getElementById('logo').value.trim();
-  }
+ // For the Logo:
+if (uploadedImages['uploadLogoBtn'] && window.uploadedFiles && window.uploadedFiles['uploadLogoBtn']) {
+  heroData.logoPreview = uploadedImages['uploadLogoBtn'];
+  heroData.logoFinal = "Images/" + window.uploadedFiles['uploadLogoBtn'].safeName;
+} else {
+  heroData.logoPreview = document.getElementById('logo').value.trim();
+  heroData.logoFinal = document.getElementById('logo').value.trim();
+}
+
+
 
   // For the Hero Banner:
-  if (uploadedImages['uploadBannerBtn'] && window.uploadedFiles && window.uploadedFiles['uploadBannerBtn']) {
-    heroData.bannerPreview = uploadedImages['uploadBannerBtn'];
-    heroData.bannerFinal = "Images/" + generateSafeFileName(window.uploadedFiles['uploadBannerBtn'].name);
-  } else {
-    heroData.bannerPreview = document.getElementById('banner').value.trim();
-    heroData.bannerFinal = document.getElementById('banner').value.trim();
-  }
+if (uploadedImages['uploadBannerBtn'] && window.uploadedFiles && window.uploadedFiles['uploadBannerBtn']) {
+  heroData.bannerPreview = uploadedImages['uploadBannerBtn'];
+  heroData.bannerFinal = "Images/" + window.uploadedFiles['uploadBannerBtn'].safeName;
+} else {
+  heroData.bannerPreview = document.getElementById('banner').value.trim();
+  heroData.bannerFinal = document.getElementById('banner').value.trim();
+}
+
 
   heroData.heroText = document.getElementById('heroText').value.trim();
   heroData.ctaText = document.getElementById('ctaText').value.trim();
 
-  // --- ABOUT DATA ---
+  // For the About Image:
+if (uploadedImages['uploadAboutImgBtn'] && window.uploadedFiles && window.uploadedFiles['uploadAboutImgBtn']) {
+  aboutData.imagePreview = uploadedImages['uploadAboutImgBtn'];
+  aboutData.imageFinal = "Images/" + window.uploadedFiles['uploadAboutImgBtn'].safeName;
+} else {
+  aboutData.imagePreview = document.getElementById('aboutImage').value.trim();
+  aboutData.imageFinal = document.getElementById('aboutImage').value.trim();
+}
 
-  if (uploadedImages['uploadAboutImgBtn'] && window.uploadedFiles && window.uploadedFiles['uploadAboutImgBtn']) {
-    aboutData.imagePreview = uploadedImages['uploadAboutImgBtn'];
-    aboutData.imageFinal = "Images/" + generateSafeFileName(window.uploadedFiles['uploadAboutImgBtn'].name);
-  } else {
-    aboutData.imagePreview = document.getElementById('aboutImage').value.trim();
-    aboutData.imageFinal = document.getElementById('aboutImage').value.trim();
-  }
   aboutData.title = document.getElementById('aboutTitle').value.trim();
   aboutData.paragraph = document.getElementById('aboutParagraph').value.trim();
   aboutData.bgColor = document.getElementById('aboutBgColorPicker').value;
