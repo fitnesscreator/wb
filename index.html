@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>12 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>Final in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -905,25 +905,21 @@
 
 /* Square upload button */
 .upload-btn {
-  width: 38px;            /* make it square by setting width = height */
-  height: 38px;
-  background-color: #fec7e0;
+  background-color: #fc9cd3;
   color: #fff;
   border: none;
-  outline: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 0.9rem;
+  text-transform: normal;
+  letter-spacing: 0.05em;
   cursor: pointer;
-  font-size: 1rem;
-  margin-left: 8px;       /* small gap from the input */
-  margin-top: 6px;
-  display: inline-flex;   /* center icon both vertically & horizontally */
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  transition: background 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .upload-btn:hover {
   background-color: #ff66c4 !important;
+  transform: scale(1.03);
 }
 
 
@@ -1153,10 +1149,11 @@
   <!-- Logo Image Row -->
   <label>Upload Logo Image</label>
   <div class="input-row">
+    <!-- Hidden input instead of text -->
     <input
       id="logo"
-      type="text"
-      placeholder="Or Paste the Logo Link Here"
+      type="hidden"
+      value=""
       required
       spellcheck="false"
       maxlength="300"
@@ -1175,10 +1172,11 @@
   <!-- Hero Banner Image Row -->
   <label>Upload Your Hero Banner Image</label>
   <div class="input-row">
+    <!-- Hidden input instead of text -->
     <input
       id="banner"
-      type="text"
-      placeholder="Or Paste Its Link Here"
+      type="hidden"
+      value=""
       required
       spellcheck="false"
       maxlength="300"
@@ -1241,9 +1239,7 @@
         padding: 5px;
         z-index: 1000;
       "
-    >
-      <!-- Font options will be populated by JavaScript -->
-    </div>
+    ></div>
   </div>
 
   <label>CTA Button Text
@@ -1284,6 +1280,7 @@
 
 
 
+
       <!-- Add Products -->
 <form id="addProductForm">
   <h2 class="section-title">Add Products</h2>
@@ -1296,19 +1293,20 @@
       required
       spellcheck="false"
       maxlength="60"
-    >
+    />
   </label>
 
   <label>Upload Main Product Image</label>
   <div class="input-row">
+    <!-- Hidden input instead of text -->
     <input
       id="image1"
-      type="text"
-      placeholder="Or Paste its Link Here"
+      type="hidden"
+      value=""
       required
       spellcheck="false"
       maxlength="300"
-    >
+    />
     <button
       type="button"
       class="upload-btn"
@@ -1323,13 +1321,14 @@
   <div id="additionalImage2" style="display:none;">
     <label>Upload 2nd Product Image</label>
     <div class="input-row">
+      <!-- Hidden input instead of text -->
       <input
         id="image2"
-        type="text"
-        placeholder="Or Paste Its Link Here"
+        type="hidden"
+        value=""
         spellcheck="false"
         maxlength="300"
-      >
+      />
       <button
         type="button"
         class="upload-btn"
@@ -1345,13 +1344,14 @@
   <div id="additionalImage3" style="display:none;">
     <label>Upload 3rd Product Image</label>
     <div class="input-row">
+      <!-- Hidden input instead of text -->
       <input
         id="image3"
-        type="text"
-        placeholder="Or Paste its Link Here"
+        type="hidden"
+        value=""
         spellcheck="false"
         maxlength="300"
-      >
+      />
       <button
         type="button"
         class="upload-btn"
@@ -1381,7 +1381,7 @@
         placeholder="Select Currency"
         readonly
         spellcheck="false"
-      >
+      />
       <div class="currency-list" id="currencyList">
         <div class="currency-search">
           <input
@@ -1389,7 +1389,7 @@
             id="currencySearch"
             placeholder="Search Currency"
             spellcheck="false"
-          >
+          />
         </div>
       </div>
     </div>
@@ -1400,7 +1400,7 @@
       id="sold"
       type="text"
       placeholder="e.g. 500 (blank or 0 to hide)"
-    >
+    />
   </label>
 
   <label>Price
@@ -1411,7 +1411,7 @@
       required
       spellcheck="false"
       maxlength="15"
-    >
+    />
   </label>
 
   <label>Shipping Cost (set 0 for FREE)
@@ -1422,7 +1422,7 @@
       required
       spellcheck="false"
       maxlength="15"
-    >
+    />
   </label>
 
   <label>Returns
@@ -1438,7 +1438,7 @@
         placeholder="Example : Color"
         spellcheck="false"
         maxlength="30"
-      >
+      />
     </label>
 
     <input
@@ -1448,7 +1448,7 @@
       required
       spellcheck="false"
       maxlength="100"
-    >
+    />
   </label>
 
   <label>Selectable Options 2 🏷️
@@ -1458,7 +1458,7 @@
       placeholder="Example : Size"
       spellcheck="false"
       maxlength="30"
-    >
+    />
 
     <input
       id="sizeOptions"
@@ -1467,7 +1467,7 @@
       required
       spellcheck="false"
       maxlength="100"
-    >
+    />
   </label>
 
   <label>Description
@@ -1487,20 +1487,20 @@
       <img
         src="https://i.ibb.co/tC9LHLG/Bella-52.png"
         alt="PayPal"
-      >
+      />
       <img
         src="https://i.ibb.co/cCtHLKs/Bella-58.png"
         alt="Stripe"
-      >
+      />
       <img
         src="https://i.ibb.co/m496tmj/Bella-53.png"
         alt="Checkout Page"
-      >
+      />
       <span>Select Payment Method</span>
     </div>
     <div class="payment-method-select">
       <button type="button" id="paymentMethodBtn">Select Payment Method</button>
-<input type="hidden" id="productPaymentMethod" name="productPaymentMethod" value="paypalEmail">
+      <input type="hidden" id="productPaymentMethod" name="productPaymentMethod" value="paypalEmail" />
     </div>
   </label>
 
@@ -1542,7 +1542,7 @@
         placeholder="https://example.com/checkout"
         spellcheck="false"
         maxlength="1000"
-      >
+      />
     </label>
   </div>
 
@@ -1557,7 +1557,7 @@
         placeholder="yourpaypal@email.com"
         spellcheck="false"
         maxlength="200"
-      >
+      />
     </label>
   </div>
 
@@ -1586,7 +1586,7 @@
         class="color-picker"
         value="#007bff"
         onchange="updateProductBuyNowStyles()"
-      >
+      />
     </div>
 
     <!-- Text Color Picker for Buy Now Button -->
@@ -1601,7 +1601,7 @@
         class="color-picker"
         value="#fff"
         onchange="updateProductBuyNowStyles()"
-      >
+      />
     </div>
 
     <!-- Corner Radius Adjuster for Buy Now Button -->
@@ -1615,6 +1615,7 @@
 
   <div id="addedProductsList"></div>
 </form>
+
 
 
 <!-- Add Reviews -->
@@ -1659,7 +1660,7 @@
 </form>
       <!-- About Us -->
 <form id="aboutForm">
-      <h2 class="section-title">About Us Section</h2>
+  <h2 class="section-title">About Us Section</h2>
 
   <label>About Title
     <input
@@ -1669,7 +1670,7 @@
       required
       spellcheck="false"
       maxlength="60"
-    >
+    />
   </label>
 
   <label>About Paragraph
@@ -1685,14 +1686,15 @@
 
   <label>Upload About Us Image</label>
   <div class="input-row">
+    <!-- Hidden input instead of text -->
     <input
       id="aboutImage"
-      type="text"
-      placeholder="Or Paste its Link Here"
+      type="hidden"
+      value=""
       required
       spellcheck="false"
       maxlength="300"
-    >
+    />
     <button
       type="button"
       class="upload-btn"
@@ -1718,7 +1720,7 @@
         class="color-picker"
         value="#ffffff"
         onchange="updateAboutColors()"
-      >
+      />
     </div>
     <!-- Text Color Picker Button -->
     <div
@@ -1732,10 +1734,11 @@
         class="color-picker"
         value="#333333"
         onchange="updateAboutColors()"
-      >
+      />
     </div>
   </div>
 </form>
+
 
 
       <!-- Contact Us -->
@@ -4900,129 +4903,121 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Helper: Get final image URL for download (if file was uploaded)
   function getFinalImageURL(fieldId, currentURL) {
-  if (window.uploadedFiles && window.uploadedFiles[fieldId]) {
-    // Convert the file name to a safe version
-    return "Images/" + generateSafeFileName(window.uploadedFiles[fieldId].name);
+    if (window.uploadedFiles && window.uploadedFiles[fieldId]) {
+      // Convert the file name to a safe version
+      return "Images/" + generateSafeFileName(window.uploadedFiles[fieldId].name);
+    }
+    return currentURL;
   }
-  return currentURL;
-}
-
-
 
   // File input handling (for browsing files)
   var uploadFileInput = document.getElementById('uploadFileInput');
   if (uploadFileInput) {
     uploadFileInput.addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  if (!window.currentUploadField) {
-    console.error("No upload field is set!");
-    return;
-  }
-  // Generate and store the unique safe filename if not already set
-  if (!file.safeName) {
-    file.safeName = generateUniqueSafeFileName(file.name);
-  }
-  const objectURL = URL.createObjectURL(file);
-  window.uploadedFiles[window.currentUploadField] = file;
-  window.uploadedImages[window.currentUploadField] = objectURL;
-  updatePreviewForField(window.currentUploadField, objectURL);
-  const btn = document.getElementById(window.currentUploadField);
-  if (btn) {
-    btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
-  }
-  e.target.value = "";
-  closeUploadModal();
-});
-  }
-
-  // Drag & Drop handling
-var dropArea = document.getElementById('uploadDropArea');
-if (dropArea) {
-  dropArea.addEventListener('dragover', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    e.dataTransfer.dropEffect = 'copy';
-    dropArea.style.borderColor = '#2196F3';
-    console.log("Dragover event fired.");
-  });
-
-  dropArea.addEventListener('dragleave', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    dropArea.style.borderColor = '#ccc';
-    console.log("Dragleave event fired.");
-  });
-
-  dropArea.addEventListener('drop', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    dropArea.style.borderColor = '#ccc';
-
-    const file = e.dataTransfer.files[0];
-    console.log("Drop event fired, file:", file);
-
-    if (file && window.currentUploadField) {
-
-      // ⬇️ Add this line so the file always gets a unique, extension-preserving safeName
+      const file = e.target.files[0];
+      if (!file) return;
+      if (!window.currentUploadField) {
+        console.error("No upload field is set!");
+        return;
+      }
+      // Generate and store the unique safe filename if not already set
       if (!file.safeName) {
         file.safeName = generateUniqueSafeFileName(file.name);
       }
-
       const objectURL = URL.createObjectURL(file);
-      console.log("Dropped file:", file.name, objectURL);
-
       window.uploadedFiles[window.currentUploadField] = file;
       window.uploadedImages[window.currentUploadField] = objectURL;
       updatePreviewForField(window.currentUploadField, objectURL);
-
       const btn = document.getElementById(window.currentUploadField);
       if (btn) {
         btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
       }
+      e.target.value = "";
       closeUploadModal();
-    }
-  });
-} else {
-  console.error("Drop area element not found.");
-}
+    });
+  }
 
+  // Drag & Drop handling
+  var dropArea = document.getElementById('uploadDropArea');
+  if (dropArea) {
+    dropArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.dataTransfer.dropEffect = 'copy';
+      dropArea.style.borderColor = '#2196F3';
+      console.log("Dragover event fired.");
+    });
+
+    dropArea.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.style.borderColor = '#ccc';
+      console.log("Dragleave event fired.");
+    });
+
+    dropArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      dropArea.style.borderColor = '#ccc';
+
+      const file = e.dataTransfer.files[0];
+      console.log("Drop event fired, file:", file);
+
+      if (file && window.currentUploadField) {
+        // ⬇️ Add this line so the file always gets a unique, extension-preserving safeName
+        if (!file.safeName) {
+          file.safeName = generateUniqueSafeFileName(file.name);
+        }
+
+        const objectURL = URL.createObjectURL(file);
+        console.log("Dropped file:", file.name, objectURL);
+
+        window.uploadedFiles[window.currentUploadField] = file;
+        window.uploadedImages[window.currentUploadField] = objectURL;
+        updatePreviewForField(window.currentUploadField, objectURL);
+
+        const btn = document.getElementById(window.currentUploadField);
+        if (btn) {
+          btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
+        }
+        closeUploadModal();
+      }
+    });
+  } else {
+    console.error("Drop area element not found.");
+  }
 
   // Updates the preview for the given upload field (for preview purposes only)
   function updatePreviewForField(fieldId, objectURL) {
-  console.log("Updating preview for", fieldId, "with URL", objectURL);
-  switch(fieldId) {
-    case 'uploadLogoBtn':
-      heroData.logoPreview = objectURL;
-      break;
-    case 'uploadBannerBtn':
-      heroData.bannerPreview = objectURL;
-      break;
-    case 'uploadAboutImgBtn':
-      aboutData.imagePreview = objectURL;
-      break;
-    // For product images—make sure these elements exist or update accordingly:
-    case 'uploadImage1Btn':
-      // If you have an <img id="productPreview1"> element:
-      var p1 = document.getElementById('productPreview1');
-      if (p1) { p1.src = objectURL; }
-      // Otherwise, store it somewhere or simply log it.
-      break;
-    case 'uploadImage2Btn':
-      var p2 = document.getElementById('productPreview2');
-      if (p2) { p2.src = objectURL; }
-      break;
-    case 'uploadImage3Btn':
-      var p3 = document.getElementById('productPreview3');
-      if (p3) { p3.src = objectURL; }
-      break;
-    default:
-      break;
+    console.log("Updating preview for", fieldId, "with URL", objectURL);
+    switch(fieldId) {
+      case 'uploadLogoBtn':
+        heroData.logoPreview = objectURL;
+        break;
+      case 'uploadBannerBtn':
+        heroData.bannerPreview = objectURL;
+        break;
+      case 'uploadAboutImgBtn':
+        aboutData.imagePreview = objectURL;
+        break;
+      // For product images—make sure these elements exist or update accordingly:
+      case 'uploadImage1Btn':
+        var p1 = document.getElementById('productPreview1');
+        if (p1) { p1.src = objectURL; }
+        break;
+      case 'uploadImage2Btn':
+        var p2 = document.getElementById('productPreview2');
+        if (p2) { p2.src = objectURL; }
+        break;
+      case 'uploadImage3Btn':
+        var p3 = document.getElementById('productPreview3');
+        if (p3) { p3.src = objectURL; }
+        break;
+      default:
+        break;
+    }
+    updatePreview();
   }
-  updatePreview();
-}
-
-
 
   // Closes the upload modal
   function closeUploadModal() {
@@ -5039,9 +5034,17 @@ if (dropArea) {
   }
 
   // (Make sure updatePreview() is defined elsewhere.)
-});
 
+  // ⬇️ Add the close “X” snippet here, inside the DOMContentLoaded block
+  const closeButton = document.getElementById('uploadModalClose');
+  if (closeButton) {
+    closeButton.addEventListener('click', function() {
+      closeUploadModal(); // calls your existing function
+    });
+  }
+});
 </script>
+
 
 
 
