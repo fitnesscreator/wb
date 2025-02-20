@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>7 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>8 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -2662,50 +2662,71 @@ function renderAddedProductsList() {
   }
 
   function updatePreview() {
-    // gather hero data
-    heroData.logoPreview = uploadedImages['uploadLogoBtn'] || document.getElementById('logo').value.trim();
-    heroData.logoFinal = getFinalImageURL('uploadLogoBtn', document.getElementById('logo').value.trim());
-    heroData.bannerPreview = uploadedImages['uploadBannerBtn'] || document.getElementById('banner').value.trim();
-    heroData.bannerFinal   = getFinalImageURL('uploadBannerBtn', heroData.bannerPreview);
-    heroData.heroText = document.getElementById('heroText').value.trim();
-    heroData.ctaText  = document.getElementById('ctaText').value.trim();
+  // --- HERO DATA ---
 
-    // about data
-    aboutData.title     = document.getElementById('aboutTitle').value.trim();
-    aboutData.paragraph = document.getElementById('aboutParagraph').value.trim();
-    aboutData.imagePreview = uploadedImages['uploadAboutImgBtn'] || document.getElementById('aboutImage').value.trim();
-    aboutData.imageFinal   = getFinalImageURL('uploadAboutImgBtn', aboutData.imagePreview);
-    aboutData.bgColor = document.getElementById('aboutBgColorPicker').value;
-aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
-
-    // contact data
-    contactData.intro       = document.getElementById('contactIntro').value.trim();
-    contactData.instagram   = document.getElementById('contactInstagram').value.trim();
-    contactData.tiktok      = document.getElementById('contactTiktok').value.trim();
-    contactData.facebook    = document.getElementById('contactFacebook').value.trim();
-    contactData.xLink       = document.getElementById('contactX').value.trim();
-    contactData.youtube     = document.getElementById('contactYoutube').value.trim();
-    contactData.email       = document.getElementById('contactEmail').value.trim();
-
-    // build
-    const previewHTML = buildPreviewHTML();
-
-const iframe = document.getElementById('previewFrame');
-const doc = iframe.contentDocument || iframe.contentWindow.document;
-doc.open();
-doc.write(previewHTML);
-doc.close();
-
-    // Payment button
-    var payBtn = document.getElementById('payBtn');
-    if(checkMandatory()) {
-      payBtn.disabled = false;
-      payBtn.classList.add('enabled');
-    } else {
-      payBtn.disabled = true;
-      payBtn.classList.remove('enabled');
-    }
+  // For the Logo:
+  if (uploadedImages['uploadLogoBtn'] && window.uploadedFiles && window.uploadedFiles['uploadLogoBtn']) {
+    heroData.logoPreview = uploadedImages['uploadLogoBtn'];
+    heroData.logoFinal = "Images/" + generateSafeFileName(window.uploadedFiles['uploadLogoBtn'].name);
+  } else {
+    heroData.logoPreview = document.getElementById('logo').value.trim();
+    heroData.logoFinal = document.getElementById('logo').value.trim();
   }
+
+  // For the Hero Banner:
+  if (uploadedImages['uploadBannerBtn'] && window.uploadedFiles && window.uploadedFiles['uploadBannerBtn']) {
+    heroData.bannerPreview = uploadedImages['uploadBannerBtn'];
+    heroData.bannerFinal = "Images/" + generateSafeFileName(window.uploadedFiles['uploadBannerBtn'].name);
+  } else {
+    heroData.bannerPreview = document.getElementById('banner').value.trim();
+    heroData.bannerFinal = document.getElementById('banner').value.trim();
+  }
+
+  heroData.heroText = document.getElementById('heroText').value.trim();
+  heroData.ctaText = document.getElementById('ctaText').value.trim();
+
+  // --- ABOUT DATA ---
+
+  if (uploadedImages['uploadAboutImgBtn'] && window.uploadedFiles && window.uploadedFiles['uploadAboutImgBtn']) {
+    aboutData.imagePreview = uploadedImages['uploadAboutImgBtn'];
+    aboutData.imageFinal = "Images/" + generateSafeFileName(window.uploadedFiles['uploadAboutImgBtn'].name);
+  } else {
+    aboutData.imagePreview = document.getElementById('aboutImage').value.trim();
+    aboutData.imageFinal = document.getElementById('aboutImage').value.trim();
+  }
+  aboutData.title = document.getElementById('aboutTitle').value.trim();
+  aboutData.paragraph = document.getElementById('aboutParagraph').value.trim();
+  aboutData.bgColor = document.getElementById('aboutBgColorPicker').value;
+  aboutData.textColor = document.getElementById('aboutTextColorPicker').value;
+
+  // --- CONTACT DATA ---
+  contactData.intro = document.getElementById('contactIntro').value.trim();
+  contactData.instagram = document.getElementById('contactInstagram').value.trim();
+  contactData.tiktok = document.getElementById('contactTiktok').value.trim();
+  contactData.facebook = document.getElementById('contactFacebook').value.trim();
+  contactData.xLink = document.getElementById('contactX').value.trim();
+  contactData.youtube = document.getElementById('contactYoutube').value.trim();
+  contactData.email = document.getElementById('contactEmail').value.trim();
+
+  // --- BUILD PREVIEW ---
+  const previewHTML = buildPreviewHTML();
+  const iframe = document.getElementById('previewFrame');
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  doc.open();
+  doc.write(previewHTML);
+  doc.close();
+
+  // --- PAYMENT BUTTON ENABLE/DISABLE ---
+  var payBtn = document.getElementById('payBtn');
+  if (checkMandatory()) {
+    payBtn.disabled = false;
+    payBtn.classList.add('enabled');
+  } else {
+    payBtn.disabled = true;
+    payBtn.classList.remove('enabled');
+  }
+}
+
     
     function updateAboutColors() {
   // Update aboutData with the chosen colors
@@ -4834,10 +4855,12 @@ document.addEventListener('DOMContentLoaded', function() {
   // Helper: Get final image URL for download (if file was uploaded)
   function getFinalImageURL(fieldId, currentURL) {
   if (window.uploadedFiles && window.uploadedFiles[fieldId]) {
+    // Convert the file name to a safe version
     return "Images/" + generateSafeFileName(window.uploadedFiles[fieldId].name);
   }
   return currentURL;
 }
+
 
 
   // File input handling (for browsing files)
