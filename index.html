@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>6 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>7 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -4832,11 +4833,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Helper: Get final image URL for download (if file was uploaded)
   function getFinalImageURL(fieldId, currentURL) {
-    if (window.uploadedFiles && window.uploadedFiles[fieldId]) {
-      return "Images/" + window.uploadedFiles[fieldId].name;
-    }
-    return currentURL;
+  if (window.uploadedFiles && window.uploadedFiles[fieldId]) {
+    return "Images/" + generateSafeFileName(window.uploadedFiles[fieldId].name);
   }
+  return currentURL;
+}
+
 
   // File input handling (for browsing files)
   var uploadFileInput = document.getElementById('uploadFileInput');
