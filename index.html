@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>11 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>12 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -1980,8 +1980,26 @@ function generateSafeFileName(name) {
 // New helper to get a unique filename:
 function generateUniqueSafeFileName(name) {
   uniqueCounter++;
-  return generateSafeFileName(name) + '-' + uniqueCounter;
+  
+  // 1. Find the file extension
+  let dotIndex = name.lastIndexOf(".");
+  let extension = "";
+  let baseName = name;
+  
+  if (dotIndex !== -1) {
+    // extension includes the dot, e.g. ".png"
+    extension = name.substring(dotIndex).toLowerCase();
+    // everything before that dot
+    baseName = name.substring(0, dotIndex);
+  }
+  
+  // 2. Clean up the base name (remove unsafe chars/spaces)
+  let safeBase = generateSafeFileName(baseName); // your existing “cleaner” function
+  
+  // 3. Return something like “bella-2025-02-14-1.png”
+  return safeBase + "-" + uniqueCounter + extension;
 }
+
 
 
     
@@ -4918,44 +4936,57 @@ document.addEventListener('DOMContentLoaded', function() {
 });
   }
 
-  // Drag & Drop handling for the upload drop area
-  var dropArea = document.getElementById('uploadDropArea');
-  if (dropArea) {
-    dropArea.addEventListener('dragover', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      e.dataTransfer.dropEffect = 'copy';
-      dropArea.style.borderColor = '#2196F3';
-      console.log("Dragover event fired.");
-    });
-    dropArea.addEventListener('dragleave', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      dropArea.style.borderColor = '#ccc';
-      console.log("Dragleave event fired.");
-    });
-    dropArea.addEventListener('drop', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      dropArea.style.borderColor = '#ccc';
-      const file = e.dataTransfer.files[0];
-      console.log("Drop event fired, file:", file);
-      if (file && window.currentUploadField) {
-        const objectURL = URL.createObjectURL(file);
-        console.log("Dropped file:", file.name, objectURL);
-        window.uploadedFiles[window.currentUploadField] = file;
-        window.uploadedImages[window.currentUploadField] = objectURL;
-        updatePreviewForField(window.currentUploadField, objectURL);
-        const btn = document.getElementById(window.currentUploadField);
-        if (btn) {
-          btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
-        }
-        closeUploadModal();
+  // Drag & Drop handling
+var dropArea = document.getElementById('uploadDropArea');
+if (dropArea) {
+  dropArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    e.dataTransfer.dropEffect = 'copy';
+    dropArea.style.borderColor = '#2196F3';
+    console.log("Dragover event fired.");
+  });
+
+  dropArea.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropArea.style.borderColor = '#ccc';
+    console.log("Dragleave event fired.");
+  });
+
+  dropArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    dropArea.style.borderColor = '#ccc';
+
+    const file = e.dataTransfer.files[0];
+    console.log("Drop event fired, file:", file);
+
+    if (file && window.currentUploadField) {
+
+      // ⬇️ Add this line so the file always gets a unique, extension-preserving safeName
+      if (!file.safeName) {
+        file.safeName = generateUniqueSafeFileName(file.name);
       }
-    });
-  } else {
-    console.error("Drop area element not found.");
-  }
+
+      const objectURL = URL.createObjectURL(file);
+      console.log("Dropped file:", file.name, objectURL);
+
+      window.uploadedFiles[window.currentUploadField] = file;
+      window.uploadedImages[window.currentUploadField] = objectURL;
+      updatePreviewForField(window.currentUploadField, objectURL);
+
+      const btn = document.getElementById(window.currentUploadField);
+      if (btn) {
+        btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
+      }
+      closeUploadModal();
+    }
+  });
+} else {
+  console.error("Drop area element not found.");
+}
+
 
   // Updates the preview for the given upload field (for preview purposes only)
   function updatePreviewForField(fieldId, objectURL) {
