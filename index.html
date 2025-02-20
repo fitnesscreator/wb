@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -1966,15 +1965,22 @@
   
   <script>
     
-    function generateSafeFileName(name) {
-  // Generate a unique token (timestamp or random number)
-  const uniqueToken = Date.now(); // or use Math.random() for more randomness
+    // A global counter to ensure uniqueness
+var uniqueCounter = 0;
+
+// Your original function that “cleans” the filename:
+function generateSafeFileName(name) {
   return name
     .toLowerCase()
     .trim()
     .replace(/\s+/g, '-')        // Replace spaces with dashes
-    .replace(/[^a-z0-9.-]/g, '')  // Remove any unsafe characters
-    + '-' + uniqueToken;         // Append the unique token
+    .replace(/[^a-z0-9.-]/g, ''); // Remove any unsafe characters
+}
+
+// New helper to get a unique filename:
+function generateUniqueSafeFileName(name) {
+  uniqueCounter++;
+  return generateSafeFileName(name) + '-' + uniqueCounter;
 }
 
 
@@ -2402,33 +2408,33 @@ var img1Blob = uploadedImages['uploadImage1Btn'] || document.getElementById('ima
 var img1File = (window.uploadedFiles && window.uploadedFiles['uploadImage1Btn']) ? window.uploadedFiles['uploadImage1Btn'] : null;
 var img1Final;
 if (img1File) {
-  var safeName = generateSafeFileName(img1File.name);
-  img1Final = "Images/" + safeName;
+  img1Final = "Images/" + img1File.safeName;
 } else {
   img1Final = img1Blob;
 }
+
 
 // For image2:
 var img2Blob = uploadedImages['uploadImage2Btn'] || document.getElementById('image2').value.trim();
 var img2File = (window.uploadedFiles && window.uploadedFiles['uploadImage2Btn']) ? window.uploadedFiles['uploadImage2Btn'] : null;
 var img2Final;
 if (img2File) {
-  var safeName = generateSafeFileName(img2File.name);
-  img2Final = "Images/" + safeName;
+  img2Final = "Images/" + img2File.safeName;
 } else {
   img2Final = img2Blob;
 }
+
 
 // For image3:
 var img3Blob = uploadedImages['uploadImage3Btn'] || document.getElementById('image3').value.trim();
 var img3File = (window.uploadedFiles && window.uploadedFiles['uploadImage3Btn']) ? window.uploadedFiles['uploadImage3Btn'] : null;
 var img3Final;
 if (img3File) {
-  var safeName = generateSafeFileName(img3File.name);
-  img3Final = "Images/" + safeName;
+  img3Final = "Images/" + img3File.safeName;
 } else {
   img3Final = img3Blob;
 }
+
 
 
   
@@ -2880,7 +2886,7 @@ function buildFinalHTML() {
         const reader = new FileReader();
         reader.onload = function(e) {
           // e.target.result is an ArrayBuffer that preserves the original file data
-          imagesFolder.file(generateSafeFileName(file.name), e.target.result);
+          imagesFolder.file(file.safeName, e.target.result);
           resolve();
         };
         reader.onerror = reject;
@@ -4869,25 +4875,27 @@ document.addEventListener('DOMContentLoaded', function() {
   var uploadFileInput = document.getElementById('uploadFileInput');
   if (uploadFileInput) {
     uploadFileInput.addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      if (!window.currentUploadField) {
-        console.error("No upload field is set!");
-        return;
-      }
-      // Create an object URL for preview
-      const objectURL = URL.createObjectURL(file);
-      window.uploadedFiles[window.currentUploadField] = file;
-      window.uploadedImages[window.currentUploadField] = objectURL;
-      console.log("File selected:", file.name, objectURL);
-      updatePreviewForField(window.currentUploadField, objectURL);
-      const btn = document.getElementById(window.currentUploadField);
-      if (btn) {
-        btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
-      }
-      e.target.value = "";
-      closeUploadModal();
-    });
+  const file = e.target.files[0];
+  if (!file) return;
+  if (!window.currentUploadField) {
+    console.error("No upload field is set!");
+    return;
+  }
+  // Generate and store the unique safe filename if not already set
+  if (!file.safeName) {
+    file.safeName = generateUniqueSafeFileName(file.name);
+  }
+  const objectURL = URL.createObjectURL(file);
+  window.uploadedFiles[window.currentUploadField] = file;
+  window.uploadedImages[window.currentUploadField] = objectURL;
+  updatePreviewForField(window.currentUploadField, objectURL);
+  const btn = document.getElementById(window.currentUploadField);
+  if (btn) {
+    btn.innerHTML = '<i class="fas fa-check" style="color: white;"></i>';
+  }
+  e.target.value = "";
+  closeUploadModal();
+});
   }
 
   // Drag & Drop handling for the upload drop area
