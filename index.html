@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <!-- Primary Meta Tags -->
-<title>9 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
+<title>6 in Pajamas – eCommerce Website Builder for Quick Online Store Launch</title>
 <meta name="title" content="Boss in Pajamas – eCommerce Website Builder for Quick Online Store Launch">
 <meta name="description" content="Build a professional online store in minutes with Boss in Pajamas. Launch your eCommerce website quickly and start selling without any coding experience.">
 <meta name="keywords" content="eCommerce website builder, online store, quick launch, no coding required, online business, Boss in Pajamas, digital marketplace, sell products online, drop shipping, small business">
@@ -1967,14 +1967,16 @@
   <script>
     
     function generateSafeFileName(name) {
-  // Convert to lower case, trim, replace spaces with dashes,
-  // and remove any characters that are not letters, numbers, dot or dash.
+  // Generate a unique token (timestamp or random number)
+  const uniqueToken = Date.now(); // or use Math.random() for more randomness
   return name
     .toLowerCase()
     .trim()
     .replace(/\s+/g, '-')        // Replace spaces with dashes
-    .replace(/[^a-z0-9.-]/g, ''); // Remove any unsafe characters
+    .replace(/[^a-z0-9.-]/g, '')  // Remove any unsafe characters
+    + '-' + uniqueToken;         // Append the unique token
 }
+
 
     
     
